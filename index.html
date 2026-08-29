@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>SIH 2026 INTERNAL HACKATHON | AJK College & AIIF</title>
+  <meta name="description" content="SIH 2026 Internal Hackathon Platform organized by AJK College of Arts & Science in association with AIIF (AJK Innovation Incubator Foundation). Collect team details, up to 2 chosen problem statements, and solutions.">
+  <link rel="stylesheet" href="styles.css?v=2.4">
+</head>
+<body>
+
+  <!-- HEADER & CO-BRANDING NAV (STUDENT FOCUSED - NO TOP ROLE SWITCHER) -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="branding-container">
+        <div class="logo-badge-group">
+          <!-- Official AIIF Header Logo Container -->
+          <div class="aiif-header-logo-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 50" class="aiif-svg-logo">
+              <defs>
+                <linearGradient id="hdrAiifGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00a859" />
+                  <stop offset="100%" stop-color="#1e3a8a" />
+                </linearGradient>
+              </defs>
+              <polygon points="5,42 22,8 30,8 13,42" fill="url(#hdrAiifGrad)" />
+              <polygon points="18,42 30,20 38,20 26,42" fill="url(#hdrAiifGrad)" />
+              <rect x="42" y="8" width="8" height="34" rx="1.5" fill="url(#hdrAiifGrad)" />
+              <rect x="54" y="8" width="8" height="34" rx="1.5" fill="url(#hdrAiifGrad)" />
+              <path d="M 66,8 L 84,8 L 84,15 L 74,15 L 74,21 L 81,21 L 81,28 L 74,28 L 74,42 L 66,42 Z" fill="url(#hdrAiifGrad)" />
+              <text x="5" y="49" font-family="'Outfit', sans-serif" font-weight="800" font-size="5.5" fill="#1e3a8a" letter-spacing="0.4">AJK INNOVATION INCUBATOR FOUNDATION</text>
+            </svg>
+            <div class="aiif-brand-meta">
+              <span class="aiif-ethnic-badge">WORLD'S 1ST ETHNIC INCUBATOR</span>
+              <span class="aiif-startuptn-tag">Recognized by StartupTN Under SIGrant</span>
+            </div>
+          </div>
+
+          <div class="brand-divider"></div>
+
+          <div class="college-brand-info">
+            <h1 id="headerCollegeName">SIH 2026 INTERNAL HACKATHON</h1>
+            <p>
+              <span>AJK College of Arts & Science | AIIF</span>
+              <span class="badge-hackathon" id="headerHackathonBadge">SIH 2026 Portal</span>
+              <span class="badge-hackathon" style="background: rgba(0, 168, 89, 0.2); color: #00a859; border-color: rgba(0, 168, 89, 0.4);">23 DEPTS MANDATE</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light/Dark Theme" style="display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; font-size: 0.8rem; font-weight: 700; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); cursor: pointer;">
+          <span id="themeIcon">☀️</span> <span id="themeLabel">Mode: Light</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Solely Participant Focused) -->
+    <nav class="nav-tabs-container" id="mainNavTabs">
+      <button class="nav-tab active" data-tab="overview" onclick="switchTab('overview')">📌 1. SIH Guidelines & Dept Tracker</button>
+      <button class="nav-tab" data-tab="directory" onclick="switchTab('directory')">💡 2. SIH Problem Statements Link</button>
+      <button class="nav-tab" data-tab="registration" onclick="switchTab('registration')">👥 3. Team Registration (6 Members)</button>
+      <button class="nav-tab" data-tab="submissions" onclick="switchTab('submissions')">📋 4. Submitted Teams</button>
+
+      <!-- Protected Admin/Jury Tabs (Hidden by Default until Unlocked) -->
+      <button class="nav-tab staff-only-tab" data-tab="jury" style="display: none;" onclick="switchTab('jury')">⚖️ 5. Jury Evaluation Desk</button>
+      <button class="nav-tab staff-only-tab" data-tab="leaderboard" style="display: none;" onclick="switchTab('leaderboard')">🏆 6. Leaderboard & Certificates</button>
+    </nav>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-container">
+
+    <!-- STAT SUMMARY BANNER -->
+    <div class="stat-banner">
+      <div class="stat-card">
+        <div class="stat-icon teams">🚀</div>
+        <div class="stat-info">
+          <h3 id="statTotalTeams">0</h3>
+          <p>Registered Teams</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon female">🏛️</div>
+        <div class="stat-info">
+          <h3 id="statDeptQuota">0 / 23</h3>
+          <p>Depts Met Quota (≥2 Teams)</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon female">👩‍💻</div>
+        <div class="stat-info">
+          <h3 id="statFemaleRatio">100%</h3>
+          <p>Female Rule Compliance</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon judged">🏆</div>
+        <div class="stat-info">
+          <h3 id="statEvaluatedTeams">0 / 50</h3>
+          <p>Top 50 Shortlist Target</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: OVERVIEW & DEPARTMENT QUOTA TRACKER -->
+    <section id="tab-overview" class="tab-content active">
+      
+      <!-- TOP COUNTDOWN & KEY DATES BANNER -->
+      <div class="sih-countdown-banner">
+        <div class="countdown-header-info">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="live-pulse-dot"></span>
+            <span style="font-weight: 800; font-size: 0.8rem; letter-spacing: 0.5px; color: var(--primary-orange); text-transform: uppercase;">
+              SIH 2026 OFFICIAL TIMELINE & LIVE COUNTDOWN
+            </span>
+          </div>
+          <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0; color: var(--text-main); line-height: 1.3;">
+            ⏰ Registration Deadline: <span style="color: var(--primary-orange);">September 01, 2026</span> | 🎯 Campus Pitching: <span style="color: var(--primary-green);">September 04, 2026</span>
+          </h2>
+          <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Complete your 6-member team registration before September 1st to qualify for September 4th offline pitching at AJK College.
+          </p>
+        </div>
+
+        <div class="countdown-timer-group">
+          <div class="countdown-box">
+            <span class="countdown-num" id="cdDays">00</span>
+            <span class="countdown-lbl">Days</span>
+          </div>
+          <div class="countdown-colon">:</div>
+          <div class="countdown-box">
+            <span class="countdown-num" id="cdHours">00</span>
+            <span class="countdown-lbl">Hours</span>
+          </div>
+          <div class="countdown-colon">:</div>
+          <div class="countdown-box">
+            <span class="countdown-num" id="cdMins">00</span>
+            <span class="countdown-lbl">Mins</span>
+          </div>
+          <div class="countdown-colon">:</div>
+          <div class="countdown-box">
+            <span class="countdown-num" id="cdSecs">00</span>
+            <span class="countdown-lbl">Secs</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- HERO CO-BRANDING DISPLAY -->
+      <div class="aiif-hero-banner">
+        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+          <div class="aiif-hero-logo-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 95" width="280" height="78">
+              <defs>
+                <linearGradient id="aiifHeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00a859" />
+                  <stop offset="100%" stop-color="#1e3a8a" />
+                </linearGradient>
+              </defs>
+
+              <polygon points="10,58 35,10 46,10 21,58" fill="url(#aiifHeroGrad)" />
+              <polygon points="29,58 45,28 56,28 40,58" fill="url(#aiifHeroGrad)" />
+
+              <rect x="62" y="10" width="12" height="48" rx="2" fill="url(#aiifHeroGrad)" />
+              <rect x="80" y="10" width="12" height="48" rx="2" fill="url(#aiifHeroGrad)" />
+              <path d="M 98,10 L 122,10 L 122,20 L 110,20 L 110,28 L 120,28 L 120,37 L 110,37 L 110,58 L 98,58 Z" fill="url(#aiifHeroGrad)" />
+
+              <text x="128" y="52" font-family="'Outfit', sans-serif" font-weight="900" font-size="48" fill="url(#aiifHeroGrad)" letter-spacing="1">AIIF</text>
+              <text x="10" y="73" font-family="'Outfit', sans-serif" font-weight="800" font-size="9.5" fill="#1e3a8a" letter-spacing="0.6">AJK INNOVATION INCUBATOR FOUNDATION</text>
+            </svg>
+
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <span class="aiif-ethnic-badge" style="font-size: 0.775rem; padding: 4px 14px;">WORLD'S 1ST ETHNIC INCUBATOR</span>
+              <span class="aiif-startuptn-tag" style="font-size: 0.8rem;">Recognized by StartupTN Under SIGrant</span>
+            </div>
+          </div>
+
+          <div>
+            <h2 style="font-size: 2rem; font-weight: 900; color: var(--text-main); line-height: 1.2;">
+              SIH 2026 INTERNAL HACKATHON
+            </h2>
+            <p style="font-size: 1.1rem; color: #00a859; font-weight: 700; margin-top: 0.25rem;">
+              AJK College of Arts & Science in Association with AIIF
+            </p>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.5rem; max-width: 680px;">
+              <strong>Department Mandate:</strong> Each of the 23 departments must bring <strong>at least 2 teams compulsory</strong> (Total Minimum Target: 46 Teams). Teams consist of exactly 6 members (with mandatory female inclusion) and select up to 2 problem statements.
+            </p>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="https://sih.gov.in/sih2026PS" target="_blank" class="btn btn-primary" style="text-decoration: none;">🌐 Open Official SIH Portal (sih.gov.in/sih2026PS) ↗</a>
+          <button class="btn btn-secondary" onclick="switchTab('registration')">👥 Register 6-Member Team</button>
+        </div>
+      </div>
+
+      <!-- 🏛️ 23 DEPARTMENT COMPULSORY QUOTA TRACKER QUEUE -->
+      <div class="section-header">
+        <div class="section-title">
+          <h2>🏛️ 23 Department Mandatory Registration Queue</h2>
+          <p>Compulsory Target: Minimum 2 Teams per Department (Target: 46+ Teams Total)</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-sm active" id="deptFilterAll" onclick="filterDeptTracker('All')">All (23 Depts)</button>
+          <button class="btn btn-secondary btn-sm" id="deptFilterCompliant" onclick="filterDeptTracker('Compliant')">Compliant (≥2 Teams) ✅</button>
+          <button class="btn btn-secondary btn-sm" id="deptFilterPending" onclick="filterDeptTracker('Pending')">Pending (<2 Teams) ⚠️</button>
+        </div>
+      </div>
+
+      <div class="ps-grid" id="deptTrackerGridContainer" style="margin-bottom: 2.5rem;">
+        <!-- 23 Department Cards rendered by JS -->
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">
+          <h2>🎯 Official SIH Team & Problem Selection Flow</h2>
+          <p>Follow these 4 clear steps to complete your team registration & problem selection</p>
+        </div>
+      </div>
+
+      <!-- PROCESS TIMELINE STEP CARDS -->
+      <div class="ps-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 2rem;">
+        <div class="ps-card">
+          <div class="ps-header">
+            <span class="ps-code">STEP 1</span>
+            <span class="ps-category Software">sih.gov.in/sih2026PS</span>
+          </div>
+          <h3 class="ps-title">1. Open Official SIH Portal</h3>
+          <p class="ps-org">Browse official SIH 2026 problem statements released by Ministries and Industries at sih.gov.in/sih2026PS.</p>
+          <a href="https://sih.gov.in/sih2026PS" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration: none;">Open sih.gov.in ↗</a>
+        </div>
+
+        <div class="ps-card">
+          <div class="ps-header">
+            <span class="ps-code">STEP 2</span>
+            <span class="ps-category Hardware">Team Rules</span>
+          </div>
+          <h3 class="ps-title">2. Form 6-Member Team</h3>
+          <p class="ps-org">Assemble exactly 6 student members from AJK College. Mandatory rule: At least 1 female student member must be included in the team.</p>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('registration')">Team Rules & Form →</button>
+        </div>
+
+        <div class="ps-card">
+          <div class="ps-header">
+            <span class="ps-code">STEP 3</span>
+            <span class="ps-category Software">Max 2 Problems</span>
+          </div>
+          <h3 class="ps-title">3. Enter PS Number & Submit Solutions</h3>
+          <p class="ps-org">Enter your chosen PS Number (e.g. SIH26001) and proposed solution approach on our registration page.</p>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('registration')">Register & Submit →</button>
+        </div>
+
+        <div class="ps-card">
+          <div class="ps-header">
+            <span class="ps-code">STEP 4</span>
+            <span class="ps-category Hardware">Campus Pitching</span>
+          </div>
+          <h3 class="ps-title">4. Pitching & Top 50 Selection</h3>
+          <p class="ps-org">Present your proposed solution to the AIIF Jury Panel at AJK College Campus on Sep 4. Top 50 teams advance to official SIH nomination!</p>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('submissions')">View Submissions →</button>
+        </div>
+      </div>
+
+      <!-- MANDATORY COMPLIANCE BAR -->
+      <div class="rule-compliance-bar valid">
+        <div class="rule-compliance-header">
+          <h3>📋 Mandatory SIH Rules Summary</h3>
+          <span class="rule-chip pass">Strict Enforcement</span>
+        </div>
+        <div class="rule-badges-grid">
+          <div class="rule-chip pass">🏛️ Department Quota: Compulsory ≥2 Teams per Department (23 Depts)</div>
+          <div class="rule-chip pass">👥 Team Size: Exactly 6 Members (1 Leader + 5 Members)</div>
+          <div class="rule-chip pass">👩 Gender Rule: Mandatory Female Inclusion (≥1 Female Student)</div>
+          <div class="rule-chip pass">💡 Problem Selection: Maximum 2 Problem Statements per Team</div>
+          <div class="rule-chip pass">🎯 Target: Shortlisting Top 50 Teams for SIH Nomination</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: OFFICIAL SIH PROBLEM STATEMENTS LINK & GUIDANCE HUB -->
+    <section id="tab-directory" class="tab-content">
+      <div class="aiif-hero-banner" style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(0, 168, 89, 0.15)); border: 1px solid var(--border-highlight); margin-bottom: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <span style="font-size: 2.5rem;">🌐</span>
+            <div>
+              <h2 style="font-size: 1.6rem; font-weight: 800;">Official SIH 2026 Problem Statements Portal</h2>
+              <p style="color: var(--primary-green); font-weight: 700; font-size: 0.95rem; margin-top: 0.2rem;">
+                Official Portal Link: <a href="https://sih.gov.in/sih2026PS" target="_blank" style="color: var(--primary-orange); text-decoration: underline;">https://sih.gov.in/sih2026PS</a>
+              </p>
+            </div>
+          </div>
+          
+          <p style="font-size: 0.925rem; color: var(--text-muted); line-height: 1.5; max-width: 800px;">
+            To ensure teams have instant access to real-time Problem Statements released by Ministries, Departments, and Industries, please browse the official portal directly.
+          </p>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <a href="https://sih.gov.in/sih2026PS" target="_blank" class="btn btn-primary" style="font-size: 1rem; padding: 0.75rem 1.5rem; text-decoration: none;">
+              🌐 Open Official SIH 2026 Portal (sih.gov.in/sih2026PS) ↗
+            </a>
+            <button class="btn btn-secondary" onclick="switchTab('registration')">
+              👥 Go to Team Registration →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONS & PS SELECTION GUIDE CARD -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-main);">
+        <h3 style="margin-bottom: 1.25rem; color: var(--text-main); font-size: 1.2rem;">📋 3-Step Guide to Choose & Submit Your Problem Statement:</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem;">
+          <div style="background: var(--bg-input); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--primary-orange); margin-bottom: 0.4rem;">STEP 1</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem;">Browse Official SIH Portal</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+              Click <a href="https://sih.gov.in/sih2026PS" target="_blank" style="color: var(--primary-green); font-weight: 600;">sih.gov.in/sih2026PS</a> to view official problem statements across Software & Hardware tracks.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-input); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--primary-orange); margin-bottom: 0.4rem;">STEP 2</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem;">Copy PS Number & Title</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+              Copy your chosen <strong>PS Number</strong> (e.g., <code style="color: var(--primary-orange);">SIH26001</code>) and Problem Title from the table.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-input); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--primary-orange); margin-bottom: 0.4rem;">STEP 3</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem;">Enter in Team Registration</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+              Switch to our <strong>Team Registration</strong> page, type your PS Number & Title, and submit your technical solution!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TEAM REGISTRATION & RULE VALIDATOR (Participant Page) -->
+    <section id="tab-registration" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>👥 Team Registration & SIH Rule Validator</h2>
+          <p>Enforces: 23 Dept Selection, Exactly 6 members, ≥1 female student, and max 2 Problem Statements + solutions.</p>
+        </div>
+      </div>
+
+      <!-- LIVE RULE TRACKER BAR -->
+      <div class="rule-compliance-bar" id="ruleTrackerBar">
+        <div class="rule-compliance-header">
+          <h3 id="ruleStatusTitle">⚠️ Team Validation Pending</h3>
+          <span class="rule-chip" id="ruleOverallChip">Checking Rules...</span>
+        </div>
+        <div class="rule-badges-grid">
+          <div class="rule-chip fail" id="ruleDeptChip">🏛️ Department: Not Selected</div>
+          <div class="rule-chip fail" id="ruleSizeChip">👥 Size: 0 / 6 Members</div>
+          <div class="rule-chip fail" id="ruleFemaleChip">👩 Female Member: Missing</div>
+          <div class="rule-chip fail" id="ruleLeaderChip">👑 Leader: Not Assigned</div>
+          <div class="rule-chip fail" id="ruleMentorChip">👨‍🏫 Mentor: Not Assigned</div>
+          <div class="rule-chip fail" id="rulePsChip">💡 Primary PS: Not Selected</div>
+        </div>
+      </div>
+
+      <div class="team-form-grid">
+        <!-- TEAM META & PROBLEM SELECTION FORM -->
+        <div class="team-meta-card">
+          <h3>🏆 Team Meta & Problem Selection</h3>
+          
+          <div class="form-group">
+            <label for="regTeamName">Team Name *</label>
+            <input type="text" id="regTeamName" class="form-control" placeholder="e.g. AquaGuard Innovators" oninput="validateTeamRules()">
+          </div>
+
+          <div class="form-group">
+            <label for="regDepartmentSelect">Official College Department (23 Depts) *</label>
+            <select id="regDepartmentSelect" class="form-control" onchange="validateTeamRules()">
+              <option value="">-- Select Your Department --</option>
+            </select>
+          </div>
+
+          <!-- MENTOR SELECTION / INLINE ONBOARDING IN REGISTRATION -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+              <label for="regMentorSelect" style="margin-bottom: 0;">Assigned Faculty / Industry Mentor *</label>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="toggleInlineNewMentorForm()" id="btnToggleInlineMentor" style="font-size: 0.75rem; padding: 2px 8px;">
+                ➕ Onboard New Mentor
+              </button>
+            </div>
+            
+            <select id="regMentorSelect" class="form-control" onchange="onMentorSelectChange()">
+              <option value="">-- Select Existing Mentor --</option>
+              <option value="NEW_MENTOR">➕ Onboard New Faculty / Industry Mentor...</option>
+            </select>
+          </div>
+
+          <!-- INLINE NEW MENTOR FORM -->
+          <div id="inlineMentorBox" style="display: none; background: var(--bg-input); border: 1px solid var(--primary-orange); border-radius: var(--radius-md); padding: 1rem; margin-top: 0.5rem; gap: 0.75rem; flex-direction: column;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-orange); display: flex; justify-content: space-between; align-items: center;">
+              <span>👨‍🏫 Onboard New Faculty Mentor</span>
+              <span style="font-size: 0.725rem; font-weight: 600; color: var(--emerald);">Auto-Saves to Directory</span>
+            </div>
+
+            <div class="form-group">
+              <label for="newMtrName" style="font-size: 0.8rem;">Mentor Full Name *</label>
+              <input type="text" id="newMtrName" class="form-control" placeholder="e.g. Dr. B. Satheesh" oninput="validateTeamRules()">
+            </div>
+
+            <div class="form-group">
+              <label for="newMtrDesignation" style="font-size: 0.8rem;">Designation & Department *</label>
+              <input type="text" id="newMtrDesignation" class="form-control" placeholder="e.g. Associate Professor / Computer Science" oninput="validateTeamRules()">
+            </div>
+
+            <div class="form-group">
+              <label for="newMtrEmail" style="font-size: 0.8rem;">Mentor Email Address *</label>
+              <input type="email" id="newMtrEmail" class="form-control" placeholder="mentor@ajkcas.edu.in" oninput="validateTeamRules()">
+            </div>
+
+            <div class="form-group">
+              <label for="newMtrPhone" style="font-size: 0.8rem;">Mentor Mobile Number</label>
+              <input type="text" id="newMtrPhone" class="form-control" placeholder="9876543210">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 0.5rem;">
+            <label for="regCategory">Category Track *</label>
+            <select id="regCategory" class="form-control">
+              <option value="Software">Software Track</option>
+              <option value="Hardware">Hardware Track</option>
+            </select>
+          </div>
+
+          <!-- PRIMARY PROBLEM STATEMENT (PS 1) -->
+          <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <label style="font-weight: 700; color: var(--primary-green); margin-bottom: 0;">💡 Problem Statement 1 (Primary) *</label>
+              <a href="https://sih.gov.in/sih2026PS" target="_blank" style="font-size: 0.75rem; color: var(--primary-orange); text-decoration: underline;">Browse sih.gov.in/sih2026PS ↗</a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label for="regPs1Code" style="font-size: 0.8rem;">PS Number / Code *</label>
+                <input type="text" id="regPs1Code" class="form-control" placeholder="e.g. SIH26001" oninput="validateTeamRules()">
+              </div>
+              <div class="form-group">
+                <label for="regPs1Title" style="font-size: 0.8rem;">PS Title / Theme *</label>
+                <input type="text" id="regPs1Title" class="form-control" placeholder="e.g. AI-Based early warning and landslide Risk Monitoring" oninput="validateTeamRules()">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 0.75rem;">
+            <label for="regSolution1">Proposed Solution Approach 1 *</label>
+            <textarea id="regSolution1" class="form-control" rows="3" placeholder="Describe your technical approach and core features for Problem 1..." oninput="validateTeamRules()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="regTechStack1">Tech Stack for Solution 1 *</label>
+            <input type="text" id="regTechStack1" class="form-control" placeholder="e.g. React Native, Python FastAPI, PostgreSQL" oninput="validateTeamRules()">
+          </div>
+
+          <!-- SECONDARY PROBLEM STATEMENT (PS 2) - OPTIONAL (MAX 2 RULE) -->
+          <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+            <label style="font-weight: 700; color: var(--text-main);">💡 Problem Statement 2 (Secondary - Optional)</label>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem;">SIH Rule: A team can select up to 2 problem statements maximum.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label for="regPs2Code" style="font-size: 0.8rem;">PS 2 Number / Code</label>
+                <input type="text" id="regPs2Code" class="form-control" placeholder="e.g. SIH26005" oninput="validateTeamRules()">
+              </div>
+              <div class="form-group">
+                <label for="regPs2Title" style="font-size: 0.8rem;">PS 2 Title / Theme</label>
+                <input type="text" id="regPs2Title" class="form-control" placeholder="e.g. Solar-Powered Smart Mini Cold Storage System" oninput="validateTeamRules()">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 0.75rem;">
+            <label for="regSolution2">Proposed Solution Approach 2 (Optional)</label>
+            <textarea id="regSolution2" class="form-control" rows="2" placeholder="Describe your technical approach for Problem 2 if selected..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="regTechStack2">Tech Stack for Solution 2 (Optional)</label>
+            <input type="text" id="regTechStack2" class="form-control" placeholder="e.g. Arduino Mega, GSM Module, Sensors">
+          </div>
+
+          <button type="button" class="btn btn-primary" id="btnSubmitTeam" onclick="saveTeamRegistration()" style="margin-top: 1rem; width: 100%;">
+            💾 Submit 6-Member Team & Solutions
+          </button>
+        </div>
+
+        <!-- 6 MEMBERS ACCORDION/CARDS -->
+        <div class="members-card-list">
+          <div class="section-title" style="margin-bottom: 0.5rem;">
+            <h3>Team Roster (6 Members Required)</h3>
+            <p>Member 1 is automatically Team Leader. Enforce at least 1 female student.</p>
+          </div>
+
+          <div id="membersContainer">
+            <!-- 6 Member Cards rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SUBMITTED TEAMS DIRECTORY -->
+    <section id="tab-submissions" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>📋 Submitted Teams & Problem Statements</h2>
+          <p>Directory of registered teams, department origin, chosen problems, and solutions.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="syncLiveTeamsFromGoogleScript(true)">🔄 Sync Live Sheet</button>
+          <button class="btn btn-secondary btn-sm staff-only-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3); display: none;" onclick="deleteAllUnevaluatedTeams()">🗑️ Delete All Unevaluated</button>
+          <div class="search-box" style="width: 260px;">
+            <input type="text" id="teamSearchInput" class="form-control" placeholder="🔍 Search team, department, PS, or member..." oninput="renderSubmissionsList()">
+          </div>
+        </div>
+      </div>
+
+      <div class="ps-grid" id="submissionsGridContainer">
+        <!-- Team Submissions rendered by JS -->
+      </div>
+    </section>
+
+    <!-- TAB 5: JURY EVALUATION DESK (Protected Backend View) -->
+    <section id="tab-jury" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>⚖️ Jury Desk - 100-Point SIH Shortlisting Rubric</h2>
+          <p>AIIF Evaluator Panel scoring desk for selecting the Top 50 teams for official SIH nomination.</p>
+        </div>
+      </div>
+
+      <div class="jury-desk-grid">
+        <!-- LEFT: TEAM LIST SIDEBAR -->
+        <div class="jury-sidebar-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color);">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Select Team to Evaluate</h3>
+            <span class="rule-chip pass" style="font-size: 0.725rem; padding: 2px 8px;">AIIF Panel</span>
+          </div>
+          <div class="team-selector-list" id="juryTeamList">
+            <!-- Teams rendered by JS -->
+          </div>
+        </div>
+
+        <!-- RIGHT: SCORING RUBRIC -->
+        <div class="rubric-card">
+          <div id="evalTeamHeader">
+            <h3 id="evalTeamName">Select a team from the list</h3>
+            <p id="evalTeamPs" class="text-muted" style="font-size: 0.85rem;">Click on any team to load the evaluation rubric.</p>
+          </div>
+
+          <div id="rubricControls" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <!-- RUBRIC ITEM 1 -->
+            <div class="rubric-item">
+              <div class="rubric-label">
+                <span>1. Problem Understanding & Novelty</span>
+                <span class="rubric-score-display"><span id="valNovelty">18</span> / 20 pts</span>
+              </div>
+              <input type="range" class="slider-control" min="0" max="20" value="18" id="slideNovelty" oninput="updateRubricTotal()">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Clarity of problem analysis, root cause understanding, and original perspective.</p>
+            </div>
+
+            <!-- RUBRIC ITEM 2 -->
+            <div class="rubric-item">
+              <div class="rubric-label">
+                <span>2. Solution Architecture & Technical Stack</span>
+                <span class="rubric-score-display"><span id="valArchitecture">23</span> / 25 pts</span>
+              </div>
+              <input type="range" class="slider-control" min="0" max="25" value="23" id="slideArchitecture" oninput="updateRubricTotal()">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Quality of proposed technical solution architecture, stack choice, and data flow.</p>
+            </div>
+
+            <!-- RUBRIC ITEM 3 -->
+            <div class="rubric-item">
+              <div class="rubric-label">
+                <span>3. Prototype Technical Feasibility & Scope</span>
+                <span class="rubric-score-display"><span id="valFeasibility">22</span> / 25 pts</span>
+              </div>
+              <input type="range" class="slider-control" min="0" max="25" value="22" id="slideFeasibility" oninput="updateRubricTotal()">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Feasibility of building prototype during hackathon timeline and resource realism.</p>
+            </div>
+
+            <!-- RUBRIC ITEM 4 -->
+            <div class="rubric-item">
+              <div class="rubric-label">
+                <span>4. Potential Impact & Practical Utility</span>
+                <span class="rubric-score-display"><span id="valImpact">14</span> / 15 pts</span>
+              </div>
+              <input type="range" class="slider-control" min="0" max="15" value="14" id="slideImpact" oninput="updateRubricTotal()">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Real-world impact on target sector/ministry and deployment scalability.</p>
+            </div>
+
+            <!-- RUBRIC ITEM 5 -->
+            <div class="rubric-item">
+              <div class="rubric-label">
+                <span>5. Campus Pitch & Female Representation</span>
+                <span class="rubric-score-display"><span id="valPresentation">14</span> / 15 pts</span>
+              </div>
+              <input type="range" class="slider-control" min="0" max="15" value="14" id="slidePresentation" oninput="updateRubricTotal()">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Presentation defense quality, team synergy, and mandatory female member inclusion.</p>
+            </div>
+
+            <!-- TOTAL SCORE BOX -->
+            <div class="score-total-box">
+              <div>
+                <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Total SIH Score</p>
+                <h3 id="valTotalScore">91 / 100</h3>
+              </div>
+              <span class="rule-chip pass" id="evalScoreStatus">Nominated for Top 50</span>
+            </div>
+
+            <!-- FEEDBACK INPUT -->
+            <div class="form-group">
+              <label for="evalFeedback">Jury Comments & Shortlist Rationale</label>
+              <textarea id="evalFeedback" class="form-control" rows="3" placeholder="Enter evaluation feedback for SIH nomination..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" onclick="submitJuryEvaluation()">💾 Submit Score & Update Ranking</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: LEADERBOARD & CERTIFICATE GENERATOR (Protected Backend View) -->
+    <section id="tab-leaderboard" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>🏆 Top 50 SIH Leaderboard & Certificates</h2>
+          <p>Official rankings of teams competing for Top 50 SIH nominations and certificate generator.</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary btn-sm staff-only-btn" id="btnPublishLeaderboard" style="display: none;" onclick="togglePublishLeaderboard()">📢 Publish Top 50 to Participants</button>
+          <button class="btn btn-primary btn-sm" onclick="exportLeaderboardExcel()">📊 Export Excel (.xls)</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaderboardCSV()">📥 Export CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaderboardJSON()">📄 Export JSON</button>
+        </div>
+      </div>
+
+      <div class="directory-filter-bar" style="margin-bottom: 1rem;">
+        <button class="btn btn-secondary btn-sm active" id="lbFilterAll" onclick="filterLeaderboard('All')">All Tracks</button>
+        <button class="btn btn-secondary btn-sm" id="lbFilterSoftware" onclick="filterLeaderboard('Software')">Software Track</button>
+        <button class="btn btn-secondary btn-sm" id="lbFilterHardware" onclick="filterLeaderboard('Hardware')">Hardware Track</button>
+      </div>
+
+      <div class="leaderboard-table-wrapper" style="margin-bottom: 2.5rem;">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Team Name</th>
+              <th>Department</th>
+              <th>Chosen Problem Statement</th>
+              <th>Entry Track</th>
+              <th>Female Rule</th>
+              <th>Score</th>
+              <th>SIH Shortlist Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Table rows rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CERTIFICATE GENERATOR WORKSPACE -->
+      <div class="section-header" style="margin-top: 2rem;">
+        <div class="section-title">
+          <h2>🎓 Co-Branded Certificate Generator</h2>
+          <p>Generate certificates co-branded with AJK College of Arts & Science & AIIF.</p>
+        </div>
+      </div>
+
+      <div class="certificate-workspace">
+        <!-- CONTROLS CARD -->
+        <div class="cert-controls-card">
+          <h3>Customization Controls</h3>
+
+          <div class="form-group">
+            <label for="certType">Certificate Type</label>
+            <select id="certType" class="form-control" onchange="renderCertificateCanvas()">
+              <option value="Excellence">Certificate of Selection (Top 50 SIH Nominated)</option>
+              <option value="Participation">Certificate of Participation (SIH Internal Hackathon)</option>
+              <option value="Appreciation">Certificate of Appreciation (Mentor / Jury)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="certRecipient">Recipient Student Name</label>
+            <input type="text" id="certRecipient" class="form-control" value="S. Kaviya" oninput="renderCertificateCanvas()">
+          </div>
+
+          <div class="form-group">
+            <label for="certRole">Role / Designation</label>
+            <input type="text" id="certRole" class="form-control" value="Team Leader" oninput="renderCertificateCanvas()">
+          </div>
+
+          <div class="form-group">
+            <label for="certTeamName">Team Name</label>
+            <input type="text" id="certTeamName" class="form-control" value="AquaGuard Innovators" oninput="renderCertificateCanvas()">
+          </div>
+
+          <div class="form-group">
+            <label for="certPsTitle">Primary Chosen Problem Statement</label>
+            <input type="text" id="certPsTitle" class="form-control" value="Smart Water Quality Monitoring Network" oninput="renderCertificateCanvas()">
+          </div>
+
+          <div class="form-group">
+            <label for="certDate">Issue Date</label>
+            <input type="text" id="certDate" class="form-control" value="September 04, 2026" oninput="renderCertificateCanvas()">
+          </div>
+
+          <div class="action-buttons" style="margin-top: 1rem;">
+            <button class="btn btn-primary" onclick="downloadCertificatePNG()">📥 Download High-Res PNG</button>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print / Download PDF</button>
+          </div>
+        </div>
+
+        <!-- CANVAS PREVIEW CARD -->
+        <div class="cert-preview-card">
+          <h3>AJK & AIIF Co-Branded Certificate Preview</h3>
+          <canvas id="certificateCanvas" width="1200" height="850"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- DISCREET PROTECTED FOOTER -->
+  <footer class="app-footer" style="text-align: center; padding: 2rem 1rem 3rem; border-top: 1px solid var(--border-color); margin-top: 3rem; font-size: 0.85rem; color: var(--text-muted);">
+    <p>SIH 2026 Internal Hackathon | AJK College of Arts & Science in association with AIIF</p>
+    <div style="margin-top: 0.75rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+      <button class="btn btn-outline btn-sm" onclick="openStaffAuthModal()" style="font-size: 0.75rem; border-color: rgba(255,255,255,0.15);">
+        🔒 Organiser & Jury Access Portal
+      </button>
+    </div>
+  </footer>
+
+  <!-- MODAL 0: PROTECTED STAFF & JURY AUTHENTICATION MODAL -->
+  <div class="modal-backdrop" id="staffAuthModal">
+    <div class="modal-card" style="max-width: 450px;">
+      <button class="modal-close-btn" onclick="closeModal('staffAuthModal')">✕</button>
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
+        <h3 style="font-size: 1.3rem;">Organiser & Jury Portal Access</h3>
+        <p class="text-muted" style="font-size: 0.825rem; margin-top: 0.3rem;">
+          Enter the access passcode to unlock Organiser Admin Tools, Bulk Import, Jury Scoring, & Leaderboard.
+        </p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); verifyStaffPasscode();">
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="staffPasscode">Access Passcode *</label>
+          <input type="password" id="staffPasscode" class="form-control" placeholder="Enter Organiser/Jury passcode..." autofocus>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          🔓 Unlock Organiser Portal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 1: BULK IMPORT SIH PROBLEM STATEMENTS (4 PM RELEASE PREP) -->
+  <div class="modal-backdrop" id="bulkPsModal">
+    <div class="modal-card" style="max-width: 700px;">
+      <button class="modal-close-btn" onclick="closeModal('bulkPsModal')">✕</button>
+      <h3 style="margin-bottom: 0.5rem;">⚡ 4 PM SIH Release: Bulk Import Problem Statements</h3>
+      <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">
+        When SIH releases problem statements at 4 PM, paste the JSON array or CSV text below to load all statements into the platform instantly.
+      </p>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="bulkPsText">Paste JSON or CSV Data *</label>
+        <textarea id="bulkPsText" class="form-control" rows="8" placeholder='[
+  {
+    "id": "SIH26001",
+    "title": "AI-Based early warning and landslide Risk Monitoring System",
+    "category": "Software",
+    "domain": "Disaster Management",
+    "organization": "Ministry of MDoNER",
+    "description": "Landslide risk monitoring in North Eastern Region...",
+    "techStack": ["Python", "FastAPI", "GIS"]
+  }
+]'></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <button class="btn btn-secondary btn-sm" onclick="loadSampleBulkPsData()">⚡ Load Sample SIH JSON Data</button>
+        <button class="btn btn-primary" onclick="submitBulkPsData()">📥 Import Problem Statements</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD SINGLE PROBLEM STATEMENT -->
+  <div class="modal-backdrop" id="customPsModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeModal('customPsModal')">✕</button>
+      <h3 style="margin-bottom: 1rem;">➕ Add SIH Problem Statement</h3>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsId">PS Code / ID *</label>
+        <input type="text" id="customPsId" class="form-control" placeholder="e.g. SIH26001">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsTitle">Problem Title *</label>
+        <input type="text" id="customPsTitle" class="form-control" placeholder="e.g. Smart Traffic Signal Control Using Computer Vision">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsCategory">Track Category *</label>
+        <select id="customPsCategory" class="form-control">
+          <option value="Software">Software Track</option>
+          <option value="Hardware">Hardware Track</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsOrg">Ministry / Organization *</label>
+        <input type="text" id="customPsOrg" class="form-control" placeholder="e.g. Ministry of Road Transport & Highways">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsDomain">Domain / Sector</label>
+        <input type="text" id="customPsDomain" class="form-control" placeholder="e.g. Smart Cities / Transportation">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="customPsDesc">Problem Description *</label>
+        <textarea id="customPsDesc" class="form-control" rows="4" placeholder="Detailed problem description released by SIH..."></textarea>
+      </div>
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label for="customPsTech">Suggested Tech Stack</label>
+        <input type="text" id="customPsTech" class="form-control" placeholder="Python, OpenCV, YOLO, Raspberry Pi">
+      </div>
+      <button class="btn btn-primary" onclick="submitCustomProblemStatement()">Save Problem Statement</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: MENTOR ONBOARDING -->
+  <div class="modal-backdrop" id="mentorModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeModal('mentorModal')">✕</button>
+      <h3 style="margin-bottom: 1rem;">👨‍🏫 Onboard Faculty / Industry Mentor</h3>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="mtrName">Full Name *</label>
+        <input type="text" id="mtrName" class="form-control" placeholder="e.g. Dr. B. Satheesh">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="mtrDesignation">Designation & Role *</label>
+        <input type="text" id="mtrDesignation" class="form-control" placeholder="e.g. Associate Professor / Senior Mentor">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="mtrOrg">Department / Organization *</label>
+        <input type="text" id="mtrOrg" class="form-control" placeholder="e.g. AJK College of Arts & Science">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="mtrExpertise">Domain Expertise *</label>
+        <input type="text" id="mtrExpertise" class="form-control" placeholder="e.g. AgriTech, IoT Systems, AI/ML">
+      </div>
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label for="mtrEmail">Email Address *</label>
+        <input type="email" id="mtrEmail" class="form-control" placeholder="mentor@ajkcas.edu.in">
+      </div>
+      <button class="btn btn-primary" onclick="saveNewMentor()">Save & Onboard Mentor</button>
+    </div>
+  </div>
+
+  <!-- MODAL 4: TEAM DETAIL MODAL -->
+  <div class="modal-backdrop" id="teamDetailModal">
+    <div class="modal-card" style="max-width: 900px;">
+      <button class="modal-close-btn" onclick="closeModal('teamDetailModal')">✕</button>
+      <div id="teamDetailContent">
+        <!-- Loaded dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: EMAIL ACKNOWLEDGEMENT & DISPATCH CONFIRMATION MODAL -->
+  <div class="modal-backdrop" id="emailAckModal">
+    <div class="modal-card" style="max-width: 750px;">
+      <button class="modal-close-btn" onclick="closeModal('emailAckModal')">✕</button>
+      
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📩</div>
+        <h3 style="font-size: 1.5rem; color: var(--emerald);">Registration Acknowledgement & Email Sent!</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.25rem;">
+          An official SIH 2026 registration receipt has been generated for all 6 team members and your assigned mentor.
+        </p>
+      </div>
+
+      <div id="emailAckContent" style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem; font-size: 0.875rem; line-height: 1.5;">
+        <!-- Loaded dynamically by JS -->
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: space-between; flex-wrap: wrap;">
+        <a id="btnMailtoTrigger" href="#" class="btn btn-primary" style="text-decoration: none;">
+          📧 Open Mail App to Dispatch to All Members
+        </a>
+        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Confirmation Slip</button>
+        <button class="btn btn-secondary" onclick="closeModal('emailAckModal'); switchTab('submissions');">📋 View Submitted Teams</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="data.js?v=2.9"></script>
+  <script src="app.js?v=2.9"></script>
+</body>
+</html>

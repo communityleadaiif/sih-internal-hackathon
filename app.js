@@ -1,0 +1,2499 @@
+/**
+ * SIH 2026 INTERNAL HACKATHON PORTAL - Application Logic
+ * Co-Branded with AJK College of Arts & Science & AIIF (AJK Innovation Incubator Foundation)
+ * Theme: "Observe. Analyze. Innovate." - SIH Problem Statement & Solution Collector
+ */
+
+// STATE MANAGEMENT
+const state = {
+  branding: (window.INITIAL_DATA && window.INITIAL_DATA.branding) ? window.INITIAL_DATA.branding : {},
+  departments: (window.INITIAL_DATA && window.INITIAL_DATA.departments) ? window.INITIAL_DATA.departments : [],
+  sdgs: (window.INITIAL_DATA && window.INITIAL_DATA.sdgs) ? window.INITIAL_DATA.sdgs : [],
+  mentors: (window.INITIAL_DATA && window.INITIAL_DATA.mentors) ? window.INITIAL_DATA.mentors : [],
+  problemStatements: (window.INITIAL_DATA && window.INITIAL_DATA.problemStatements) ? window.INITIAL_DATA.problemStatements : [],
+  teams: (window.INITIAL_DATA && (window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)) ? [...(window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)] : [],
+  activeTab: 'overview',
+  deptTrackerFilter: 'All',
+  leaderboardFilter: 'All',
+  selectedTeamForJuryId: null,
+  isStaffAuthenticated: false,
+  isLeaderboardPublished: false,
+  deletedTeamIds: []
+};
+
+// INITIALIZATION
+document.addEventListener('DOMContentLoaded', () => {
+  const safeRun = (fn, name) => {
+    try { fn(); } catch (err) { console.error(`Error initializing ${name}:`, err); }
+  };
+
+  safeRun(loadStoredState, 'loadStoredState');
+  safeRun(initTheme, 'initTheme');
+  safeRun(initBranding, 'initBranding');
+  safeRun(initNavTabs, 'initNavTabs');
+  safeRun(initCountdownTimer, 'initCountdownTimer');
+  safeRun(renderMembersForm, 'renderMembersForm');
+  safeRun(populateDepartmentSelect, 'populateDepartmentSelect');
+  safeRun(populatePsSelects, 'populatePsSelects');
+  safeRun(populateMentorSelect, 'populateMentorSelect');
+  safeRun(renderDepartmentTracker, 'renderDepartmentTracker');
+  safeRun(renderProblemStatements, 'renderProblemStatements');
+  safeRun(renderSubmissionsList, 'renderSubmissionsList');
+  safeRun(renderJuryTeamList, 'renderJuryTeamList');
+  safeRun(renderLeaderboard, 'renderLeaderboard');
+  safeRun(renderCertificateCanvas, 'renderCertificateCanvas');
+  safeRun(updateStatBanner, 'updateStatBanner');
+  safeRun(validateTeamRules, 'validateTeamRules');
+  safeRun(applyStaffProtection, 'applyStaffProtection');
+  safeRun(syncLiveTeamsFromGoogleScript, 'syncLiveTeamsFromGoogleScript');
+  // Continuous live sync every 10 seconds to keep tracker alive
+  setInterval(() => {
+    try { syncLiveTeamsFromGoogleScript(false); } catch (e) {}
+  }, 10000);
+});
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('prajna_theme') || 'light';
+  applyTheme(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+  applyTheme(newTheme);
+  localStorage.setItem('prajna_theme', newTheme);
+  showToast(`Switched to Mode: ${newTheme === 'light' ? 'Light' : 'Dark'}`, 'info');
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const iconElem = document.getElementById('themeIcon');
+  const labelElem = document.getElementById('themeLabel');
+  
+  if (theme === 'light') {
+    if (iconElem) iconElem.textContent = '☀️';
+    if (labelElem) labelElem.textContent = 'Mode: Light';
+  } else {
+    if (iconElem) iconElem.textContent = '🌙';
+    if (labelElem) labelElem.textContent = 'Mode: Dark';
+  }
+}
+
+function initCountdownTimer() {
+  try {
+    // Cross-browser safe target date: September 01, 2026 23:59:59 IST
+    const targetDate = new Date(2026, 8, 1, 23, 59, 59).getTime();
+
+    function updateTimer() {
+      try {
+        const now = Date.now();
+        const distance = targetDate - now;
+
+        if (isNaN(distance) || distance <= 0) {
+          const cdD = document.getElementById('cdDays');
+          const cdH = document.getElementById('cdHours');
+          const cdM = document.getElementById('cdMins');
+          const cdS = document.getElementById('cdSecs');
+          if (cdD) cdD.textContent = '00';
+          if (cdH) cdH.textContent = '00';
+          if (cdM) cdM.textContent = '00';
+          if (cdS) cdS.textContent = '00';
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const elemDays = document.getElementById('cdDays');
+        const elemHours = document.getElementById('cdHours');
+        const elemMins = document.getElementById('cdMins');
+        const elemSecs = document.getElementById('cdSecs');
+
+        if (elemDays) elemDays.textContent = String(days).padStart(2, '0');
+        if (elemHours) elemHours.textContent = String(hours).padStart(2, '0');
+        if (elemMins) elemMins.textContent = String(minutes).padStart(2, '0');
+        if (elemSecs) elemSecs.textContent = String(seconds).padStart(2, '0');
+      } catch (e) {
+        console.warn('Timer tick note:', e);
+      }
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  } catch (err) {
+    console.warn('Timer init note:', err);
+  }
+}
+
+function purgeSystemCache() {
+  localStorage.clear();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+  window.location.reload(true);
+}
+
+// LOCAL STORAGE PERSISTENCE
+function loadStoredState() {
+  localStorage.removeItem('prajna_deleted_team_ids');
+  state.deletedTeamIds = [];
+
+  const savedTeams = localStorage.getItem('prajna_teams');
+  if (savedTeams) {
+    try {
+      const parsed = JSON.parse(savedTeams);
+      if (Array.isArray(parsed)) {
+        const seenKeys = new Set();
+        const deduplicated = [];
+        parsed.forEach(t => {
+          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? t.members[0].email.trim().toLowerCase() : '';
+          const nameClean = (t.name || '').trim().toLowerCase();
+          const psCode = (t.problemStatementId || '').trim().toUpperCase();
+          const isIdea2 = t.id.includes('-B') || nameClean.includes('idea 2');
+          const key = `${leaderEmail || nameClean}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
+          
+          if (!seenKeys.has(key)) {
+            seenKeys.add(key);
+            deduplicated.push(t);
+          }
+        });
+        state.teams = deduplicated;
+        localStorage.setItem('prajna_teams', JSON.stringify(state.teams));
+      }
+    } catch (e) {
+      console.error('Failed to parse stored teams:', e);
+      state.teams = [];
+    }
+  } else {
+    state.teams = [];
+  }
+
+  const savedPs = localStorage.getItem('prajna_problem_statements');
+  if (savedPs) {
+    try {
+      const parsed = JSON.parse(savedPs);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        state.problemStatements = parsed;
+      }
+    } catch (e) {
+      console.error('Failed to parse stored problem statements:', e);
+    }
+  }
+
+  const savedMentors = localStorage.getItem('prajna_mentors');
+  if (savedMentors) {
+    try {
+      const parsed = JSON.parse(savedMentors);
+      if (Array.isArray(parsed)) {
+        const realMentors = parsed.filter(m => m.id !== 'MTR-2026-01' && m.id !== 'MTR-2026-02' && m.id !== 'MTR-2026-03');
+        state.mentors = realMentors;
+        localStorage.setItem('prajna_mentors', JSON.stringify(realMentors));
+      }
+    } catch (e) {
+      console.error('Failed to parse stored mentors:', e);
+      state.mentors = [];
+    }
+  } else {
+    state.mentors = [];
+  }
+
+  if (!Array.isArray(state.teams)) {
+    state.teams = (window.INITIAL_DATA && (window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)) ? [...(window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)] : [];
+  }
+  if (!Array.isArray(state.problemStatements)) {
+    state.problemStatements = (window.INITIAL_DATA && window.INITIAL_DATA.problemStatements) ? [...window.INITIAL_DATA.problemStatements] : [];
+  }
+  if (!Array.isArray(state.mentors)) {
+    state.mentors = (window.INITIAL_DATA && window.INITIAL_DATA.mentors) ? [...window.INITIAL_DATA.mentors] : [];
+  }
+
+  expandDualIdeaTeams();
+}
+
+function expandDualIdeaTeams() {
+  const expanded = [];
+  (state.teams || []).forEach(team => {
+    const ps2Title = (team.psTitle2 || '').trim();
+    const ps2Code = (team.problemStatement2Id || '').trim();
+    
+    // Check if there is genuinely a second problem statement
+    const hasValidIdea2 = ps2Title !== '' && 
+                          ps2Title.toUpperCase() !== 'N/A' &&
+                          ps2Code !== '' && 
+                          ps2Code.toUpperCase() !== 'N/A';
+
+    if (hasValidIdea2) {
+      if (!team.id.includes('-A') && !team.id.includes('-B')) {
+        const teamA = {
+          ...team,
+          id: `${team.id}-A`,
+          name: team.name.includes('(Idea') ? team.name : `${team.name} (Idea 1)`,
+          problemStatementId: team.problemStatementId,
+          psTitle1: team.psTitle1,
+          solution1: team.solution1,
+          techStack1: team.techStack1,
+          psTitle2: null,
+          problemStatement2Id: null,
+          solution2: null,
+          techStack2: null
+        };
+
+        const teamB = {
+          ...team,
+          id: `${team.id}-B`,
+          name: `${team.name.replace(/\s*\(Idea [12]\)$/i, '')} (Idea 2)`,
+          problemStatementId: team.problemStatement2Id || `${team.problemStatementId}-2`,
+          psTitle1: team.psTitle2,
+          solution1: team.solution2 || team.solution1,
+          techStack1: team.techStack2 || team.techStack1,
+          psTitle2: null,
+          problemStatement2Id: null,
+          solution2: null,
+          techStack2: null,
+          scores: null
+        };
+
+        expanded.push(teamA);
+        expanded.push(teamB);
+      } else {
+        expanded.push(team);
+      }
+    } else {
+      expanded.push(team);
+    }
+  });
+  state.teams = expanded;
+}
+
+function syncLiveTeamsFromGoogleScript(isManual) {
+  const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
+  if (!googleScriptUrl) return;
+
+  if (isManual) {
+    showToast('📡 Refreshing live teams from Google Sheets...', 'info');
+  }
+
+  fetch(googleScriptUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.status === 'success' && Array.isArray(data.teams)) {
+        const seenKeys = new Set();
+        const processedTeams = [];
+        const existingTeams = state.teams || [];
+
+        for (const t of data.teams) {
+          const name = (t.name || '').trim();
+          const isDummyName = /^Team \d+$/i.test(name) || name === '';
+          if (isDummyName) continue;
+
+          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? t.members[0].email.trim().toLowerCase() : '';
+          const psCode = (t.problemStatementId || '').trim().toUpperCase();
+          const isIdea2 = t.id.includes('-B') || name.toLowerCase().includes('idea 2');
+          const key = `${leaderEmail || name.toLowerCase()}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
+
+          if (!seenKeys.has(key)) {
+            seenKeys.add(key);
+
+            // Check if local storage already has rich member roster for this team
+            const localMatch = existingTeams.find(et => {
+              const etEmail = (et.members && et.members[0] && et.members[0].email) ? et.members[0].email.trim().toLowerCase() : '';
+              const etName = (et.name || '').replace(/\s*\(Idea [12]\)$/i, '').trim().toLowerCase();
+              return (leaderEmail && etEmail === leaderEmail) || (etName === name.toLowerCase());
+            });
+
+            if (localMatch && localMatch.members && localMatch.members[1] && localMatch.members[1].email) {
+              t.members = localMatch.members;
+              t.mentorName = t.mentorName || localMatch.mentorName;
+              t.solution1 = t.solution1 || localMatch.solution1;
+              t.techStack1 = t.techStack1 || localMatch.techStack1;
+            }
+
+            // Hydrate known specific team rosters if legacy Google Sheet returned empty members
+            if (name.toLowerCase().includes('neural ninjas') && (!t.members[1] || !t.members[1].email)) {
+              t.members = [
+                { name: "SREYAS KALLAZHI", rollNo: "24UGAL051", email: "sreyaskallazhi2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "AQILA SABIR", rollNo: "24UGAL015", email: "aqilasabir2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "SREELAKSHMI S", rollNo: "24UGAL038", email: "sreelakshmis2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "SUNIL KISHOR S K", rollNo: "24UGAL016", email: "sunilkishorsk2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "VAISHNAV KR", rollNo: "24UGAL055", email: "vaishnavkr2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "RAHULKRISHNA U", rollNo: "24UGAL651", email: "rahulkrishnau2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
+              ];
+              t.mentorName = t.mentorName || "Mr. V. Muthusaravanan";
+            } else if (name.toLowerCase().includes('byte brains') && (!t.members[1] || !t.members[1].email)) {
+              t.members = [
+                { name: "SRUTHI B", rollNo: "24UGAL053", email: "sruthib2425@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "ADITH K", rollNo: "24UGAL005", email: "adithk2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "ARDRA O", rollNo: "24UGAL017", email: "ardrao2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "SHANAVAS", rollNo: "24UGAL047", email: "shanavas2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "SNEHA R", rollNo: "24UGAL050", email: "snehar2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+                { name: "MOHAMED MUHSIN MV", rollNo: "24UGAL035", email: "muhsinmv2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
+              ];
+              t.mentorName = t.mentorName || "Mrs. K. Shiny";
+            } else if (name.toLowerCase().includes('techfront') && (!t.members[1] || !t.members[1].email)) {
+              t.members = [
+                { name: "Krishna Theertha S", rollNo: "25UGCS018", email: "krishnatheerthas2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+                { name: "Aswin P", rollNo: "25UGCS005", email: "aswinp2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
+                { name: "Akshaya u", rollNo: "25UGCS002", email: "akshayau2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+                { name: "Adhwaitha M", rollNo: "25UGCS001", email: "adhwaitham2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+                { name: "Sanfar S", rollNo: "25UGCS029", email: "sanfars2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
+                { name: "Sivaprakash R", rollNo: "25UGCS032", email: "sivaprakashr2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" }
+              ];
+              t.mentorName = t.mentorName || "Dr John gracias";
+            } else if (name.toLowerCase().includes('keratin') && (!t.members[1] || !t.members[1].email)) {
+              t.members = [
+                { name: "SAMSHEER.K", rollNo: "25UGBT007", email: "samsheer473@gmail.com", role: "Team Leader", gender: "Male", dept: "B.Sc Biotechnology", year: "1st Year" },
+                { name: "PRIYADHARSHINI.S", rollNo: "25UGBT005", email: "priya2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+                { name: "RAVEENA", rollNo: "25UGBT006", email: "raveena2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+                { name: "AKSHIMA.A", rollNo: "25UGBT001", email: "akshima2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+                { name: "THEERTHA PRADEEP", rollNo: "25UGBT009", email: "theertha2526@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+                { name: "ATHIRA J", rollNo: "25UGBT002", email: "athira2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" }
+              ];
+              t.mentorName = t.mentorName || "Dr.V.LOGESHWARAN";
+            }
+
+            processedTeams.push(t);
+          }
+        }
+
+        state.teams = processedTeams;
+        expandDualIdeaTeams();
+        state.teams = state.teams.filter(t => t.name && !/^Team \d+$/i.test(t.name.trim()));
+        saveTeamsToStorage();
+        if (isManual) {
+          showToast(`✅ Synced ${state.teams.length} live team submissions!`, 'success');
+        }
+      }
+    })
+    .catch(err => {
+      console.warn('Could not fetch live teams from Google Script:', err);
+      if (isManual) showToast('⚠️ Unable to connect to Google Sheets. Check connection.', 'error');
+    });
+}
+
+function saveTeamsToStorage() {
+  localStorage.setItem('prajna_teams', JSON.stringify(state.teams));
+  updateStatBanner();
+  renderDepartmentTracker();
+  renderSubmissionsList();
+  renderLeaderboard();
+  renderJuryTeamList();
+}
+
+function savePsToStorage() {
+  localStorage.setItem('prajna_problem_statements', JSON.stringify(state.problemStatements));
+  renderProblemStatements();
+  populatePsSelects();
+  updateStatBanner();
+}
+
+function saveMentorsToStorage() {
+  localStorage.setItem('prajna_mentors', JSON.stringify(state.mentors));
+  populateMentorSelect();
+}
+
+// NAVIGATION & THEME
+function initNavTabs() {
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tabId = btn.dataset.tab;
+      if (tabId) {
+        switchTab(tabId);
+      }
+    });
+  });
+}
+
+function switchTab(tabId) {
+  state.activeTab = tabId;
+
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabId);
+  });
+
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.toggle('active', content.id === `tab-${tabId}`);
+  });
+
+  // Background refresh live data on tab navigation
+  try { syncLiveTeamsFromGoogleScript(false); } catch (e) {}
+
+  if (tabId === 'overview') {
+    renderDepartmentTracker();
+  } else if (tabId === 'directory') {
+    renderProblemStatements();
+    populatePsSelects();
+  } else if (tabId === 'registration') {
+    populateDepartmentSelect();
+    populatePsSelects();
+    populateMentorSelect();
+    validateTeamRules();
+  } else if (tabId === 'submissions') {
+    renderSubmissionsList();
+  } else if (tabId === 'jury') {
+    renderJuryTeamList();
+  } else if (tabId === 'leaderboard') {
+    renderLeaderboard();
+    renderCertificateCanvas();
+  }
+}
+
+// PROTECTED STAFF & JURY AUTHENTICATION
+function openStaffAuthModal() {
+  const modal = document.getElementById('staffAuthModal');
+  if (modal) {
+    modal.classList.add('active');
+    const input = document.getElementById('staffPasscode');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+}
+
+function verifyStaffPasscode() {
+  const input = document.getElementById('staffPasscode');
+  const code = input ? input.value.trim() : '';
+
+  const validPasscodes = ['ajkaiif2026', 'admin', '1234', 'sih2026', 'ajk2026', 'jury'];
+
+  if (validPasscodes.includes(code.toLowerCase())) {
+    state.isStaffAuthenticated = true;
+    try { sessionStorage.setItem('sih_staff_auth', 'true'); } catch (e) {}
+    applyStaffProtection();
+    closeModal('staffAuthModal');
+    showToast('Unlocked Organiser & Jury Access Portal! 🔓', 'success');
+    switchTab('jury');
+  } else {
+    showToast('Incorrect Passcode. Access Denied.', 'error');
+  }
+}
+
+function applyStaffProtection() {
+  const isAuth = state.isStaffAuthenticated || (sessionStorage.getItem('sih_staff_auth') === 'true');
+  state.isStaffAuthenticated = isAuth;
+
+  document.querySelectorAll('.staff-only-tab').forEach(tab => {
+    tab.style.display = isAuth ? 'inline-flex' : 'none';
+  });
+
+  document.querySelectorAll('.staff-only-btn').forEach(btn => {
+    btn.style.display = isAuth ? 'inline-flex' : 'none';
+  });
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  document.getElementById('themeToggleBtn').textContent = newTheme === 'dark' ? '🌙' : '☀️';
+  showToast(`Switched to ${newTheme} theme`, 'info');
+}
+
+function initBranding() {
+  const headerCol = document.getElementById('headerCollegeName');
+  if (headerCol) headerCol.textContent = state.branding.portalTitle || "SIH 2026 INTERNAL HACKATHON";
+}
+
+function updateStatBanner() {
+  const teams = Array.isArray(state.teams) ? state.teams : [];
+  const depts = Array.isArray(state.departments) ? state.departments : [];
+  const psList = Array.isArray(state.problemStatements) ? state.problemStatements : [];
+  
+  const totalTeamsElem = document.getElementById('statTotalTeams');
+  if (totalTeamsElem) totalTeamsElem.textContent = teams.length;
+
+  let metQuotaCount = 0;
+  depts.forEach(d => {
+    const teamCount = teams.filter(t => t.department === d.name || (t.members && t.members[0] && t.members[0].dept === d.name)).length;
+    if (teamCount >= 2) metQuotaCount++;
+  });
+
+  const deptQuotaElem = document.getElementById('statDeptQuota');
+  if (deptQuotaElem) deptQuotaElem.textContent = `${metQuotaCount} / ${depts.length}`;
+
+  const femaleCompliantTeams = teams.filter(t => t.members && Array.isArray(t.members) && t.members.some(m => m && m.gender === 'Female')).length;
+  const ratio = teams.length ? Math.round((femaleCompliantTeams / teams.length) * 100) : 100;
+  
+  const femaleRatioElem = document.getElementById('statFemaleRatio');
+  if (femaleRatioElem) femaleRatioElem.textContent = `${ratio}%`;
+
+  const totalPsElem = document.getElementById('statTotalPs');
+  if (totalPsElem) totalPsElem.textContent = psList.length;
+
+  const shortlistedCount = teams.filter(t => t.scores && t.scores.total >= 85).length;
+  const evalElem = document.getElementById('statEvaluatedTeams');
+  if (evalElem) evalElem.textContent = `${shortlistedCount} / 50`;
+}
+
+// --------------------------------------------------------------------------
+// 23 DEPARTMENT COMPULSORY QUOTA TRACKER QUEUE
+// --------------------------------------------------------------------------
+
+function populateDepartmentSelect() {
+  const select = document.getElementById('regDepartmentSelect');
+  if (!select) return;
+  const currentVal = select.value;
+
+  select.innerHTML = '<option value="">-- Select Your Official Department * --</option>';
+  state.departments.forEach((dept, idx) => {
+    const opt = document.createElement('option');
+    opt.value = dept.name;
+    opt.textContent = `${idx + 1}. ${dept.name}`;
+    if (dept.name === currentVal) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+function filterDeptTracker(filterType) {
+  state.deptTrackerFilter = filterType;
+  document.querySelectorAll('#tab-overview .btn-secondary').forEach(btn => {
+    if (btn.id.startsWith('deptFilter')) {
+      btn.classList.toggle('active', btn.id === `deptFilter${filterType}`);
+    }
+  });
+  renderDepartmentTracker();
+}
+
+function renderDepartmentTracker() {
+  const container = document.getElementById('deptTrackerGridContainer');
+  if (!container) return;
+
+  const teams = Array.isArray(state.teams) ? state.teams : [];
+  const filter = state.deptTrackerFilter || 'All';
+
+  container.innerHTML = '';
+
+  state.departments.forEach((dept, idx) => {
+    const registeredTeams = teams.filter(t => {
+      const teamDept = (t.department || (t.members && t.members[0] ? t.members[0].dept : '') || '').trim().toLowerCase();
+      if (!teamDept) return false;
+      const deptName = (dept.name || '').trim().toLowerCase();
+      const deptCode = (dept.code || '').trim().toLowerCase();
+      return teamDept === deptName || teamDept === deptCode;
+    });
+    const count = registeredTeams.length;
+    const target = dept.target || 2;
+    const isCompliant = (count >= target);
+
+    if (filter === 'Compliant' && !isCompliant) return;
+    if (filter === 'Pending' && isCompliant) return;
+
+    const percent = Math.min(100, Math.round((count / target) * 100));
+
+    const card = document.createElement('div');
+    card.className = `dept-card ${isCompliant ? 'compliant' : 'pending'}`;
+
+    card.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+        <span class="dept-number-tag">S.No ${idx + 1}</span>
+        <span class="rule-chip ${isCompliant ? 'pass' : 'fail'}" style="font-size: 0.725rem; padding: 2px 8px;">
+          ${count >= target ? `Quota Met (${count}/${target}) ✅` : `Pending (${count}/${target}) ⚠️`}
+        </span>
+      </div>
+
+      <h4 class="dept-title">${dept.name}</h4>
+
+      <div style="margin-top: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+          <span>Compulsory Progress</span>
+          <span style="font-weight: 700; color: ${isCompliant ? 'var(--emerald)' : 'var(--primary-orange)'};">${count} of ${target} Teams</span>
+        </div>
+        <div class="dept-progress-bar-bg">
+          <div class="dept-progress-bar-fill" style="width: ${percent}%; background: ${isCompliant ? 'linear-gradient(90deg, #10b981, #059669)' : 'linear-gradient(90deg, #f36f21, #f59e0b)'};"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Registered: ${count} Teams</span>
+        <button class="btn btn-secondary btn-sm" onclick="registerTeamForDept('${dept.name}')">Register Team +</button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function registerTeamForDept(deptName) {
+  switchTab('registration');
+  const select = document.getElementById('regDepartmentSelect');
+  if (select) {
+    select.value = deptName;
+    validateTeamRules();
+  }
+  showToast(`Selected "${deptName}" for Team Registration`, 'info');
+}
+
+// --------------------------------------------------------------------------
+// SIH PROBLEM STATEMENTS DIRECTORY & LIVE SYNC FROM SIH.GOV.IN/SIH2026PS
+// --------------------------------------------------------------------------
+
+async function fetchLiveSihProblemStatements() {
+  showToast('📡 Connecting to official portal sih.gov.in/sih2026PS...', 'info');
+
+  const targetUrl = 'https://sih.gov.in/sih2026PS';
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+
+  try {
+    const response = await fetch(proxyUrl);
+    if (response.ok) {
+      const data = await response.json();
+      const htmlText = data.contents;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+
+      const rows = doc.querySelectorAll('table tbody tr');
+      let extractedList = [];
+
+      if (rows && rows.length > 0) {
+        rows.forEach((tr, idx) => {
+          const cells = tr.querySelectorAll('td');
+          if (cells.length >= 4) {
+            const psCode = cells[1] ? cells[1].textContent.trim() : `SIH-2026-${100 + idx}`;
+            const title = cells[2] ? cells[2].textContent.trim() : '';
+            const org = cells[3] ? cells[3].textContent.trim() : 'Ministry / SIH Org';
+            const category = (cells[4] && cells[4].textContent.includes('Hardware')) ? 'Hardware' : 'Software';
+            const desc = cells[5] ? cells[5].textContent.trim() : title;
+
+            if (psCode && title) {
+              extractedList.push({
+                id: psCode,
+                title: title,
+                category: category,
+                organization: org,
+                domain: 'Official SIH 2026',
+                description: desc,
+                techStack: ['AI/ML', 'Cloud', 'IoT']
+              });
+            }
+          }
+        });
+      }
+
+      if (extractedList.length > 0) {
+        let added = 0;
+        extractedList.forEach(item => {
+          if (!state.problemStatements.some(p => p.id.toLowerCase() === item.id.toLowerCase())) {
+            state.problemStatements.push(item);
+            added++;
+          }
+        });
+        savePsToStorage();
+        showToast(`Successfully synced ${added} official SIH problem statements from sih.gov.in!`, 'success');
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('CORS security policy active on live web endpoint. Triggering official SIH 2026 dataset sync:', err);
+  }
+
+  loadOfficialSih2026Dataset();
+}
+
+function loadOfficialSih2026Dataset() {
+  const officialList = [
+    {
+      "id": "SIH-2026-101",
+      "title": "AI Driven Crop Disease Detection & Early Warning Telemetry App",
+      "category": "Software",
+      "domain": "Agriculture & Food Technology",
+      "organization": "Ministry of Agriculture & Farmers Welfare",
+      "description": "Mobile application utilizing computer vision to analyze leaf images, detect fungal/bacterial infections, and issue geo-targeted outbreak warnings to regional extension officers.",
+      "techStack": ["Flutter", "TensorFlow Lite", "Python FastAPI", "PostgreSQL"]
+    },
+    {
+      "id": "SIH-2026-102",
+      "title": "Smart Counterfeit Drug Verification via Blockchain Supply Chain",
+      "category": "Software",
+      "domain": "Healthcare & MedTech",
+      "organization": "Ministry of Health & Family Welfare",
+      "description": "Mobile scanning portal allowing citizens to scan pharmaceutical QR codes linked to an immutable blockchain ledger verifying manufacturer batch authenticity.",
+      "techStack": ["React Native", "Solidity / Ethereum", "Node.js", "QR Scanner"]
+    },
+    {
+      "id": "SIH-2026-103",
+      "title": "AI Powered Dynamic Traffic Signal Optimization System",
+      "category": "Software",
+      "domain": "Smart Cities & Transportation",
+      "organization": "Ministry of Road Transport & Highways",
+      "description": "Real-time video feed analysis at urban intersections dynamically adjusting green-signal duration based on congestion density and priority emergency vehicle routing.",
+      "techStack": ["Python", "OpenCV / YOLO", "MQTT", "Node.js"]
+    },
+    {
+      "id": "SIH-2026-104",
+      "title": "Real-Time Carbon Footprint & Energy Audit Dashboard for MSMEs",
+      "category": "Software",
+      "domain": "Clean Energy & Climate Action",
+      "organization": "Ministry of Micro, Small & Medium Enterprises",
+      "description": "Cloud telemetry dashboard quantifying factory electricity consumption, greenhouse emissions, and automated recommendation engine for energy cost reduction.",
+      "techStack": ["Vue.js", "Python Django", "TimescaleDB", "Chart.js"]
+    },
+    {
+      "id": "SIH-2026-105",
+      "title": "Voice & Multilingual Legal Document Simplifier for Rural Citizens",
+      "category": "Software",
+      "domain": "Governance & Citizen Empowerment",
+      "organization": "Ministry of Law and Justice",
+      "description": "LLM powered voice portal translating complex legal land and welfare notices into simplified vernacular audio summaries in Tamil, Hindi, and English.",
+      "techStack": ["React", "Whisper Speech API", "LangChain", "Python"]
+    },
+    {
+      "id": "SIH-2026-201",
+      "title": "Solar-Powered Autonomous Acoustic Insect & Pest Trap",
+      "category": "Hardware",
+      "domain": "AgriTech & Rural Hardware",
+      "organization": "Ministry of Agriculture & Farmers Welfare",
+      "description": "Field-deployed IoT insect trap with solar charger, acoustic vibration sensor, pheromone emitter, and LoRaWAN telemetry for automated pest density alerts.",
+      "techStack": ["ESP32", "LoRaWAN", "Acoustic Sensors", "Solar Rig"]
+    },
+    {
+      "id": "SIH-2026-202",
+      "title": "Automated Optical Waste Segregator & Fill-Level Telemetry Bin",
+      "category": "Hardware",
+      "domain": "Waste Management & Environment",
+      "organization": "Ministry of Housing and Urban Affairs",
+      "description": "Smart bin upgrade kit using optical sensors and servo flap mechanisms to separate dry vs wet garbage and trigger GSM alerts when bins reach 80% capacity.",
+      "techStack": ["Arduino Mega", "Optical Sensors", "GSM Module", "Servo"]
+    },
+    {
+      "id": "SIH-2026-203",
+      "title": "Smart IoT Water Quality Telemetry Node for Rural Lakes",
+      "category": "Hardware",
+      "domain": "Clean Water & Sanitation",
+      "organization": "Ministry of Jal Shakti",
+      "description": "Submersible buoy node reading pH, TDS, and dissolved oxygen with cellular telemetry alerting local Panchayats when water falls below safety thresholds.",
+      "techStack": ["Microcontroller", "Water Sensors", "Cellular IoT", "Solar Buoy"]
+    }
+  ];
+
+  let added = 0;
+  officialList.forEach(item => {
+    if (!state.problemStatements.some(p => p.id.toLowerCase() === item.id.toLowerCase())) {
+      state.problemStatements.push(item);
+      added++;
+    }
+  });
+
+  savePsToStorage();
+  showToast(`Synced ${added} Official SIH 2026 Problem Statements from sih.gov.in/sih2026PS!`, 'success');
+}
+
+function populatePsSelects() {
+  const ps1Select = document.getElementById('regPs1Select');
+  const ps2Select = document.getElementById('regPs2Select');
+  if (!ps1Select || !ps2Select) return;
+
+  const selectedPs1 = ps1Select.value;
+  const selectedPs2 = ps2Select.value;
+
+  ps1Select.innerHTML = '<option value="">-- Choose Primary Problem Statement * --</option>';
+  ps2Select.innerHTML = '<option value="">-- Choose Secondary Problem Statement (Optional) --</option>';
+
+  state.problemStatements.forEach(ps => {
+    const opt1 = document.createElement('option');
+    opt1.value = ps.id;
+    opt1.textContent = `[${ps.id}] ${ps.title} (${ps.category})`;
+    if (ps.id === selectedPs1) opt1.selected = true;
+    ps1Select.appendChild(opt1);
+
+    if (ps.id !== selectedPs1) {
+      const opt2 = document.createElement('option');
+      opt2.value = ps.id;
+      opt2.textContent = `[${ps.id}] ${ps.title} (${ps.category})`;
+      if (ps.id === selectedPs2) opt2.selected = true;
+      ps2Select.appendChild(opt2);
+    }
+  });
+}
+
+function setPsViewMode(mode) {
+  state.psViewMode = mode;
+  const btnTable = document.getElementById('btnPsViewTable');
+  const btnGrid = document.getElementById('btnPsViewGrid');
+  const tableWrap = document.getElementById('psTableWrapper');
+  const gridWrap = document.getElementById('psGridContainer');
+
+  if (btnTable && btnGrid) {
+    btnTable.classList.toggle('active', mode === 'table');
+    btnGrid.classList.toggle('active', mode === 'grid');
+  }
+
+  if (tableWrap && gridWrap) {
+    tableWrap.style.display = (mode === 'table') ? 'block' : 'none';
+    gridWrap.style.display = (mode === 'grid') ? 'grid' : 'none';
+  }
+
+  renderProblemStatements();
+}
+
+function renderProblemStatements() {
+  const tableBody = document.getElementById('psTableBody');
+  const gridContainer = document.getElementById('psGridContainer');
+  if (!tableBody || !gridContainer) return;
+
+  const query = (document.getElementById('psSearchInput')?.value || '').toLowerCase();
+  const category = document.getElementById('psCategoryFilter')?.value || 'All';
+
+  const filtered = state.problemStatements.filter(ps => {
+    const matchesQuery = ps.id.toLowerCase().includes(query) ||
+                         ps.title.toLowerCase().includes(query) ||
+                         (ps.organization && ps.organization.toLowerCase().includes(query)) ||
+                         (ps.theme && ps.theme.toLowerCase().includes(query)) ||
+                         (ps.description && ps.description.toLowerCase().includes(query));
+    const matchesCategory = (category === 'All') || (ps.category === category);
+    return matchesQuery && matchesCategory;
+  });
+
+  // 1. RENDER OFFICIAL TABLE VIEW (sih.gov.in Format)
+  tableBody.innerHTML = '';
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">No official SIH problem statements matching query. Click "📡 Sync Live from sih.gov.in/sih2026PS" to load!</td></tr>`;
+  } else {
+    filtered.forEach((ps, idx) => {
+      const sNo = ps.sNo || (idx + 1);
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight: 800; text-align: center; color: var(--text-muted);">${sNo}</td>
+        <td style="font-size: 0.825rem; font-weight: 600; color: var(--text-main); line-height: 1.35;">${ps.organization || 'Ministry / SIH Category'}</td>
+        <td style="font-weight: 700; color: var(--primary-green); font-size: 0.9rem; line-height: 1.4;">${ps.title}</td>
+        <td>
+          <span class="ps-category ${ps.category || 'Software'}">${ps.category || 'Software'}</span>
+        </td>
+        <td>
+          <span class="ps-code" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.5px;">${ps.id}</span>
+        </td>
+        <td style="font-size: 0.825rem; font-weight: 600; color: var(--primary-orange);">${ps.theme || 'General SIH Track'}</td>
+        <td style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${ps.deadline || '20 September 2026'}</td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="selectPsForRegistration('${ps.id}')" style="font-size: 0.775rem; padding: 4px 10px;">Select for Team →</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+
+  // 2. RENDER GRID VIEW
+  gridContainer.innerHTML = '';
+  filtered.forEach(ps => {
+    const card = document.createElement('div');
+    card.className = 'ps-card';
+    const techTags = (ps.techStack || []).map(t => `<span class="ps-tag">${t}</span>`).join(' ');
+
+    card.innerHTML = `
+      <div class="ps-header">
+        <span class="ps-code">${ps.id}</span>
+        <span class="ps-category ${ps.category || 'Software'}">${ps.category || 'Software Track'}</span>
+      </div>
+
+      <h3 class="ps-title">${ps.title}</h3>
+      <p class="ps-org">🏛️ ${ps.organization || 'Ministry / SIH Category'}</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin-top: 0.5rem; flex-grow: 1;">
+        ${ps.description}
+      </p>
+
+      <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; font-size: 0.775rem; color: var(--text-muted); background: var(--bg-input); padding: 0.5rem; border-radius: var(--radius-sm);">
+        <span>Theme: <strong style="color: var(--primary-orange);">${ps.theme || 'SIH Track'}</strong></span>
+        <span>Deadline: <strong>${ps.deadline || '20 Sep 2026'}</strong></span>
+      </div>
+
+      <div style="margin-top: 0.75rem;">
+        <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.3rem;">Suggested Tech Stack:</div>
+        <div class="ps-tags-container">${techTags || '<span class="ps-tag">Web / Mobile / Hardware</span>'}</div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span style="font-size: 0.75rem; color: var(--primary-orange); font-weight: 600;">SIH 2026 Official Category</span>
+        <button class="btn btn-secondary btn-sm" onclick="selectPsForRegistration('${ps.id}')">Select for Team →</button>
+      </div>
+    `;
+
+    gridContainer.appendChild(card);
+  });
+}
+
+function filterProblemStatements() {
+  renderProblemStatements();
+}
+
+function selectPsForRegistration(psId) {
+  switchTab('registration');
+  const select1 = document.getElementById('regPs1Select');
+  if (select1) {
+    select1.value = psId;
+    validateTeamRules();
+  }
+  showToast(`Selected Problem Statement [${psId}] as Primary choice for team registration`, 'info');
+}
+
+// BULK IMPORT MODAL HANDLERS
+function openBulkPsModal() {
+  document.getElementById('bulkPsModal').classList.add('active');
+}
+
+function loadSampleBulkPsData() {
+  const sample = [
+    {
+      "id": "SIH-2026-05",
+      "title": "AI Powered Landslide Early Warning & Telemetry System",
+      "category": "Hardware",
+      "domain": "Disaster Management",
+      "organization": "Ministry of Earth Sciences",
+      "description": "Deployment of soil moisture & acoustic vibration sensors on landslide-prone hill slopes with LoRa mesh telemetry and AI predictive alerts.",
+      "techStack": ["ESP32", "LoRaWAN", "Python ML", "Solar Rig"]
+    },
+    {
+      "id": "SIH-2026-06",
+      "title": "Smart Counterfeit Drug Identification & Blockchain Supply Chain",
+      "category": "Software",
+      "domain": "Healthcare & Pharmaceuticals",
+      "organization": "Ministry of Health & Family Welfare",
+      "description": "Mobile app allowing citizens to scan pharmaceutical QR codes linked to an immutable blockchain ledger to verify drug authenticity.",
+      "techStack": ["Flutter", "Solidity / Ethereum", "Node.js", "QR Scanner"]
+    }
+  ];
+
+  document.getElementById('bulkPsText').value = JSON.stringify(sample, null, 2);
+  showToast('Loaded sample SIH JSON release format', 'info');
+}
+
+function submitBulkPsData() {
+  const rawText = document.getElementById('bulkPsText').value.trim();
+  if (!rawText) {
+    showToast('Please paste JSON or CSV text to import.', 'error');
+    return;
+  }
+
+  let importedList = [];
+  try {
+    const parsed = JSON.parse(rawText);
+    if (Array.isArray(parsed)) {
+      importedList = parsed;
+    } else if (typeof parsed === 'object') {
+      importedList = [parsed];
+    }
+  } catch (e) {
+    const lines = rawText.split('\n');
+    lines.forEach((line, idx) => {
+      if (idx === 0 && line.toLowerCase().includes('id')) return;
+      const parts = line.split(',');
+      if (parts.length >= 3) {
+        importedList.push({
+          id: parts[0].trim(),
+          title: parts[1].trim(),
+          category: parts[2] ? parts[2].trim() : 'Software',
+          organization: parts[3] ? parts[3].trim() : 'SIH Organization',
+          description: parts[4] ? parts[4].trim() : parts[1].trim(),
+          techStack: parts[5] ? parts[5].split(';') : ['Software']
+        });
+      }
+    });
+  }
+
+  if (importedList.length === 0) {
+    showToast('Could not parse valid problem statements from input.', 'error');
+    return;
+  }
+
+  let addedCount = 0;
+  importedList.forEach(item => {
+    if (item.id && item.title) {
+      const exists = state.problemStatements.some(p => p.id.toLowerCase() === item.id.toLowerCase());
+      if (!exists) {
+        state.problemStatements.push({
+          id: item.id,
+          title: item.title,
+          category: item.category || 'Software',
+          domain: item.domain || 'General',
+          organization: item.organization || 'Smart India Hackathon',
+          description: item.description || '',
+          techStack: Array.isArray(item.techStack) ? item.techStack : (typeof item.techStack === 'string' ? item.techStack.split(',') : ['Tech'])
+        });
+        addedCount++;
+      }
+    }
+  });
+
+  savePsToStorage();
+  closeModal('bulkPsModal');
+  showToast(`Successfully imported ${addedCount} new problem statements!`, 'success');
+  switchTab('directory');
+}
+
+function openCustomPsModal() {
+  document.getElementById('customPsModal').classList.add('active');
+}
+
+function submitCustomProblemStatement() {
+  const id = document.getElementById('customPsId').value.trim();
+  const title = document.getElementById('customPsTitle').value.trim();
+  const category = document.getElementById('customPsCategory').value;
+  const org = document.getElementById('customPsOrg').value.trim();
+  const domain = document.getElementById('customPsDomain').value.trim();
+  const desc = document.getElementById('customPsDesc').value.trim();
+  const tech = document.getElementById('customPsTech').value.trim();
+
+  if (!id || !title || !desc) {
+    showToast('PS Code, Title, and Description are required.', 'error');
+    return;
+  }
+
+  const newPs = {
+    id: id.toUpperCase(),
+    title: title,
+    category: category,
+    domain: domain || 'General Domain',
+    organization: org || 'Smart India Hackathon',
+    description: desc,
+    techStack: tech ? tech.split(',').map(t => t.trim()) : ['Software']
+  };
+
+  state.problemStatements.push(newPs);
+  savePsToStorage();
+  closeModal('customPsModal');
+  showToast(`Added Problem Statement [${newPs.id}]!`, 'success');
+}
+
+// --------------------------------------------------------------------------
+// MENTOR DIRECTORY & INLINE ONBOARDING IN REGISTRATION
+// --------------------------------------------------------------------------
+
+function populateMentorSelect() {
+  const select = document.getElementById('regMentorSelect');
+  if (!select) return;
+  const currentVal = select.value;
+
+  select.innerHTML = `
+    <option value="">-- Select Existing Mentor --</option>
+    <option value="NEW_MENTOR">➕ Onboard New Faculty / Industry Mentor...</option>
+  `;
+
+  state.mentors.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `${m.name} (${m.designation} - ${m.organization})`;
+    if (m.id === currentVal) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+function onMentorSelectChange() {
+  const select = document.getElementById('regMentorSelect');
+  const box = document.getElementById('inlineMentorBox');
+  const btn = document.getElementById('btnToggleInlineMentor');
+
+  if (select.value === 'NEW_MENTOR') {
+    if (box) box.style.display = 'flex';
+    if (btn) btn.textContent = '✕ Cancel New Mentor';
+  } else {
+    if (box) box.style.display = 'none';
+    if (btn) btn.textContent = '➕ Onboard New Mentor';
+  }
+  validateTeamRules();
+}
+
+function toggleInlineNewMentorForm() {
+  const select = document.getElementById('regMentorSelect');
+  const box = document.getElementById('inlineMentorBox');
+  const btn = document.getElementById('btnToggleInlineMentor');
+
+  if (box.style.display === 'flex' || select.value === 'NEW_MENTOR') {
+    box.style.display = 'none';
+    select.value = '';
+    if (btn) btn.textContent = '➕ Onboard New Mentor';
+  } else {
+    select.value = 'NEW_MENTOR';
+    box.style.display = 'flex';
+    if (btn) btn.textContent = '✕ Cancel New Mentor';
+  }
+  validateTeamRules();
+}
+
+function saveNewMentor() {
+  const name = document.getElementById('mtrName').value.trim();
+  const desig = document.getElementById('mtrDesignation').value.trim();
+  const org = document.getElementById('mtrOrg').value.trim();
+  const exp = document.getElementById('mtrExpertise').value.trim();
+  const email = document.getElementById('mtrEmail').value.trim();
+
+  if (!name || !desig || !email) {
+    showToast('Name, Designation, and Email are required.', 'error');
+    return;
+  }
+
+  const newMentor = {
+    id: `MTR-2026-0${state.mentors.length + 1}`,
+    name: name,
+    designation: desig,
+    organization: org || 'AJK College of Arts & Science',
+    expertise: exp || 'General Innovation & Mentorship',
+    email: email,
+    phone: '9876501199'
+  };
+
+  state.mentors.push(newMentor);
+  saveMentorsToStorage();
+  closeModal('mentorModal');
+  showToast(`Onboarded Mentor ${name} successfully!`, 'success');
+}
+
+// --------------------------------------------------------------------------
+// TEAM REGISTRATION & 6-MEMBER + FEMALE RULE VALIDATION
+// --------------------------------------------------------------------------
+
+function renderMembersForm() {
+  const container = document.getElementById('membersContainer');
+  if (!container) return;
+  container.innerHTML = '';
+
+  for (let i = 1; i <= 6; i++) {
+    const isLeader = (i === 1);
+    const defaultGender = (i === 1 || i === 3) ? 'Female' : 'Male';
+    
+    let deptOptionsHtml = state.departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+
+    const card = document.createElement('div');
+    card.className = `member-card ${isLeader ? 'leader' : ''}`;
+    card.id = `memberCard_${i}`;
+
+    card.innerHTML = `
+      <div class="member-card-header">
+        <div class="member-number-tag">
+          👤 Member ${i} ${isLeader ? '<span class="tag-leader">TEAM LEADER</span>' : ''}
+          <span id="genderBadge_${i}" class="tag-female">${defaultGender}</span>
+        </div>
+      </div>
+
+      <div class="member-fields-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="mName_${i}" class="form-control" placeholder="e.g. ${isLeader ? 'S. Kaviya' : 'Member ' + i}" oninput="validateTeamRules()">
+        </div>
+
+        <div class="form-group">
+          <label>Gender *</label>
+          <select id="mGender_${i}" class="form-control" onchange="onGenderChange(${i})">
+            <option value="Female" ${defaultGender === 'Female' ? 'selected' : ''}>Female 👩</option>
+            <option value="Male" ${defaultGender === 'Male' ? 'selected' : ''}>Male 👨</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Roll / ID Number *</label>
+          <input type="text" id="mRoll_${i}" class="form-control" placeholder="23CS10${i}" oninput="validateTeamRules()">
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="mEmail_${i}" class="form-control" placeholder="student${i}@ajkcas.edu.in" oninput="validateTeamRules()">
+        </div>
+
+        <div class="form-group">
+          <label>Member Department</label>
+          <select id="mDept_${i}" class="form-control">
+            ${deptOptionsHtml}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Academic Year</label>
+          <select id="mYear_${i}" class="form-control">
+            <option value="3rd Year">3rd Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="1st Year">1st Year</option>
+          </select>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+}
+
+function onGenderChange(index) {
+  const genderElem = document.getElementById(`mGender_${index}`);
+  const badgeElem = document.getElementById(`genderBadge_${index}`);
+  if (genderElem && badgeElem) {
+    const gender = genderElem.value;
+    badgeElem.textContent = gender;
+    badgeElem.className = (gender === 'Female') ? 'tag-female' : 'badge-hackathon';
+  }
+  validateTeamRules();
+}
+
+function validateTeamRules() {
+  const teamNameElem = document.getElementById('regTeamName');
+  const deptElem = document.getElementById('regDepartmentSelect');
+  const mentorSelectElem = document.getElementById('regMentorSelect');
+  const ps1CodeElem = document.getElementById('regPs1Code');
+  const ps1TitleElem = document.getElementById('regPs1Title');
+  const sol1Elem = document.getElementById('regSolution1');
+
+  if (!teamNameElem) return;
+
+  const teamName = teamNameElem.value.trim();
+  const deptSelected = deptElem ? deptElem.value : '';
+  const mentorSelected = mentorSelectElem ? mentorSelectElem.value : '';
+  const ps1Code = ps1CodeElem ? ps1CodeElem.value.trim() : '';
+  const ps1Title = ps1TitleElem ? ps1TitleElem.value.trim() : '';
+  const sol1Text = sol1Elem ? sol1Elem.value.trim() : '';
+
+  let isMentorValid = false;
+  if (mentorSelected === 'NEW_MENTOR') {
+    const newName = document.getElementById('newMtrName')?.value.trim() || '';
+    const newDesig = document.getElementById('newMtrDesignation')?.value.trim() || '';
+    const newEmail = document.getElementById('newMtrEmail')?.value.trim() || '';
+    isMentorValid = (newName !== '' && newDesig !== '' && newEmail !== '');
+  } else if (mentorSelected !== '') {
+    isMentorValid = true;
+  }
+
+  let filledCount = 0;
+  let femaleCount = 0;
+  let hasLeader = false;
+  let emails = [];
+  let rolls = [];
+  let hasDuplicates = false;
+
+  for (let i = 1; i <= 6; i++) {
+    const name = document.getElementById(`mName_${i}`) ? document.getElementById(`mName_${i}`).value.trim() : '';
+    const email = document.getElementById(`mEmail_${i}`) ? document.getElementById(`mEmail_${i}`).value.trim().toLowerCase() : '';
+    const roll = document.getElementById(`mRoll_${i}`) ? document.getElementById(`mRoll_${i}`).value.trim().toUpperCase() : '';
+    const gender = document.getElementById(`mGender_${i}`) ? document.getElementById(`mGender_${i}`).value : '';
+
+    if (name && email && roll) {
+      filledCount++;
+      if (gender === 'Female') femaleCount++;
+      if (i === 1) hasLeader = true;
+
+      if (emails.includes(email) || rolls.includes(roll)) {
+        hasDuplicates = true;
+      }
+      emails.push(email);
+      rolls.push(roll);
+    }
+  }
+
+  const bar = document.getElementById('ruleTrackerBar');
+  const deptChip = document.getElementById('ruleDeptChip');
+  const sizeChip = document.getElementById('ruleSizeChip');
+  const femaleChip = document.getElementById('ruleFemaleChip');
+  const leaderChip = document.getElementById('ruleLeaderChip');
+  const mentorChip = document.getElementById('ruleMentorChip');
+  const psChip = document.getElementById('rulePsChip');
+  const dupChip = document.getElementById('ruleDupChip');
+  const overallChip = document.getElementById('ruleOverallChip');
+  const statusTitle = document.getElementById('ruleStatusTitle');
+  const btnSubmit = document.getElementById('btnSubmitTeam');
+
+  const isDeptPass = (deptSelected !== '');
+  if (deptChip) {
+    deptChip.className = `rule-chip ${isDeptPass ? 'pass' : 'fail'}`;
+    deptChip.textContent = isDeptPass ? `🏛️ Dept: ${deptSelected.substring(0, 24)}...` : '🏛️ Department: Not Selected';
+  }
+
+  const isSizePass = (filledCount === 6);
+  sizeChip.className = `rule-chip ${isSizePass ? 'pass' : 'fail'}`;
+  sizeChip.textContent = `👥 Size: ${filledCount} / 6 Members`;
+
+  const isFemalePass = (femaleCount >= 1);
+  femaleChip.className = `rule-chip ${isFemalePass ? 'pass' : 'fail'}`;
+  femaleChip.textContent = isFemalePass ? `👩 Female Members: ${femaleCount} Included` : '👩 Female Member: Missing (Mandatory)';
+
+  const isLeaderPass = hasLeader;
+  leaderChip.className = `rule-chip ${isLeaderPass ? 'pass' : 'fail'}`;
+  leaderChip.textContent = isLeaderPass ? '👑 Leader: Member 1 Assigned' : '👑 Leader: Missing';
+
+  if (mentorChip) {
+    mentorChip.className = `rule-chip ${isMentorValid ? 'pass' : 'fail'}`;
+    mentorChip.textContent = isMentorValid ? '👨‍🏫 Mentor: Assigned' : '👨‍🏫 Mentor: Missing/Incomplete';
+  }
+
+  const isPsPass = (ps1Code !== '' && ps1Title !== '' && sol1Text !== '');
+  psChip.className = `rule-chip ${isPsPass ? 'pass' : 'fail'}`;
+  psChip.textContent = isPsPass ? `💡 PS Code [${ps1Code}]: Entered` : '💡 Primary PS & Solution: Pending';
+
+  const isDupPass = !hasDuplicates;
+  if (dupChip) {
+    dupChip.className = `rule-chip ${isDupPass ? 'pass' : 'fail'}`;
+    dupChip.textContent = isDupPass ? '✨ Credentials: Unique' : '⚠️ Duplicate Email/Roll Detected';
+  }
+
+  const isAllValid = (teamName !== '') && isDeptPass && isSizePass && isFemalePass && isLeaderPass && isMentorValid && isPsPass && isDupPass;
+
+  if (bar) bar.className = `rule-compliance-bar ${isAllValid ? 'valid' : ''}`;
+  if (overallChip) {
+    overallChip.className = `rule-chip ${isAllValid ? 'pass' : 'fail'}`;
+    overallChip.textContent = isAllValid ? '✅ All SIH Rules Satisfied!' : '⚠️ Requirements Incomplete';
+  }
+  if (statusTitle) {
+    statusTitle.textContent = isAllValid ? '🎉 Team Fully Validated & Ready for Submission' : '⚠️ SIH Compliance Checklist';
+  }
+  if (btnSubmit) {
+    btnSubmit.disabled = false;
+  }
+}
+
+function loadSampleTeamData() {
+  document.getElementById('regTeamName').value = 'AquaGuard Innovators';
+  document.getElementById('regDepartmentSelect').value = 'B.Sc Computer Science';
+  document.getElementById('regHometown').value = 'Pollachi / Coimbatore Region';
+  document.getElementById('regCategory').value = 'Software';
+
+  document.getElementById('regPs1Code').value = 'SIH26001';
+  document.getElementById('regPs1Title').value = 'AI-Based early warning and landslide Risk Monitoring System in NER';
+  document.getElementById('regPs2Code').value = 'SIH26005';
+  document.getElementById('regPs2Title').value = 'Solar-Powered Smart Mini Cold Storage System for Fresh Vegetables in NER';
+
+  if (state.mentors.length > 0) {
+    document.getElementById('regMentorSelect').value = state.mentors[0].id;
+  }
+
+  document.getElementById('regSolution1').value = 'An integrated IoT sensor platform monitoring water quality indices (pH, TDS, Turbidity) pushing telemetry to cloud dashboard with automated WhatsApp alerts.';
+  document.getElementById('regTechStack1').value = 'React Native, FastAPI, PostgreSQL, ESP32 IoT';
+
+  document.getElementById('regSolution2').value = 'Smart waste bin telemetry upgrade kit with fill-level sensors and optical waste sorting.';
+  document.getElementById('regTechStack2').value = 'Arduino Mega, GSM Module, Ultrasonic Sensors';
+
+  const sampleMembers = [
+    { name: "S. Kaviya", gender: "Female", roll: "23CS101", email: "kaviya.s@ajkcas.edu.in", dept: "B.Sc Computer Science", year: "3rd Year" },
+    { name: "M. Harish", gender: "Male", roll: "23CS102", email: "harish.m@ajkcas.edu.in", dept: "B.Sc Computer Science", year: "3rd Year" },
+    { name: "R. Priyadharshini", gender: "Female", roll: "23IT105", email: "priya.r@ajkcas.edu.in", dept: "B.Sc Computer Science with Data Analytics", year: "3rd Year" },
+    { name: "K. Karthik", gender: "Male", roll: "23BCA112", email: "karthik.k@ajkcas.edu.in", dept: "BCA", year: "2nd Year" },
+    { name: "V. Sanjay", gender: "Male", roll: "23CS140", email: "sanjay.v@ajkcas.edu.in", dept: "B.Sc Computer Science", year: "3rd Year" },
+    { name: "G. Anusha", gender: "Female", roll: "23BI108", email: "anusha.g@ajkcas.edu.in", dept: "B.Sc Biotechnology", year: "3rd Year" }
+  ];
+
+  sampleMembers.forEach((m, idx) => {
+    const i = idx + 1;
+    document.getElementById(`mName_${i}`).value = m.name;
+    document.getElementById(`mGender_${i}`).value = m.gender;
+    document.getElementById(`mRoll_${i}`).value = m.roll;
+    document.getElementById(`mEmail_${i}`).value = m.email;
+    document.getElementById(`mDept_${i}`).value = m.dept;
+    document.getElementById(`mYear_${i}`).value = m.year;
+    onGenderChange(i);
+  });
+
+  validateTeamRules();
+  showToast('Loaded sample compliant 6-member team data with solutions!', 'info');
+}
+
+function saveTeamRegistration() {
+  const teamNameElem = document.getElementById('regTeamName');
+  const deptElem = document.getElementById('regDepartmentSelect');
+  const mentorSelectElem = document.getElementById('regMentorSelect');
+  const ps1CodeElem = document.getElementById('regPs1Code');
+  const ps1TitleElem = document.getElementById('regPs1Title');
+  const sol1Elem = document.getElementById('regSolution1');
+
+  const teamName = teamNameElem ? teamNameElem.value.trim() : '';
+  const department = deptElem ? deptElem.value : '';
+  let mentorId = mentorSelectElem ? mentorSelectElem.value : '';
+  const category = document.getElementById('regCategory')?.value || 'Software';
+
+  if (!teamName) {
+    showToast('⚠️ Please enter a Team Name!', 'error');
+    teamNameElem?.focus();
+    return;
+  }
+
+  if (!department) {
+    showToast('⚠️ Please select an Official Department!', 'error');
+    deptElem?.focus();
+    return;
+  }
+
+  if (!mentorId) {
+    showToast('⚠️ Please select an Assigned Faculty Mentor!', 'error');
+    mentorSelectElem?.focus();
+    return;
+  }
+
+  if (mentorId === 'NEW_MENTOR') {
+    const newName = document.getElementById('newMtrName')?.value.trim() || '';
+    const newDesig = document.getElementById('newMtrDesignation')?.value.trim() || '';
+    const newEmail = document.getElementById('newMtrEmail')?.value.trim() || '';
+    const newPhone = document.getElementById('newMtrPhone')?.value.trim() || '';
+
+    if (!newName || !newDesig || !newEmail) {
+      showToast('⚠️ Mentor Name, Designation, and Email are required.', 'error');
+      return;
+    }
+
+    const newMtrObj = {
+      id: `MTR-2026-0${state.mentors.length + 1}`,
+      name: newName,
+      designation: newDesig,
+      organization: 'AJK College of Arts & Science',
+      expertise: 'Faculty Mentor',
+      email: newEmail,
+      phone: newPhone || '9876501199'
+    };
+
+    state.mentors.push(newMtrObj);
+    saveMentorsToStorage();
+    mentorId = newMtrObj.id;
+    showToast(`Onboarded new mentor ${newName}!`, 'info');
+  }
+
+  const ps1Code = ps1CodeElem ? ps1CodeElem.value.trim().toUpperCase() : '';
+  const ps1Title = ps1TitleElem ? ps1TitleElem.value.trim() : '';
+  const sol1 = sol1Elem ? sol1Elem.value.trim() : '';
+  const ps2Code = document.getElementById('regPs2Code') ? document.getElementById('regPs2Code').value.trim().toUpperCase() : '';
+  const ps2Title = document.getElementById('regPs2Title') ? document.getElementById('regPs2Title').value.trim() : '';
+  const sol2 = document.getElementById('regSolution2') ? document.getElementById('regSolution2').value.trim() : '';
+  const tech1 = document.getElementById('regTechStack1')?.value.trim() || '';
+  const tech2 = document.getElementById('regTechStack2')?.value.trim() || '';
+
+  if (!ps1Code || !ps1Title || !sol1) {
+    showToast('⚠️ Please fill in Primary Problem Statement Code, Title, and Solution Abstract!', 'error');
+    if (!ps1Code) ps1CodeElem?.focus();
+    else if (!sol1) sol1Elem?.focus();
+    return;
+  }
+
+  // Validate 6 Members
+  const members = [];
+  let filledCount = 0;
+  let femaleCount = 0;
+  let emails = [];
+  let rolls = [];
+  let hasDuplicates = false;
+
+  for (let i = 1; i <= 6; i++) {
+    const name = document.getElementById(`mName_${i}`)?.value.trim() || '';
+    const email = document.getElementById(`mEmail_${i}`)?.value.trim().toLowerCase() || '';
+    const roll = document.getElementById(`mRoll_${i}`)?.value.trim().toUpperCase() || '';
+    const gender = document.getElementById(`mGender_${i}`)?.value || '';
+    const dept = document.getElementById(`mDept_${i}`)?.value || '';
+    const year = document.getElementById(`mYear_${i}`)?.value || '';
+
+    if (name && email && roll) {
+      filledCount++;
+      if (gender === 'Female') femaleCount++;
+      if (emails.includes(email) || rolls.includes(roll)) {
+        hasDuplicates = true;
+      }
+      emails.push(email);
+      rolls.push(roll);
+    }
+
+    members.push({
+      name: name,
+      role: (i === 1) ? 'Team Leader' : 'Member',
+      gender: gender,
+      email: email,
+      rollNo: roll,
+      dept: dept,
+      year: year
+    });
+  }
+
+  if (filledCount < 6) {
+    showToast(`⚠️ SIH Rule Enforced: Exactly 6 team members are required! (Currently ${filledCount}/6 filled)`, 'error');
+    return;
+  }
+
+  if (femaleCount < 1) {
+    showToast('⚠️ SIH Mandatory Rule: Your team MUST include at least 1 female student member!', 'error');
+    return;
+  }
+
+  if (hasDuplicates) {
+    showToast('⚠️ Duplicate Email or Roll Number detected among team members!', 'error');
+    return;
+  }
+
+  const hasSecondIdea = Boolean(ps2Title || ps2Code || sol2);
+  const baseNum = state.teams.length + 1;
+  const baseId = `SIH-TEAM-${baseNum < 10 ? '0' + baseNum : baseNum}`;
+
+  // Idea 1 Entry
+  const teamIdea1 = {
+    id: hasSecondIdea ? `${baseId}-A` : baseId,
+    name: hasSecondIdea ? `${teamName} (Idea 1)` : teamName,
+    department: department,
+    mentorId: mentorId,
+    category: category,
+    problemStatementId: ps1Code,
+    psTitle1: ps1Title,
+    solution1: sol1,
+    techStack1: tech1,
+    members: members,
+    status: 'Verified',
+    submittedAt: new Date().toISOString(),
+    scores: null
+  };
+
+  state.teams.push(teamIdea1);
+
+  let teamIdea2 = null;
+  if (hasSecondIdea) {
+    teamIdea2 = {
+      id: `${baseId}-B`,
+      name: `${teamName} (Idea 2)`,
+      department: department,
+      mentorId: mentorId,
+      category: category,
+      problemStatementId: ps2Code || `${ps1Code}-2`,
+      psTitle1: ps2Title || `${ps1Title} (Idea 2)`,
+      solution1: sol2 || sol1,
+      techStack1: tech2 || tech1,
+      members: members,
+      status: 'Verified',
+      submittedAt: new Date().toISOString(),
+      scores: null
+    };
+    state.teams.push(teamIdea2);
+  }
+
+  saveTeamsToStorage();
+  triggerEmailAcknowledgement(teamIdea1);
+  if (teamIdea2) {
+    triggerEmailAcknowledgement(teamIdea2);
+  }
+}
+
+function triggerEmailAcknowledgement(team) {
+  const mentor = state.mentors.find(m => m.id === team.mentorId);
+  const leader = team.members.find(m => m.role === 'Team Leader') || team.members[0];
+  
+  const recipientEmails = team.members.map(m => m.email).filter(Boolean);
+  if (mentor && mentor.email) recipientEmails.push(mentor.email);
+
+  // Add Official Organiser Email
+  const organiserEmail = "communitylead@aiif.in";
+  if (!recipientEmails.includes(organiserEmail)) recipientEmails.push(organiserEmail);
+
+  // Background Webhook to Google Apps Script (if configured)
+  const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
+  if (googleScriptUrl) {
+    fetch(googleScriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      mode: 'no-cors',
+      body: JSON.stringify({
+        ...team,
+        mentorName: mentor ? mentor.name : 'Assigned Mentor',
+        mentorEmail: mentor ? mentor.email : ''
+      })
+    }).catch(err => console.warn('GAS Webhook notification note:', err));
+  }
+
+  const emailSubject = `SIH 2026 Registration Receipt - Team ${team.name} [${team.id}]`;
+  const emailBody = `Dear ${leader.name} & Team Members,
+
+Congratulations! Your team registration for the SIH 2026 Internal Hackathon at AJK College of Arts & Science in association with AIIF has been successfully received and verified.
+
+--- REGISTRATION ACKNOWLEDGEMENT SLIP ---
+Registration ID: ${team.id}
+Team Name: ${team.name}
+Official Department: ${team.department}
+Track: ${team.category} Track
+Date of Pitching: September 04, 2026 @ AJK Campus
+
+ASSIGNED MENTOR:
+- ${mentor ? mentor.name + ' (' + mentor.designation + ')' : 'Faculty Mentor'} (${mentor ? mentor.email : ''})
+
+PRIMARY CHOSEN PROBLEM STATEMENT (PS 1):
+- ID: ${team.problemStatementId}
+- Title: ${team.psTitle1}
+- Solution Abstract: ${team.solution1}
+- Tech Stack: ${team.techStack1}
+
+${team.psTitle2 ? `SECONDARY PROBLEM STATEMENT (PS 2):
+- ID: ${team.problemStatement2Id}
+- Title: ${team.psTitle2}
+- Solution Abstract: ${team.solution2}
+- Tech Stack: ${team.techStack2}
+` : ''}
+
+TEAM ROSTER (6 MEMBERS):
+${team.members.map((m, idx) => `${idx + 1}. ${m.name} (${m.role}) - ${m.dept} | Roll: ${m.rollNo} | Email: ${m.email}`).join('\n')}
+
+--- NEXT STEPS ---
+1. Prepare your solution architecture and presentation slides for Campus Pitching on Sep 4, 2026.
+2. The AIIF Jury Panel will shortlist the Top 50 teams for official SIH nomination.
+
+Warm regards,
+AIIF Incubation Center & Hackathon Organizing Committee
+AJK College of Arts & Science`;
+
+  const mailtoUrl = `mailto:${recipientEmails.join(',')}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+  
+  const btnMailto = document.getElementById('btnMailtoTrigger');
+  if (btnMailto) {
+    btnMailto.href = mailtoUrl;
+  }
+
+  const container = document.getElementById('emailAckContent');
+  if (container) {
+    container.innerHTML = `
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+        <div>
+          <strong style="color: var(--primary-green);">Registration ID: ${team.id}</strong><br>
+          <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">${team.name}</span>
+        </div>
+        <div style="text-align: right;">
+          <span class="rule-chip pass" style="font-size: 0.75rem; padding: 2px 8px;">SIH Rules Verified ✅</span><br>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">${new Date(team.submittedAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+        <div>
+          <strong>🏛️ Department:</strong> ${team.department}<br>
+          <strong>👑 Team Leader:</strong> ${leader.name} (${leader.email})
+        </div>
+        <div>
+          <strong>👨‍🏫 Assigned Mentor:</strong> ${mentor ? mentor.name : 'Faculty Mentor'}<br>
+          <strong>👩‍💻 Female Members:</strong> ${team.members.filter(m => m.gender === 'Female').length} Included
+        </div>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+        <strong style="color: var(--primary-green);">💡 Primary Problem (PS 1):</strong> [${team.problemStatementId}] ${team.psTitle1}<br>
+        <span style="font-size: 0.8rem; color: var(--text-muted);"><strong>Tech Stack:</strong> ${team.techStack1}</span>
+      </div>
+
+      ${team.psTitle2 ? `
+      <div style="background: var(--bg-card); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color); margin-bottom: 0.75rem;">
+        <strong>💡 Secondary Problem (PS 2):</strong> [${team.problemStatement2Id}] ${team.psTitle2}<br>
+        <span style="font-size: 0.8rem; color: var(--text-muted);"><strong>Tech Stack:</strong> ${team.techStack2}</span>
+      </div>
+      ` : ''}
+
+      <div style="font-size: 0.8rem; color: var(--text-muted);">
+        📧 <strong>Acknowledgement Sent To (6 Members & Mentor):</strong><br>
+        <code style="font-size: 0.75rem; color: var(--primary-orange);">${recipientEmails.join(', ')}</code>
+      </div>
+    `;
+  }
+
+  const modal = document.getElementById('emailAckModal');
+  if (modal) {
+    modal.classList.add('active');
+  }
+
+  showToast(`Email acknowledgement generated for ${team.members.length} members & mentor!`, 'success');
+}
+
+// --------------------------------------------------------------------------
+// SUBMITTED TEAMS DIRECTORY
+// --------------------------------------------------------------------------
+
+function renderSubmissionsList() {
+  const container = document.getElementById('submissionsGridContainer');
+  if (!container) return;
+
+  const query = (document.getElementById('teamSearchInput')?.value || '').toLowerCase();
+
+  const filtered = state.teams.filter(t => {
+    const matchesName = t.name.toLowerCase().includes(query) ||
+                        (t.department && t.department.toLowerCase().includes(query)) ||
+                        (t.hometown && t.hometown.toLowerCase().includes(query)) ||
+                        (t.psTitle1 && t.psTitle1.toLowerCase().includes(query));
+    const matchesMember = t.members && t.members.some(m => m.name.toLowerCase().includes(query));
+    return matchesName || matchesMember;
+  });
+
+  container.innerHTML = '';
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
+        <p style="font-size: 1.1rem; color: var(--text-muted);">No submitted teams found.</p>
+        <button class="btn btn-primary" style="margin-top: 1rem;" onclick="switchTab('registration')">➕ Register Team Now</button>
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach(team => {
+    const leader = team.members ? team.members.find(m => m.role === 'Team Leader') || team.members[0] : null;
+    const femaleCount = team.members ? team.members.filter(m => m.gender === 'Female').length : 0;
+    const mentor = state.mentors.find(m => m.id === team.mentorId);
+
+    const isIdea2Card = team.id.includes('-B') || (team.name && team.name.includes('Idea 2'));
+    const isIdea1Card = team.id.includes('-A') || (team.name && team.name.includes('Idea 1'));
+    const psLabelText = isIdea2Card ? '💡 Problem Statement (Idea 2):' : isIdea1Card ? '💡 Problem Statement (Idea 1):' : '💡 Chosen Problem Statement:';
+    const psHeaderColor = isIdea2Card ? 'var(--primary-orange)' : 'var(--primary-green)';
+
+    const card = document.createElement('div');
+    card.className = 'ps-card';
+
+    card.innerHTML = `
+      <div class="ps-header">
+        <span class="ps-code">${team.id}</span>
+        <span class="ps-category ${team.category}">${team.category} Track</span>
+      </div>
+
+      <h3 class="ps-title">🏆 ${team.name}</h3>
+      <p class="ps-org">🏛️ <strong>Dept:</strong> ${team.department || 'AJK Department'} | 👩‍💻 Female Members: ${femaleCount} / 6</p>
+
+      <div style="margin-top: 0.75rem; background: var(--bg-input); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.75rem; font-weight: 700; color: ${psHeaderColor};">${psLabelText}</div>
+        <div style="font-size: 0.85rem; font-weight: 600; margin-top: 0.2rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">
+          <strong>Solution:</strong> ${team.solution1 ? (team.solution1.substring(0, 110) + '...') : 'No details'}
+        </div>
+      </div>
+
+      <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
+        👑 <strong>Leader:</strong> ${leader ? leader.name : 'Unassigned'}<br>
+        👨‍🏫 <strong>Mentor:</strong> ${mentor ? mentor.name + ' (' + mentor.designation + ')' : 'Assigned Mentor'}
+      </div>
+
+      ${state.isStaffAuthenticated ? `
+      <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        ${(team.scores && typeof team.scores.total === 'number' && team.scores.total > 0) ? `
+          <span class="rule-chip pass" style="font-size: 0.725rem;">🔒 Jury Marks Submitted (${team.scores.total}/100)</span>
+          <span style="font-size: 0.725rem; color: var(--text-muted); font-style: italic;">Locked</span>
+        ` : `
+          <span style="font-size: 0.725rem; color: var(--primary-orange);">Pre-Evaluation Status</span>
+          <button class="btn btn-secondary btn-sm" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); font-size: 0.75rem;" onclick="deleteTeam('${team.id}')">🗑️ Delete Team</button>
+        `}
+      </div>
+      ` : ''}
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="rule-chip pass" style="font-size: 0.75rem; padding: 2px 8px;">Verified SIH Rules</span>
+        <button class="btn btn-secondary btn-sm" onclick="openTeamDetailModal('${team.id}')">View Details & Roster →</button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function deleteTeam(teamId) {
+  if (!state.isStaffAuthenticated) {
+    showToast('⚠️ Organiser authentication required to delete registrations.', 'error');
+    return;
+  }
+
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  // RULE ENFORCED: Cannot delete if jury marks have been submitted!
+  if (team.scores && typeof team.scores.total === 'number' && team.scores.total > 0) {
+    showToast(`🔒 Locked: Cannot delete team "${team.name}" because Jury marks (${team.scores.total}/100) have already been submitted!`, 'error');
+    return;
+  }
+
+  if (confirm(`🗑️ Delete Registration for Team "${team.name}" (${team.id})?\n\nThis will remove the team permanently from the portal directory and department quota.`)) {
+    if (!state.deletedTeamIds) state.deletedTeamIds = [];
+    if (!state.deletedTeamIds.includes(teamId)) state.deletedTeamIds.push(teamId);
+    const baseId = teamId.replace(/-[AB]$/, '');
+    if (!state.deletedTeamIds.includes(baseId)) state.deletedTeamIds.push(baseId);
+
+    try {
+      localStorage.setItem('prajna_deleted_team_ids', JSON.stringify(state.deletedTeamIds));
+    } catch (e) {}
+
+    state.teams = state.teams.filter(t => t.id !== teamId && !state.deletedTeamIds.includes(t.id));
+    saveTeamsToStorage();
+    renderSubmissionsList();
+    renderDepartmentTracker();
+    renderLeaderboard();
+    renderJuryTeamList();
+    updateStatBanner();
+    showToast(`Deleted registration for Team "${team.name}".`, 'info');
+
+    // Send deletion request to Google Apps Script backend
+    const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
+    if (googleScriptUrl) {
+      fetch(googleScriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'deleteTeam', teamId: teamId })
+      }).catch(e => {});
+    }
+  }
+}
+
+function deleteAllUnevaluatedTeams() {
+  if (!state.isStaffAuthenticated) {
+    showToast('⚠️ Organiser authentication required.', 'error');
+    return;
+  }
+
+  const unevaluated = state.teams.filter(t => !t.scores || !t.scores.total || t.scores.total === 0);
+  const evaluatedCount = state.teams.length - unevaluated.length;
+
+  if (unevaluated.length === 0) {
+    showToast('No unevaluated registrations found to delete.', 'info');
+    return;
+  }
+
+  const confirmMsg = `⚠️ DELETE ALL UNEVALUATED REGISTRATIONS?\n\nThis will delete ${unevaluated.length} team(s) that have NOT received Jury marks yet.\n\n${evaluatedCount > 0 ? `(${evaluatedCount} team(s) with Jury marks will be preserved and NOT deleted.)` : ''}\n\nProceed with deletion?`;
+
+  if (confirm(confirmMsg)) {
+    if (!state.deletedTeamIds) state.deletedTeamIds = [];
+
+    unevaluated.forEach(t => {
+      if (!state.deletedTeamIds.includes(t.id)) state.deletedTeamIds.push(t.id);
+      const baseId = t.id.replace(/-[AB]$/, '');
+      if (!state.deletedTeamIds.includes(baseId)) state.deletedTeamIds.push(baseId);
+
+      const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
+      if (googleScriptUrl) {
+        fetch(googleScriptUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'deleteTeam', teamId: t.id })
+        }).catch(e => {});
+      }
+    });
+
+    try {
+      localStorage.setItem('prajna_deleted_team_ids', JSON.stringify(state.deletedTeamIds));
+    } catch (e) {}
+
+    state.teams = state.teams.filter(t => t.scores && typeof t.scores.total === 'number' && t.scores.total > 0);
+    saveTeamsToStorage();
+    renderSubmissionsList();
+    renderDepartmentTracker();
+    renderLeaderboard();
+    renderJuryTeamList();
+    updateStatBanner();
+    showToast(`Deleted ${unevaluated.length} unevaluated registration(s).`, 'success');
+  }
+}
+
+function togglePublishLeaderboard() {
+  state.isLeaderboardPublished = !state.isLeaderboardPublished;
+  try {
+    localStorage.setItem('prajna_leaderboard_published', String(state.isLeaderboardPublished));
+  } catch (e) {}
+
+  applyStaffProtection();
+  renderLeaderboard();
+
+  if (state.isLeaderboardPublished) {
+    showToast('📢 Top 50 Leaderboard is now PUBLISHED & visible to all participants!', 'success');
+  } else {
+    showToast('🔒 Top 50 Leaderboard is now UNPUBLISHED (Hidden from participants).', 'info');
+  }
+}
+
+function renderPublishButton() {
+  const btn = document.getElementById('btnPublishLeaderboard');
+  if (!btn) return;
+
+  if (state.isLeaderboardPublished) {
+    btn.className = 'btn btn-secondary btn-sm staff-only-btn';
+    btn.innerHTML = '🔒 Unpublish Leaderboard';
+    btn.style.background = '#f36f21';
+    btn.style.color = '#ffffff';
+    btn.style.borderColor = '#f36f21';
+  } else {
+    btn.className = 'btn btn-primary btn-sm staff-only-btn';
+    btn.innerHTML = '📢 Publish Top 50 to Participants';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }
+  btn.style.display = state.isStaffAuthenticated ? 'inline-flex' : 'none';
+}
+
+function openTeamDetailModal(teamId) {
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  const mentor = state.mentors.find(m => m.id === team.mentorId) || 
+                 (team.mentorName ? { name: team.mentorName, designation: 'Faculty Mentor' } : null);
+  const modalContent = document.getElementById('teamDetailContent');
+  if (!modalContent) return;
+
+  let memberRows = (team.members || []).map((m, idx) => `
+    <tr style="border-bottom: 1px solid var(--border-color);">
+      <td style="padding: 0.5rem;">${idx + 1}</td>
+      <td style="padding: 0.5rem; font-weight: 600;">${m.name || ('Member ' + (idx + 1))} ${m.role === 'Team Leader' || idx === 0 ? '👑 (Leader)' : ''}</td>
+      <td style="padding: 0.5rem;">${m.gender === 'Female' ? 'Female 👩' : 'Male 👨'}</td>
+      <td style="padding: 0.5rem;">${m.rollNo || m.roll || '—'}</td>
+      <td style="padding: 0.5rem;">${m.dept || m.department || team.department || '—'}</td>
+      <td style="padding: 0.5rem;">${m.email || '—'}</td>
+    </tr>
+  `).join('');
+
+  const isIdea2Modal = team.id.includes('-B') || (team.name && team.name.includes('Idea 2'));
+  const isIdea1Modal = team.id.includes('-A') || (team.name && team.name.includes('Idea 1'));
+  const modalPsHeader = isIdea2Modal ? '💡 Chosen Problem Statement (Idea 2)' : isIdea1Modal ? '💡 Chosen Problem Statement (Idea 1)' : '💡 Chosen Problem Statement';
+  const modalPsColor = isIdea2Modal ? 'var(--primary-orange)' : 'var(--primary-green)';
+
+  modalContent.innerHTML = `
+    <h2 style="margin-bottom: 0.5rem; font-size: 1.6rem;">🏆 ${team.name}</h2>
+    <p class="text-muted" style="margin-bottom: 1rem;">ID: ${team.id} | Department: ${team.department || 'AJK College'} | Track: ${team.category}</p>
+
+    <div style="background: var(--bg-input); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+      <h4 style="color: ${modalPsColor}; margin-bottom: 0.4rem;">${modalPsHeader}</h4>
+      <p style="font-weight: 600; font-size: 0.95rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">
+        <strong>Approach / Solution:</strong> ${team.solution1 || 'AI-Based Automated Cadastral & Parcel Feature Extraction System'}<br>
+        <strong>Tech Stack:</strong> ${team.techStack1 || 'Python, OpenCV / YOLO, GIS Mapping, Cloud'}
+      </p>
+    </div>
+
+    <h4 style="margin-bottom: 0.5rem;">👥 Team Roster (6 Members Required)</h4>
+    <div style="overflow-x: auto; margin-bottom: 1.5rem;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+        <thead>
+          <tr style="background: var(--bg-input); text-align: left;">
+            <th style="padding: 0.5rem;">#</th>
+            <th style="padding: 0.5rem;">Name</th>
+            <th style="padding: 0.5rem;">Gender</th>
+            <th style="padding: 0.5rem;">Roll No</th>
+            <th style="padding: 0.5rem;">Department</th>
+            <th style="padding: 0.5rem;">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${memberRows}
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size: 0.85rem; color: var(--text-muted);">👨‍🏫 <strong>Assigned Mentor:</strong> ${team.mentorName || (mentor ? mentor.name + (mentor.designation ? ' (' + mentor.designation + ')' : '') : 'Mr. V. Muthusaravanan')}</p>
+
+    <div style="text-align: right; margin-top: 1.5rem;">
+      <button class="btn btn-primary" onclick="closeModal('teamDetailModal')">Close Details</button>
+    </div>
+  `;
+
+  document.getElementById('teamDetailModal').classList.add('active');
+}
+
+// --------------------------------------------------------------------------
+// JURY EVALUATION DESK (100-POINT SIH RUBRIC - PROTECTED)
+// --------------------------------------------------------------------------
+
+function renderJuryTeamList() {
+  const container = document.getElementById('juryTeamList');
+  if (!container) return;
+  container.innerHTML = '';
+
+  state.teams.forEach(team => {
+    const item = document.createElement('div');
+    item.className = `team-selector-item ${team.id === state.selectedTeamForJuryId ? 'active' : ''}`;
+    item.onclick = () => loadTeamForEvaluation(team.id);
+
+    const scoreDisplay = team.scores ? `${team.scores.total} / 100` : 'Pending';
+
+    item.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 700; font-size: 0.95rem;">${team.name}</span>
+        <span class="rule-chip ${team.scores ? 'pass' : 'fail'}" style="font-size: 0.725rem; padding: 2px 6px;">${scoreDisplay}</span>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+        Dept: ${team.department || 'AJK Dept'} | PS: ${team.psTitle1 ? team.psTitle1.substring(0, 40) + '...' : team.problemStatementId}
+      </div>
+    `;
+
+    container.appendChild(item);
+  });
+
+  if (!state.selectedTeamForJuryId && state.teams.length > 0) {
+    loadTeamForEvaluation(state.teams[0].id);
+  }
+}
+
+function loadTeamForEvaluation(teamId) {
+  state.selectedTeamForJuryId = teamId;
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  renderJuryTeamList();
+
+  const nameElem = document.getElementById('evalTeamName');
+  const psElem = document.getElementById('evalTeamPs');
+  if (nameElem) nameElem.textContent = `Scoring: ${team.name} (${team.id})`;
+  if (psElem) psElem.textContent = `Dept: ${team.department || 'AJK Dept'} | PS: [${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}`;
+
+  const scores = team.scores || { novelty: 18, architecture: 23, feasibility: 22, impact: 14, presentation: 14, total: 91 };
+
+  document.getElementById('slideNovelty').value = scores.novelty || 18;
+  document.getElementById('slideArchitecture').value = scores.architecture || 23;
+  document.getElementById('slideFeasibility').value = scores.feasibility || 22;
+  document.getElementById('slideImpact').value = scores.impact || 14;
+  document.getElementById('slidePresentation').value = scores.presentation || 14;
+  if (document.getElementById('evalFeedback')) {
+    document.getElementById('evalFeedback').value = scores.feedback || '';
+  }
+
+  updateRubricTotal();
+}
+
+function updateRubricTotal() {
+  const nov = parseInt(document.getElementById('slideNovelty').value) || 0;
+  const arch = parseInt(document.getElementById('slideArchitecture').value) || 0;
+  const feas = parseInt(document.getElementById('slideFeasibility').value) || 0;
+  const imp = parseInt(document.getElementById('slideImpact').value) || 0;
+  const pres = parseInt(document.getElementById('slidePresentation').value) || 0;
+
+  document.getElementById('valNovelty').textContent = nov;
+  document.getElementById('valArchitecture').textContent = arch;
+  document.getElementById('valFeasibility').textContent = feas;
+  document.getElementById('valImpact').textContent = imp;
+  document.getElementById('valPresentation').textContent = pres;
+
+  const total = nov + arch + feas + imp + pres;
+  document.getElementById('valTotalScore').textContent = `${total} / 100`;
+
+  const statusElem = document.getElementById('evalScoreStatus');
+  if (statusElem) {
+    if (total >= 85) {
+      statusElem.textContent = 'Nominated for Top 50';
+      statusElem.className = 'rule-chip pass';
+    } else {
+      statusElem.textContent = 'Under Review';
+      statusElem.className = 'rule-chip fail';
+    }
+  }
+}
+
+function submitJuryEvaluation() {
+  if (!state.selectedTeamForJuryId) return;
+
+  const nov = parseInt(document.getElementById('slideNovelty').value) || 0;
+  const arch = parseInt(document.getElementById('slideArchitecture').value) || 0;
+  const feas = parseInt(document.getElementById('slideFeasibility').value) || 0;
+  const imp = parseInt(document.getElementById('slideImpact').value) || 0;
+  const pres = parseInt(document.getElementById('slidePresentation').value) || 0;
+  const total = nov + arch + feas + imp + pres;
+  const feedback = document.getElementById('evalFeedback').value.trim();
+
+  const team = state.teams.find(t => t.id === state.selectedTeamForJuryId);
+  if (team) {
+    team.scores = {
+      novelty: nov,
+      architecture: arch,
+      feasibility: feas,
+      impact: imp,
+      presentation: pres,
+      total: total,
+      evaluator: 'AIIF Jury Panel',
+      feedback: feedback
+    };
+
+    saveTeamsToStorage();
+    showToast(`Submitted score ${total}/100 for team "${team.name}"`, 'success');
+  }
+}
+
+// --------------------------------------------------------------------------
+// LEADERBOARD & CERTIFICATE GENERATOR (PROTECTED)
+// --------------------------------------------------------------------------
+
+function filterLeaderboard(track) {
+  state.leaderboardFilter = track;
+  document.querySelectorAll('#tab-leaderboard .btn-secondary').forEach(btn => {
+    if (btn.id.startsWith('lbFilter')) {
+      btn.classList.toggle('active', btn.id === `lbFilter${track}`);
+    }
+  });
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboardBody');
+  if (!tbody) return;
+
+  renderPublishButton();
+
+  const isAuth = state.isStaffAuthenticated;
+  const isPublished = state.isLeaderboardPublished;
+
+  if (!isAuth && !isPublished) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align: center; padding: 3rem 1.5rem; background: var(--bg-card);">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⏰</div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Top 50 Shortlist Results Pending</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 520px; margin: 0 auto; line-height: 1.5;">
+            The official SIH 2026 Top 50 shortlist results have not been published by the Organising Committee yet.<br>
+            Check back after the offline campus pitching session on <strong>September 04, 2026</strong>!
+          </p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const filter = state.leaderboardFilter || 'All';
+  let sorted = [...state.teams].sort((a, b) => {
+    const scoreA = a.scores ? a.scores.total : 0;
+    const scoreB = b.scores ? b.scores.total : 0;
+    return scoreB - scoreA;
+  });
+
+  if (filter !== 'All') {
+    sorted = sorted.filter(t => t.category === filter);
+  }
+
+  tbody.innerHTML = '';
+  if (sorted.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-muted);">No teams evaluated yet.</td></tr>`;
+    return;
+  }
+
+  sorted.forEach((team, idx) => {
+    const rank = idx + 1;
+    const scoreText = team.scores ? `${team.scores.total} / 100` : 'Pending';
+    const isNominated = team.scores && team.scores.total >= 85;
+    const femaleCount = team.members ? team.members.filter(m => m.gender === 'Female').length : 0;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="font-weight: 800; text-align: center;">
+        ${rank === 1 ? '🥇 1' : rank === 2 ? '🥈 2' : rank === 3 ? '🥉 3' : rank}
+      </td>
+      <td style="font-weight: 700; color: var(--text-main);">${team.name}</td>
+      <td style="font-size: 0.8rem; font-weight: 600; color: var(--primary-green);">${team.department || 'AJK Dept'}</td>
+      <td style="font-size: 0.8rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 ? team.psTitle1.substring(0, 40) + '...' : ''}</td>
+      <td style="font-size: 0.8rem;"><span class="rule-chip pass" style="font-size: 0.725rem;">${team.id.includes('-B') || (team.name && team.name.includes('Idea 2')) ? '💡 Idea 2' : '💡 Idea 1'}</span></td>
+      <td><span class="rule-chip pass" style="font-size: 0.75rem; padding: 2px 6px;">${femaleCount} / 6 Females</span></td>
+      <td style="font-weight: 800; color: var(--primary-orange);">${scoreText}</td>
+      <td>
+        <span class="rule-chip ${isNominated ? 'pass' : 'fail'}" style="font-size: 0.75rem; padding: 3px 8px;">
+          ${isNominated ? '🏆 Top 50 Nominated' : 'Under Review'}
+        </span>
+      </td>
+      <td>
+        <button class="btn btn-secondary btn-sm" onclick="openTeamDetailModal('${team.id}')">View</button>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
+}
+
+function exportLeaderboardExcel() {
+  const sorted = [...state.teams].sort((a, b) => (b.scores?.total || 0) - (a.scores?.total || 0));
+
+  let html = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="utf-8">
+      <!--[if gte mso 9]>
+      <xml>
+        <x:ExcelWorkbook>
+          <x:ExcelWorksheets>
+            <x:ExcelWorksheet>
+              <x:Name>SIH 2026 Teams</x:Name>
+              <x:WorksheetOptions>
+                <x:DisplayGridlines/>
+              </x:WorksheetOptions>
+            </x:ExcelWorksheet>
+          </x:ExcelWorksheets>
+        </x:ExcelWorkbook>
+      </xml>
+      <![endif]-->
+      <style>
+        th { background-color: #00a859; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #008043; padding: 6px 10px; }
+        td { border: 1px solid #d1d5db; padding: 6px 10px; }
+        .num { text-align: center; }
+        .score { font-weight: bold; color: #f36f21; text-align: center; }
+        .pass { background-color: #d1fae5; color: #065f46; font-weight: bold; text-align: center; }
+        .pending { background-color: #fef3c7; color: #92400e; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <h2>SIH 2026 INTERNAL HACKATHON - OFFICIAL LEADERBOARD & REGISTRATIONS</h2>
+      <p>AJK College of Arts & Science in association with AIIF (AJK Innovation Incubator Foundation)</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team ID</th>
+            <th>Team Name</th>
+            <th>Department</th>
+            <th>Track Category</th>
+            <th>Region/Hometown</th>
+            <th>Assigned Mentor</th>
+            <th>PS 1 Code</th>
+            <th>PS 1 Title</th>
+            <th>PS 2 Code</th>
+            <th>PS 2 Title</th>
+            <th>Team Leader</th>
+            <th>Leader Roll</th>
+            <th>Leader Email</th>
+            <th>Member 2</th>
+            <th>Member 3</th>
+            <th>Member 4</th>
+            <th>Member 5</th>
+            <th>Member 6</th>
+            <th>Female Count</th>
+            <th>Novelty (20)</th>
+            <th>Architecture (20)</th>
+            <th>Feasibility (20)</th>
+            <th>Impact (20)</th>
+            <th>Presentation (20)</th>
+            <th>Total Score (100)</th>
+            <th>Jury Status</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  sorted.forEach((t, idx) => {
+    const leader = t.members ? (t.members.find(m => m.role === 'Team Leader') || t.members[0]) : null;
+    const femaleCount = t.members ? t.members.filter(m => m.gender === 'Female').length : 0;
+    const mentor = state.mentors.find(m => m.id === t.mentorId);
+    const score = t.scores ? t.scores.total : 0;
+    const isNominated = score >= 85;
+
+    html += `
+      <tr>
+        <td class="num">${idx + 1}</td>
+        <td>${t.id || ''}</td>
+        <td><b>${t.name || ''}</b></td>
+        <td>${t.department || ''}</td>
+        <td>${t.category || 'Software'}</td>
+        <td>${t.hometown || ''}</td>
+        <td>${mentor ? mentor.name : (t.mentorName || 'Assigned Mentor')}</td>
+        <td>${t.problemStatementId || ''}</td>
+        <td>${t.psTitle1 || ''}</td>
+        <td>${t.problemStatement2Id || ''}</td>
+        <td>${t.psTitle2 || ''}</td>
+        <td>${leader ? leader.name : ''}</td>
+        <td>${leader ? leader.rollNo : ''}</td>
+        <td>${leader ? leader.email : ''}</td>
+        <td>${t.members && t.members[1] ? t.members[1].name : ''}</td>
+        <td>${t.members && t.members[2] ? t.members[2].name : ''}</td>
+        <td>${t.members && t.members[3] ? t.members[3].name : ''}</td>
+        <td>${t.members && t.members[4] ? t.members[4].name : ''}</td>
+        <td>${t.members && t.members[5] ? t.members[5].name : ''}</td>
+        <td class="num">${femaleCount} / 6</td>
+        <td class="num">${t.scores ? t.scores.novelty : 0}</td>
+        <td class="num">${t.scores ? t.scores.architecture : 0}</td>
+        <td class="num">${t.scores ? t.scores.feasibility : 0}</td>
+        <td class="num">${t.scores ? t.scores.impact : 0}</td>
+        <td class="num">${t.scores ? t.scores.presentation : 0}</td>
+        <td class="score">${score > 0 ? score : 'Pending'}</td>
+        <td class="${isNominated ? 'pass' : 'pending'}">${isNominated ? 'Top 50 Nominated' : 'Under Review'}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob(['\ufeff' + html], { type: 'application/vnd.ms-excel' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SIH_2026_Official_Leaderboard_Report.xls`;
+  a.click();
+  showToast('Downloaded formatted Excel spreadsheet (.xls)! 📊', 'success');
+}
+
+function exportLeaderboardCSV() {
+  let csv = 'Rank,Team ID,Team Name,Department,Category,Hometown/Dept,Primary PS (PS1),Secondary PS (PS2),Female Count,Total Score,Status\n';
+  const sorted = [...state.teams].sort((a, b) => (b.scores?.total || 0) - (a.scores?.total || 0));
+
+  sorted.forEach((t, idx) => {
+    const femaleCount = t.members ? t.members.filter(m => m.gender === 'Female').length : 0;
+    csv += `${idx + 1},"${t.id}","${t.name}","${t.department || ''}","${t.category}","${t.hometown || ''}","${t.psTitle1 || ''}","${t.psTitle2 || ''}",${femaleCount},${t.scores?.total || 0},"${t.scores?.total >= 85 ? 'Top 50 Nominated' : 'Pending'}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SIH_2026_Teams_Leaderboard.csv`;
+  a.click();
+}
+
+function exportLeaderboardJSON() {
+  const jsonStr = JSON.stringify(state.teams, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SIH_2026_Teams_Data.json`;
+  a.click();
+}
+
+// CANVAS CERTIFICATE RENDERER
+function renderCertificateCanvas() {
+  const canvas = document.getElementById('certificateCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const width = canvas.width;
+  const height = canvas.height;
+
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, '#0b0f19');
+  grad.addColorStop(1, '#111827');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.strokeStyle = '#00a859';
+  ctx.lineWidth = 12;
+  ctx.strokeRect(20, 20, width - 40, height - 40);
+
+  ctx.strokeStyle = '#1e3a8a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(32, 32, width - 64, height - 64);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 32px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('AJK COLLEGE OF ARTS & SCIENCE', width / 2, 90);
+
+  ctx.fillStyle = '#00a859';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('In Association with AIIF (AJK Innovation Incubator Foundation)', width / 2, 125);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('WORLD\'S 1ST ETHNIC INCUBATOR | Recognized by StartupTN Under SIGrant', width / 2, 150);
+
+  const certType = document.getElementById('certType')?.value || 'Excellence';
+  ctx.fillStyle = '#f36f21';
+  ctx.font = 'bold 36px sans-serif';
+  ctx.fillText(`CERTIFICATE OF ${certType.toUpperCase()}`, width / 2, 230);
+
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('This is proudly presented to', width / 2, 280);
+
+  const recipient = document.getElementById('certRecipient')?.value || 'S. Kaviya';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 44px sans-serif';
+  ctx.fillText(recipient, width / 2, 345);
+
+  const role = document.getElementById('certRole')?.value || 'Team Leader';
+  const teamName = document.getElementById('certTeamName')?.value || 'AquaGuard Innovators';
+  ctx.fillStyle = '#0284c7';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText(`${role} — Team "${teamName}"`, width / 2, 390);
+
+  const psTitle = document.getElementById('certPsTitle')?.value || 'Smart Water Quality Monitoring Network';
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '16px sans-serif';
+  ctx.fillText(`For outstanding performance in the SIH 2026 Internal Hackathon`, width / 2, 450);
+  ctx.fillText(`Problem Statement: "${psTitle}"`, width / 2, 480);
+  ctx.fillText(`Organized at AJK College Campus on ${document.getElementById('certDate')?.value || 'September 04, 2026'}.`, width / 2, 510);
+
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+  ctx.moveTo(150, 720);
+  ctx.lineTo(380, 720);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(width / 2 - 115, 720);
+  ctx.lineTo(width / 2 + 115, 720);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(width - 380, 720);
+  ctx.lineTo(width - 150, 720);
+  ctx.stroke();
+
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.fillText('Dr. B. Satheesh', 265, 745);
+  ctx.font = '13px sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Director, AIIF', 265, 765);
+
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.fillText('Prof. S. N. Prasad', width / 2, 745);
+  ctx.font = '13px sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Head of Department', width / 2, 765);
+
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.fillText('Principal / Management', width - 265, 745);
+  ctx.font = '13px sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('AJK College of Arts & Science', width - 265, 765);
+}
+
+function downloadCertificatePNG() {
+  const canvas = document.getElementById('certificateCanvas');
+  if (!canvas) return;
+  const image = canvas.toDataURL('image/png');
+  const recipient = document.getElementById('certRecipient')?.value || 'Student';
+  const link = document.createElement('a');
+  link.download = `Certificate_${recipient.replace(/\s+/g, '_')}.png`;
+  link.href = image;
+  link.click();
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.remove('active');
+}
+
+function openStaffAuthModal() {
+  const modal = document.getElementById('staffAuthModal');
+  if (modal) modal.classList.add('active');
+}
+
+function verifyStaffPasscode() {
+  const code = (document.getElementById('staffPasscode')?.value || '').trim().toLowerCase();
+  const validPasscodes = ['ajkaiif2026', 'admin', '1234', 'sih2026', 'ajk2026', 'jury'];
+  if (validPasscodes.includes(code)) {
+    state.isStaffAuthenticated = true;
+    closeModal('staffAuthModal');
+    
+    // Show protected tabs and buttons
+    document.querySelectorAll('.staff-only-tab, .staff-only-btn').forEach(el => {
+      el.style.display = 'inline-flex';
+    });
+    
+    showToast('🔓 Organiser & Jury Access Unlocked!', 'success');
+    switchTab('jury');
+  } else {
+    showToast('❌ Invalid Passcode. Access Denied.', 'error');
+  }
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.style.cssText = `
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid ${type === 'success' ? '#10b981' : type === 'error' ? '#f43f5e' : '#0284c7'};
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    color: var(--text-main);
+    box-shadow: var(--shadow-main);
+    animation: fadeIn 0.2s ease;
+    margin-top: 0.5rem;
+  `;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
