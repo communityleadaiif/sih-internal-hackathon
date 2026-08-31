@@ -81,8 +81,8 @@ function applyTheme(theme) {
 
 function initCountdownTimer() {
   try {
-    // Cross-browser safe target date: September 01, 2026 23:59:59 IST
-    const targetDate = new Date(2026, 8, 1, 23, 59, 59).getTime();
+    // Cross-browser safe target date: September 05, 2026 23:59:59 IST
+    const targetDate = new Date(2026, 8, 5, 23, 59, 59).getTime();
 
     function updateTimer() {
       try {
@@ -1609,7 +1609,7 @@ Registration ID: ${team.id}
 Team Name: ${team.name}
 Official Department: ${team.department}
 Track: ${team.category} Track
-Date of Pitching: September 04, 2026 @ AJK Campus
+Date of Pitching: September 07, 2026 @ AJK Campus
 
 ASSIGNED MENTOR:
 - ${mentor ? mentor.name + ' (' + mentor.designation + ')' : 'Faculty Mentor'} (${mentor ? mentor.email : ''})
@@ -1631,7 +1631,7 @@ TEAM ROSTER (6 MEMBERS):
 ${team.members.map((m, idx) => `${idx + 1}. ${m.name} (${m.role}) - ${m.dept} | Roll: ${m.rollNo} | Email: ${m.email}`).join('\n')}
 
 --- NEXT STEPS ---
-1. Prepare your solution architecture and presentation slides for Campus Pitching on Sep 4, 2026.
+1. Prepare your solution architecture and presentation slides for Campus Pitching on Sep 7, 2026.
 2. The AIIF Jury Panel will shortlist the Top 50 teams for official SIH nomination.
 
 Warm regards,
@@ -2138,7 +2138,7 @@ function renderLeaderboard() {
           <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Top 50 Shortlist Results Pending</h3>
           <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 520px; margin: 0 auto; line-height: 1.5;">
             The official SIH 2026 Top 50 shortlist results have not been published by the Organising Committee yet.<br>
-            Check back after the offline campus pitching session on <strong>September 04, 2026</strong>!
+            Check back after the offline campus pitching session on <strong>September 07, 2026</strong>!
           </p>
         </td>
       </tr>
@@ -2406,7 +2406,7 @@ function renderCertificateCanvas() {
   ctx.font = '16px sans-serif';
   ctx.fillText(`For outstanding performance in the SIH 2026 Internal Hackathon`, width / 2, 450);
   ctx.fillText(`Problem Statement: "${psTitle}"`, width / 2, 480);
-  ctx.fillText(`Organized at AJK College Campus on ${document.getElementById('certDate')?.value || 'September 04, 2026'}.`, width / 2, 510);
+  ctx.fillText(`Organized at AJK College Campus on ${document.getElementById('certDate')?.value || 'September 07, 2026'}.`, width / 2, 510);
 
   ctx.strokeStyle = '#334155';
   ctx.lineWidth = 1;
