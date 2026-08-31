@@ -152,10 +152,10 @@ function loadStoredState() {
         const seenKeys = new Set();
         const deduplicated = [];
         parsed.forEach(t => {
-          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? t.members[0].email.trim().toLowerCase() : '';
-          const nameClean = (t.name || '').trim().toLowerCase();
-          const psCode = (t.problemStatementId || '').trim().toUpperCase();
-          const isIdea2 = t.id.includes('-B') || nameClean.includes('idea 2');
+          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? String(t.members[0].email).trim().toLowerCase() : '';
+          const nameClean = (t.name ? String(t.name) : '').trim().toLowerCase();
+          const psCode = (t.problemStatementId ? String(t.problemStatementId) : '').trim().toUpperCase();
+          const isIdea2 = (t.id ? String(t.id) : '').includes('-B') || nameClean.includes('idea 2');
           const key = `${leaderEmail || nameClean}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
           
           if (!seenKeys.has(key)) {
@@ -219,8 +219,8 @@ function loadStoredState() {
 function expandDualIdeaTeams() {
   const expanded = [];
   (state.teams || []).forEach(team => {
-    const ps2Title = (team.psTitle2 || '').trim();
-    const ps2Code = (team.problemStatement2Id || '').trim();
+    const ps2Title = (team.psTitle2 ? String(team.psTitle2) : '').trim();
+    const ps2Code = (team.problemStatement2Id ? String(team.problemStatement2Id) : '').trim();
     
     // Check if there is genuinely a second problem statement
     const hasValidIdea2 = ps2Title !== '' && 
@@ -229,11 +229,13 @@ function expandDualIdeaTeams() {
                           ps2Code.toUpperCase() !== 'N/A';
 
     if (hasValidIdea2) {
-      if (!team.id.includes('-A') && !team.id.includes('-B')) {
+      const teamIdStr = team.id ? String(team.id) : '';
+      if (!teamIdStr.includes('-A') && !teamIdStr.includes('-B')) {
+        const teamNameStr = team.name ? String(team.name) : '';
         const teamA = {
           ...team,
           id: `${team.id}-A`,
-          name: team.name.includes('(Idea') ? team.name : `${team.name} (Idea 1)`,
+          name: teamNameStr.includes('(Idea') ? teamNameStr : `${teamNameStr} (Idea 1)`,
           problemStatementId: team.problemStatementId,
           psTitle1: team.psTitle1,
           solution1: team.solution1,
@@ -247,7 +249,7 @@ function expandDualIdeaTeams() {
         const teamB = {
           ...team,
           id: `${team.id}-B`,
-          name: `${team.name.replace(/\s*\(Idea [12]\)$/i, '')} (Idea 2)`,
+          name: `${teamNameStr.replace(/\s*\(Idea [12]\)$/i, '')} (Idea 2)`,
           problemStatementId: team.problemStatement2Id || `${team.problemStatementId}-2`,
           psTitle1: team.psTitle2,
           solution1: team.solution2 || team.solution1,
@@ -288,22 +290,31 @@ function syncLiveTeamsFromGoogleScript(isManual) {
         const existingTeams = state.teams || [];
 
         for (const t of data.teams) {
-          const name = (t.name || '').trim();
+          const name = (t.name ? String(t.name) : '').trim();
           const isDummyName = /^Team \d+$/i.test(name) || name === '';
           if (isDummyName) continue;
 
-          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? t.members[0].email.trim().toLowerCase() : '';
-          const psCode = (t.problemStatementId || '').trim().toUpperCase();
-          const isIdea2 = t.id.includes('-B') || name.toLowerCase().includes('idea 2');
+          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? String(t.members[0].email).trim().toLowerCase() : '';
+          const psCode = (t.problemStatementId ? String(t.problemStatementId) : '').trim().toUpperCase();
+          const teamIdStr = t.id ? String(t.id) : '';
+          const isIdea2 = teamIdStr.includes('-B') || name.toLowerCase().includes('idea 2');
           const key = `${leaderEmail || name.toLowerCase()}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
 
           if (!seenKeys.has(key)) {
             seenKeys.add(key);
 
+            // Ensure problemStatementId and problemStatement2Id are strings with SIH prefix if needed
+            if (t.problemStatementId && typeof t.problemStatementId === 'number') {
+              t.problemStatementId = `SIH${t.problemStatementId}`;
+            }
+            if (t.problemStatement2Id && typeof t.problemStatement2Id === 'number') {
+              t.problemStatement2Id = `SIH${t.problemStatement2Id}`;
+            }
+
             // Check if local storage already has rich member roster for this team
             const localMatch = existingTeams.find(et => {
-              const etEmail = (et.members && et.members[0] && et.members[0].email) ? et.members[0].email.trim().toLowerCase() : '';
-              const etName = (et.name || '').replace(/\s*\(Idea [12]\)$/i, '').trim().toLowerCase();
+              const etEmail = (et.members && et.members[0] && et.members[0].email) ? String(et.members[0].email).trim().toLowerCase() : '';
+              const etName = (et.name ? String(et.name) : '').replace(/\s*\(Idea [12]\)$/i, '').trim().toLowerCase();
               return (leaderEmail && etEmail === leaderEmail) || (etName === name.toLowerCase());
             });
 
@@ -363,7 +374,7 @@ function syncLiveTeamsFromGoogleScript(isManual) {
 
         state.teams = processedTeams;
         expandDualIdeaTeams();
-        state.teams = state.teams.filter(t => t.name && !/^Team \d+$/i.test(t.name.trim()));
+        state.teams = state.teams.filter(t => t.name && !/^Team \d+$/i.test(String(t.name).trim()));
         saveTeamsToStorage();
         if (isManual) {
           showToast(`✅ Synced ${state.teams.length} live team submissions!`, 'success');
@@ -1697,11 +1708,17 @@ function renderSubmissionsList() {
   const query = (document.getElementById('teamSearchInput')?.value || '').toLowerCase();
 
   const filtered = state.teams.filter(t => {
-    const matchesName = t.name.toLowerCase().includes(query) ||
-                        (t.department && t.department.toLowerCase().includes(query)) ||
-                        (t.hometown && t.hometown.toLowerCase().includes(query)) ||
-                        (t.psTitle1 && t.psTitle1.toLowerCase().includes(query));
-    const matchesMember = t.members && t.members.some(m => m.name.toLowerCase().includes(query));
+    const nameStr = t.name ? String(t.name).toLowerCase() : '';
+    const deptStr = t.department ? String(t.department).toLowerCase() : '';
+    const homeStr = t.hometown ? String(t.hometown).toLowerCase() : '';
+    const psStr = t.psTitle1 ? String(t.psTitle1).toLowerCase() : '';
+    const psIdStr = t.problemStatementId ? String(t.problemStatementId).toLowerCase() : '';
+    const matchesName = nameStr.includes(query) ||
+                        deptStr.includes(query) ||
+                        homeStr.includes(query) ||
+                        psStr.includes(query) ||
+                        psIdStr.includes(query);
+    const matchesMember = t.members && t.members.some(m => m && m.name && String(m.name).toLowerCase().includes(query));
     return matchesName || matchesMember;
   });
 
