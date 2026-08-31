@@ -336,6 +336,8 @@ function syncLiveTeamsFromGoogleScript(isManual) {
                 { name: "RAHULKRISHNA U", rollNo: "24UGAL651", email: "rahulkrishnau2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
               ];
               t.mentorName = t.mentorName || "Mr. V. Muthusaravanan";
+              t.solution1 = t.solution1 || "AI-Based Automated Urban Parcel Mapping and Cadastral Feature Extraction System using Drone Imagery";
+              t.techStack1 = t.techStack1 || "Python, OpenCV, GIS Mapping, LoRaWAN";
             } else if (name.toLowerCase().includes('byte brains') && (!t.members[1] || !t.members[1].email)) {
               t.members = [
                 { name: "SRUTHI B", rollNo: "24UGAL053", email: "sruthib2425@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
@@ -346,6 +348,8 @@ function syncLiveTeamsFromGoogleScript(isManual) {
                 { name: "MOHAMED MUHSIN MV", rollNo: "24UGAL035", email: "muhsinmv2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
               ];
               t.mentorName = t.mentorName || "Mrs. K. Shiny";
+              t.solution1 = t.solution1 || "Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains using Machine Learning";
+              t.techStack1 = t.techStack1 || "Python, ML Telemetry, Fast API, React";
             } else if (name.toLowerCase().includes('techfront') && (!t.members[1] || !t.members[1].email)) {
               t.members = [
                 { name: "Krishna Theertha S", rollNo: "25UGCS018", email: "krishnatheerthas2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
@@ -356,6 +360,8 @@ function syncLiveTeamsFromGoogleScript(isManual) {
                 { name: "Sivaprakash R", rollNo: "25UGCS032", email: "sivaprakashr2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" }
               ];
               t.mentorName = t.mentorName || "Dr John gracias";
+              t.solution1 = t.solution1 || "Digital Platform for Efficient Agricultural Procurement, Slot Booking and Queue Management";
+              t.techStack1 = t.techStack1 || "React Native, Node.js, PostgreSQL";
             } else if (name.toLowerCase().includes('keratin') && (!t.members[1] || !t.members[1].email)) {
               t.members = [
                 { name: "SAMSHEER.K", rollNo: "25UGBT007", email: "samsheer473@gmail.com", role: "Team Leader", gender: "Male", dept: "B.Sc Biotechnology", year: "1st Year" },
@@ -366,6 +372,78 @@ function syncLiveTeamsFromGoogleScript(isManual) {
                 { name: "ATHIRA J", rollNo: "25UGBT002", email: "athira2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" }
               ];
               t.mentorName = t.mentorName || "Dr.V.LOGESHWARAN";
+              t.solution1 = t.solution1 || "Development of Sustainable Keratin-Based Bioplastic and Bioadsorbent from Chicken Feather Waste for Wastewater Treatment";
+              t.techStack1 = t.techStack1 || "Bio-Chemical Processing, Green Synthesis, Material Testing";
+            } else if (name.toLowerCase().includes('neerav fighters')) {
+              t.members = [
+                { name: "Srijin Krishna", rollNo: "24UGCA050", email: "srijinkrishna2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+                { name: "Abhinav K S", rollNo: "24UGCA002", email: "abhinavks2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+                { name: "Akshay c", rollNo: "24UGCA009", email: "akshayc2425@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+                { name: "Sidharth S", rollNo: "24UGCA048", email: "sidharths2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+                { name: "Adharsh P S", rollNo: "24UGCA004", email: "adharshps2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+                { name: "Avani P A", rollNo: "24UGCA019", email: "avanipa2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "2nd Year" }
+              ];
+              t.mentorName = t.mentorName || "Pavithra V (Ass professor BCA)";
+              t.solution1 = t.solution1 || "The system converts real-time train movement and historical operational data into a continuously updated ETA, helping both passengers and railway authorities make better decisions.";
+              t.techStack1 = t.techStack1 || "Python, Machine Learning, Fast API";
+            } else if (name.toLowerCase().includes('cyclone guardians')) {
+              t.members = [
+                { name: "Arun N", rollNo: "24UGAI012", email: "arunn2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+                { name: "Sandhya Sivan", rollNo: "24UGAI040", email: "sandhyasivan2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+                { name: "Payal Bimal", rollNo: "24UGAI033", email: "payalbimal2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+                { name: "ARJUN KG", rollNo: "24UGAI011", email: "arjunkg2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+                { name: "Sresha S", rollNo: "24UGAI049", email: "sreshas2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+                { name: "HENCY G", rollNo: "24UGAI021", email: "hencyg2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" }
+              ];
+              t.mentorName = t.mentorName || "Dr. Vineetha Vijayan";
+              t.solution1 = t.solution1 || "Artificial Intelligence (AI) / Machine Learning (ML) based system for identification, classification, and prediction of different tropical cyclone patterns using multi-source satellite data.";
+              t.techStack1 = t.techStack1 || "Python, TensorFlow, Satellite Telemetry, PyTorch";
+            } else if (name.toLowerCase().includes('cascaders')) {
+              t.members = [
+                { name: "Abhishek Shaji", rollNo: "25UGAI003", email: "abhishekshaji2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+                { name: "Aswathy Akash", rollNo: "25UGAI009", email: "aswathyakash2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+                { name: "Devika Das M", rollNo: "25UGAI014", email: "devikadasm2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+                { name: "Niya P", rollNo: "25UGAI029", email: "niyap2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+                { name: "Roopesh T", rollNo: "25UGAI036", email: "roopesht2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+                { name: "Athul P", rollNo: "25UGAI010", email: "athulp2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" }
+              ];
+              t.mentorName = t.mentorName || "Dr. Vineetha Vijayan";
+              if (name.includes('Idea 2')) {
+                t.solution1 = t.solution1 || "AI-Enabled Learning Platform for Skill-Gap Analysis & Auto-MCQ Generation.";
+                t.techStack1 = t.techStack1 || "React, Python, NLP, PostgreSQL";
+              } else {
+                t.solution1 = t.solution1 || "AI Detection/Classification of Industrial Fires via Satellite Data.";
+                t.techStack1 = t.techStack1 || "Python, OpenCV, Satellite Imaging, Fast API";
+              }
+            } else if (name.toLowerCase().includes('kratos')) {
+              t.members = [
+                { name: "MADHUMITHRA K", rollNo: "25UGCA026", email: "madhumithrak2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "1st Year" },
+                { name: "AMRITHA R", rollNo: "25UGCA008", email: "amrithar2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA", year: "1st Year" },
+                { name: "STEPHY K", rollNo: "25UGCA054", email: "stephyk2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "1st Year" },
+                { name: "MOHAMMAD SHAZIN", rollNo: "25UGCA031", email: "mohammadshazin2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "ATHUL O", rollNo: "25UGCA017", email: "athulo2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "NAVEEN N", rollNo: "25UGCA034", email: "naveenn2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "1st Year" }
+              ];
+              t.mentorName = t.mentorName || "SANGEETHA SR";
+              if (name.includes('Idea 2')) {
+                t.solution1 = t.solution1 || "Intelligent tracking of employment outcomes, skill gaps, and the quantifiable impact of skilling initiatives.";
+                t.techStack1 = t.techStack1 || "React, Node.js, Analytics Dashboard";
+              } else {
+                t.solution1 = t.solution1 || "Portal for Academia - Industry collaboration for Skill Mapping, Internships and Placement.";
+                t.techStack1 = t.techStack1 || "React, Express, PostgreSQL";
+              }
+            } else if (name.toLowerCase().includes('team flash')) {
+              t.members = [
+                { name: "Abhinav ks", rollNo: "25UGCA057", email: "abhinavksbca2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "Abhinandh", rollNo: "25UGCA003", email: "abhinandh2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "Abhi", rollNo: "25UGCA001", email: "abhi2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "Adhi", rollNo: "25UGCA005", email: "adhi2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "Jobi", rollNo: "25UGCA023", email: "jobi2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+                { name: "Ananya R", rollNo: "25UGCA010", email: "ananya2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "1st Year" }
+              ];
+              t.mentorName = t.mentorName || "Moushika";
+              t.solution1 = t.solution1 || "Flash Speed Intelligent Workflow Automation & Rapid Task Optimization Platform.";
+              t.techStack1 = t.techStack1 || "Web, Cloud, Node.js";
             }
 
             processedTeams.push(t);
@@ -1956,8 +2034,8 @@ function openTeamDetailModal(teamId) {
       <h4 style="color: ${modalPsColor}; margin-bottom: 0.4rem;">${modalPsHeader}</h4>
       <p style="font-weight: 600; font-size: 0.95rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}</p>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">
-        <strong>Approach / Solution:</strong> ${team.solution1 || 'AI-Based Automated Cadastral & Parcel Feature Extraction System'}<br>
-        <strong>Tech Stack:</strong> ${team.techStack1 || 'Python, OpenCV / YOLO, GIS Mapping, Cloud'}
+        <strong>Approach / Solution:</strong> ${team.solution1 || 'Proposed solution abstract submitted for SIH 2026 Internal Pitching.'}<br>
+        <strong>Tech Stack:</strong> ${team.techStack1 || 'Software / Web / Mobile / IoT / AI'}
       </p>
     </div>
 

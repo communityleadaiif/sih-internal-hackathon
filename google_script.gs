@@ -148,13 +148,19 @@ function doGet(e) {
       // Skip blank rows or dummy test rows
       if (!teamName || teamName === "" || /^Team \d+$/i.test(teamName)) continue;
       
-      // Check if last column has full Raw Data JSON
-      var rawJsonStr = r[r.length - 1];
+      // Check all columns for full Raw Data JSON
       var parsedData = null;
-      if (typeof rawJsonStr === 'string' && rawJsonStr.trim().startsWith('{') && rawJsonStr.trim().endsWith('}')) {
-        try {
-          parsedData = JSON.parse(rawJsonStr);
-        } catch (err) {}
+      for (var c = r.length - 1; c >= 0; c--) {
+        var cellVal = r[c];
+        if (typeof cellVal === 'string' && cellVal.trim().startsWith('{') && cellVal.trim().endsWith('}')) {
+          try {
+            var temp = JSON.parse(cellVal);
+            if (temp && (temp.members || temp.name)) {
+              parsedData = temp;
+              break;
+            }
+          } catch (err) {}
+        }
       }
 
       if (parsedData && Array.isArray(parsedData.members) && parsedData.members.length > 0) {
