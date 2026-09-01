@@ -183,7 +183,37 @@ function doGet(e) {
           scores: parsedData.scores || null
         });
       } else {
-        // Legacy Row Fallback
+        // Legacy Row Fallback - Infer missing properties with high fidelity
+        var rawMembers = [
+          { name: (r[11] || r[13] || "").toString().trim(), rollNo: (r[12] || r[14] || "").toString().trim(), email: (r[13] || r[15] || "").toString().trim(), role: "Team Leader" },
+          { name: (r[14] || r[16] || "").toString().trim(), role: "Member 2" },
+          { name: (r[15] || r[17] || "").toString().trim(), role: "Member 3" },
+          { name: (r[16] || r[18] || "").toString().trim(), role: "Member 4" },
+          { name: (r[17] || r[19] || "").toString().trim(), role: "Member 5" },
+          { name: (r[18] || r[20] || "").toString().trim(), role: "Member 6" }
+        ].filter(function(m) { return m.name && m.name.toString().trim() !== ""; });
+
+        var femaleNamesList = ["aqila", "sreelakshmi", "sruthi", "ardra", "sneha", "krishna", "akshaya", "adhwaitha", "priyadharshini", "raveena", "akshima", "theertha", "athira", "sandhya", "payal", "sresha", "hency", "aswathy", "devika", "niya", "madhumithra", "amritha", "stephy", "avani", "ananya", "nivya", "nimisha", "pooja", "nanditha", "thanmaya", "krishnapriya", "anusree", "nivedya", "anusha", "aleena", "adhirsha", "manjima", "thasni", "jesna", "shifa", "sreenandini", "anagha", "raniya", "jemima", "safeena", "thulasi", "nethara", "yamika", "sreethma", "abhinandana", "priya", "anitha", "kavya", "divya", "archana", "haritha", "geetha", "deepa", "lakshmi"];
+
+        var enrichedMembers = rawMembers.map(function(m, idx) {
+          var nameTokens = m.name.toLowerCase().replace(/[^a-z]/g, " ").trim().split(/\s+/);
+          var isFemale = false;
+          for (var k = 0; k < nameTokens.length; k++) {
+            if (femaleNamesList.indexOf(nameTokens[k]) !== -1) {
+              isFemale = true;
+              break;
+            }
+          }
+          return {
+            name: m.name,
+            role: m.role || (idx === 0 ? "Team Leader" : "Member " + (idx + 1)),
+            gender: isFemale ? "Female" : "Male",
+            rollNo: m.rollNo || "",
+            email: m.email || "",
+            dept: r[3] ? r[3].toString().trim() : ""
+          };
+        });
+
         teams.push({
           id: teamId || ("SIH-TEAM-" + (i < 10 ? "0" + i : i)),
           name: teamName,
@@ -198,14 +228,7 @@ function doGet(e) {
           solution1: (r.length > 20 && r[11] ? r[11].toString() : "") || "",
           techStack1: (r.length > 20 && r[12] ? r[12].toString() : "") || "",
           submittedAt: r[0] || new Date().toISOString(),
-          members: [
-            { name: (r[11] || r[13] || "").toString().trim(), rollNo: (r[12] || r[14] || "").toString().trim(), email: (r[13] || r[15] || "").toString().trim(), role: "Team Leader", gender: "Male" },
-            { name: (r[14] || r[16] || "").toString().trim(), role: "Member 2", gender: "Female" },
-            { name: (r[15] || r[17] || "").toString().trim(), role: "Member 3", gender: "Female" },
-            { name: (r[16] || r[18] || "").toString().trim(), role: "Member 4", gender: "Male" },
-            { name: (r[17] || r[19] || "").toString().trim(), role: "Member 5", gender: "Male" },
-            { name: (r[18] || r[20] || "").toString().trim(), role: "Member 6", gender: "Male" }
-          ].filter(function(m) { return m.name && m.name.toString().trim() !== ""; })
+          members: enrichedMembers
         });
       }
     }

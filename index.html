@@ -873,9 +873,19 @@
 
   <!-- MODAL 4: TEAM DETAIL MODAL -->
   <div class="modal-backdrop" id="teamDetailModal">
-    <div class="modal-card" style="max-width: 900px;">
+    <div class="modal-card" style="max-width: 950px; max-height: 90vh; overflow-y: auto;">
       <button class="modal-close-btn" onclick="closeModal('teamDetailModal')">✕</button>
       <div id="teamDetailContent">
+        <!-- Loaded dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4B: EDIT TEAM DETAILS MODAL -->
+  <div class="modal-backdrop" id="editTeamModal">
+    <div class="modal-card" style="max-width: 950px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeModal('editTeamModal')">✕</button>
+      <div id="editTeamContent">
         <!-- Loaded dynamically by JS -->
       </div>
     </div>
@@ -912,7 +922,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCRIPTS -->
-  <script src="data.js?v=2.9"></script>
-  <script src="app.js?v=2.9"></script>
+  <script src="data.js?v=3.1"></script>
+  <script src="app.js?v=3.1"></script>
 </body>
 </html>

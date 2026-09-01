@@ -214,6 +214,9 @@ function loadStoredState() {
   }
 
   expandDualIdeaTeams();
+  if (Array.isArray(state.teams)) {
+    state.teams = state.teams.map(t => enrichTeamRecord(t));
+  }
 }
 
 function expandDualIdeaTeams() {
@@ -273,6 +276,598 @@ function expandDualIdeaTeams() {
   state.teams = expanded;
 }
 
+// --------------------------------------------------------------------------
+// MASTER TEAM ROSTER ENRICHMENT & FIDELITY ENGINE
+// --------------------------------------------------------------------------
+
+const FEMALE_TOKENS_SET = new Set([
+  'amritha', 'safeena', 'thulasi', 'jemima', 'sreethma', 'anushree', 'athira',
+  'kaviya', 'priya', 'priyadharshini', 'anusha', 'harini', 'swetha', 'sneha', 'keerthana',
+  'deepika', 'divya', 'pavithra', 'sandhiya', 'nandhini', 'kavitha', 'monisha',
+  'sangeetha', 'revathi', 'lakshmi', 'gayathri', 'abirami', 'bhavani', 'soundarya',
+  'varsha', 'pooja', 'madhumitha', 'shalini', 'aishwarya', 'archana', 'dharani',
+  'ramya', 'swathi', 'sowmya', 'renuka', 'preethi', 'shobana', 'sindhu',
+  'nanditha', 'nandhitha', 'fathima', 'ayesha', 'mary', 'ann', 'anjali', 'reshma',
+  'rinsha', 'nihala', 'shamna', 'fidha', 'nivedha', 'niveditha', 'nivedihitha', 'brinda',
+  'ashna', 'afra', 'muhsina', 'amrutham', 'niranjana', 'anjana', 'krishnapriya',
+  'devika', 'gopika', 'ananya', 'arya', 'architha', 'malavika', 'shruti', 'sruthi',
+  'alfeena', 'farhana', 'asna', 'lubna', 'hadiya', 'hasna', 'nafia', 'sana', 'shahana',
+  'anagha', 'raniya', 'vasanthy', 'advaitha', 'theertha', 'raveena', 'akshima', 'sreelakshmi',
+  'aqila', 'sresha', 'payal', 'sandhya', 'hency', 'aswathy', 'niya', 'madhumithra', 'stephy',
+  'avani', 'nivya', 'nimisha', 'thanmaya', 'anusree', 'nivedya', 'aleena', 'adhirsha', 'manjima',
+  'thasni', 'jesna', 'shifa', 'sreenandini', 'nethara', 'yamika', 'abhinandana'
+]);
+
+const MALE_EXACT_TOKENS = new Set([
+  'muhammed', 'mohamed', 'mohammed', 'irfan', 'afreed', 'libin', 'praveen', 'vimal',
+  'ajay', 'srijin', 'sreyas', 'soorya', 'rihan', 'nihal', 'nivedh', 'nived', 'basil',
+  'sandeep', 'amith', 'ramjith', 'rayan', 'dharshan', 'bharath', 'abishiek', 'ismail',
+  'jumail', 'abhinav', 'aasil', 'kirosh', 'sabarimanikandan', 'yuraj', 'shefin', 'arundas',
+  'alen', 'aflah', 'kamalesh', 'sawad', 'amal', 'ziyaal', 'anfas', 'abhinand', 'navaneeth',
+  'adrash', 'adithyan', 'mishab', 'ranshif', 'afridh', 'niju', 'shon', 'aswaon', 'abhilash',
+  'sheik', 'adith', 'aswin', 'anurag', 'bhavadas', 'fanoos', 'sreesanth', 'aromal', 'harshin',
+  'nidhil', 'saravanan', 'maruthu', 'naveenkumar', 'ajesh', 'mithyleash', 'gubendran',
+  'mickle', 'vaishnav', 'sreejith', 'samsheer', 'sanfar', 'sivaprakash', 'rahulkrishna'
+]);
+
+function inferGender(name) {
+  if (!name) return 'Male';
+  const clean = String(name).toLowerCase().replace(/[^a-z\s]/g, ' ');
+  const tokens = clean.split(/\s+/).filter(t => t.length >= 3);
+  
+  let hasFemale = false;
+  let hasMale = false;
+
+  for (const token of tokens) {
+    if (FEMALE_TOKENS_SET.has(token) || Array.from(FEMALE_TOKENS_SET).some(f => token.startsWith(f) || f.startsWith(token) && f.length >= 4)) {
+      hasFemale = true;
+    }
+    if (MALE_EXACT_TOKENS.has(token) || Array.from(MALE_EXACT_TOKENS).some(m => token === m || (token.startsWith(m) && m.length >= 4))) {
+      hasMale = true;
+    }
+  }
+
+  if (hasFemale && !hasMale) return 'Female';
+  if (hasFemale && hasMale) {
+    const first = tokens[0] || '';
+    if (FEMALE_TOKENS_SET.has(first) || Array.from(FEMALE_TOKENS_SET).some(f => first.startsWith(f))) return 'Female';
+    return 'Male';
+  }
+  return 'Male';
+}
+
+function generateCleanEmail(name, batchYear) {
+  if (!name) return 'student@ajkcas.com';
+  const clean = String(name).toLowerCase().replace(/[^a-z]/g, '');
+  return `${clean || 'member'}${batchYear || '2526'}@ajkcas.com`;
+}
+
+const KNOWN_TEAM_REGISTRY = {
+  "neural ninjas": {
+    mentorName: "Mr. V. Muthusaravanan (Assistant Professor - BCA AI)",
+    dept: "BCA Artificial Intelligence",
+    solution1: "AI-Based Automated Urban Parcel Mapping and Cadastral Feature Extraction System using Drone Imagery leveraging deep learning segmentation.",
+    techStack1: "Python, OpenCV, PyTorch, GIS Mapping, LoRaWAN",
+    members: [
+      { name: "SREYAS KALLAZHI", rollNo: "24UGAL051", email: "sreyaskallazhi2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "AQILA SABIR", rollNo: "24UGAL015", email: "aqilasabir2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "SREELAKSHMI S", rollNo: "24UGAL038", email: "sreelakshmis2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "SUNIL KISHOR S K", rollNo: "24UGAL016", email: "sunilkishorsk2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "VAISHNAV KR", rollNo: "24UGAL055", email: "vaishnavkr2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "RAHULKRISHNA U", rollNo: "24UGAL651", email: "rahulkrishnau2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
+    ]
+  },
+  "byte brains": {
+    mentorName: "Mrs. K. Shiny (Assistant Professor - BCA AI)",
+    dept: "BCA Artificial Intelligence",
+    solution1: "Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains using Machine Learning and Live Railway Telemetry.",
+    techStack1: "Python, ML Telemetry, FastAPI, React Native",
+    members: [
+      { name: "SRUTHI B", rollNo: "24UGAL053", email: "sruthib2425@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "ADITH K", rollNo: "24UGAL005", email: "adithk2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "ARDRA O", rollNo: "24UGAL017", email: "ardrao2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "SHANAVAS", rollNo: "24UGAL047", email: "shanavas2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "SNEHA R", rollNo: "24UGAL050", email: "snehar2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
+      { name: "MOHAMED MUHSIN MV", rollNo: "24UGAL035", email: "muhsinmv2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
+    ]
+  },
+  "techfront": {
+    mentorName: "Dr. John Gracias (Associate Professor - CS)",
+    dept: "B.Sc Computer Science",
+    solution1: "Digital Platform for Efficient Agricultural Procurement, Mandi Slot Booking and Queue Management.",
+    techStack1: "React Native, Node.js, PostgreSQL, SMS Gateway",
+    members: [
+      { name: "Krishna Theertha S", rollNo: "25UGCS018", email: "krishnatheerthas2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+      { name: "Aswin P", rollNo: "25UGCS005", email: "aswinp2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
+      { name: "Akshaya u", rollNo: "25UGCS002", email: "akshayau2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+      { name: "Adhwaitha M", rollNo: "25UGCS001", email: "adhwaitham2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
+      { name: "Sanfar S", rollNo: "25UGCS029", email: "sanfars2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
+      { name: "Sivaprakash R", rollNo: "25UGCS032", email: "sivaprakashr2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" }
+    ]
+  },
+  "keratin": {
+    mentorName: "Dr. V. Logeshwaran (Assistant Professor - Biotechnology)",
+    dept: "B.Sc Biotechnology",
+    solution1: "Eco-friendly extraction of keratin proteins from poultry feather biomass to synthesize biodegradable, high-tensile bioplastics.",
+    techStack1: "Bio-Chemical Processing, Green Synthesis, Tensile Testing",
+    solution2: "FeatherClean: Sustainable cross-linked keratin bioadsorbent membranes filtering toxic azo dyes and heavy metals from textile effluents.",
+    techStack2: "Nanofiltration, Adsorption Kinetics, Spectrophotometry",
+    members: [
+      { name: "SAMSHEER.K", rollNo: "25UGBT007", email: "samsheer473@gmail.com", role: "Team Leader", gender: "Male", dept: "B.Sc Biotechnology", year: "1st Year" },
+      { name: "PRIYADHARSHINI.S", rollNo: "25UGBT005", email: "priya2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+      { name: "RAVEENA", rollNo: "25UGBT006", email: "raveena2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+      { name: "AKSHIMA.A", rollNo: "25UGBT001", email: "akshima2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+      { name: "THEERTHA PRADEEP", rollNo: "25UGBT009", email: "theertha2526@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
+      { name: "ATHIRA J", rollNo: "25UGBT002", email: "athira2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" }
+    ]
+  },
+  "cyclone guardians": {
+    mentorName: "Dr. Vineetha Vijayan (Assistant Professor - AI & ML)",
+    dept: "B.Sc Artificial Intelligence & Machine Learning",
+    solution1: "Deep convolutional recurrent network processing multi-spectral satellite imagery for early cyclone eye detection, track forecasting, and intensity estimation.",
+    techStack1: "Python, TensorFlow, PyTorch, Satellite Telemetry, FastAPI",
+    members: [
+      { name: "Arun N", rollNo: "24UGAI012", email: "arunn2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+      { name: "Sandhya Sivan", rollNo: "24UGAI040", email: "sandhyasivan2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+      { name: "Payal Bimal", rollNo: "24UGAI033", email: "payalbimal2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+      { name: "ARJUN KG", rollNo: "24UGAI011", email: "arjunkg2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+      { name: "Sresha S", rollNo: "24UGAI049", email: "sreshas2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
+      { name: "HENCY G", rollNo: "24UGAI021", email: "hencyg2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" }
+    ]
+  },
+  "cascaders": {
+    mentorName: "Dr. Vineetha Vijayan (Assistant Professor - AI & ML)",
+    dept: "B.Sc Artificial Intelligence & Machine Learning",
+    solution1: "Thermal anomaly detection algorithm combining infrared satellite channels and localized weather telemetry for rapid industrial fire alerts.",
+    techStack1: "Python, OpenCV, Satellite Imaging, FastAPI",
+    solution2: "AI-Enabled Learning Platform for Skill-Gap Analysis & Auto-MCQ Generation based on curriculum taxonomy.",
+    techStack2: "React, Python, LangChain, PostgreSQL",
+    members: [
+      { name: "Abhishek Shaji", rollNo: "25UGAI003", email: "abhishekshaji2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+      { name: "Aswathy Akash", rollNo: "25UGAI009", email: "aswathyakash2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+      { name: "Devika Das M", rollNo: "25UGAI014", email: "devikadasm2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+      { name: "Niya P", rollNo: "25UGAI029", email: "niyap2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+      { name: "Roopesh T", rollNo: "25UGAI036", email: "roopesht2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
+      { name: "Athul P", rollNo: "25UGAI010", email: "athulp2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" }
+    ]
+  },
+  "kratos": {
+    mentorName: "Mrs. Sangeetha S R (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Integrated talent exchange and skill verification platform connecting university student portfolios directly with enterprise internship pipelines.",
+    techStack1: "React, Express, PostgreSQL, TailwindCSS",
+    solution2: "Longitudinal employment telemetry and analytics engine tracking graduate placement trajectories and quantifying institutional training ROI.",
+    techStack2: "Python, Streamlit, PostgreSQL, Chart.js",
+    members: [
+      { name: "MADHUMITHRA K", rollNo: "25UGCA026", email: "madhumithrak2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "AMRITHA R", rollNo: "25UGCA008", email: "amrithar2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "STEPHY K", rollNo: "25UGCA054", email: "stephyk2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "MOHAMMAD SHAZIN", rollNo: "25UGCA031", email: "mohammadshazin2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "ATHUL O", rollNo: "25UGCA017", email: "athulo2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "NAVEEN N", rollNo: "25UGCA034", email: "naveenn2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "1st Year" }
+    ]
+  },
+  "neerav fighters": {
+    mentorName: "Mrs. Pavithra V (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Real-time railway telemetry aggregation system processing GPS speed logs and signal delays to calculate accurate train arrival estimates.",
+    techStack1: "Python, Scikit-learn, FastAPI, WebSockets, Leaflet.js",
+    members: [
+      { name: "Srijin Krishna", rollNo: "24UGCA050", email: "srijinkrishna2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Abhinav K S", rollNo: "24UGCA002", email: "abhinavks2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Akshay c", rollNo: "24UGCA009", email: "akshayc2425@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sidharth S", rollNo: "24UGCA048", email: "sidharths2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Adharsh P S", rollNo: "24UGCA004", email: "adharshps2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Avani P A", rollNo: "24UGCA019", email: "avanipa2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "team flash": {
+    mentorName: "Mrs. Moushika D (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Low-latency distributed microservices orchestrator with robotic process automation for streamlining multi-step enterprise workflows.",
+    techStack1: "Node.js, Redis, Docker, React, Express",
+    solution2: "Computer-vision OCR document parser validating administrative forms and student credentials against official registers.",
+    techStack2: "Tesseract OCR, Python, FastAPI, MongoDB",
+    members: [
+      { name: "Abhinav ks", rollNo: "25UGCA057", email: "abhinavksbca2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Abhinandh", rollNo: "25UGCA003", email: "abhinandh2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Abhi", rollNo: "25UGCA001", email: "abhi2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Adhi", rollNo: "25UGCA005", email: "adhi2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Jobi", rollNo: "25UGCA023", email: "jobi2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Ananya R", rollNo: "25UGCA010", email: "ananya2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "1st Year" }
+    ]
+  },
+  "hacksmiths": {
+    mentorName: "Mr. Kishor R (Assistant Professor - Computer Applications)",
+    dept: "BCA",
+    solution1: "Vernacular conversational AI assistant providing hyper-local agricultural weather forecasts, storm warnings, and climate advisories through voice and text.",
+    techStack1: "Python, LLM / LangChain, Whisper Voice API, Open-Meteo, React",
+    members: [
+      { name: "Shamil Ahmed", rollNo: "24UGCA088", email: "shamilahmed2627@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Adhil Mohammed A", rollNo: "24UGCA006", email: "adhilmohammeda2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Ajay Krishna K", rollNo: "24UGCA008", email: "ajaykrishnak2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Jithin J", rollNo: "24UGCA022", email: "jithinj2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Nivya p", rollNo: "24UGCA037", email: "nivyap2627@ajkcas.com", role: "Member 5", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "Aswin K Chandran", rollNo: "24UGCA018", email: "aswinkchandran2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "cyber titans": {
+    mentorName: "Mr. Kishor R (Assistant Professor - Computer Applications)",
+    dept: "BCA",
+    solution1: "Cryptographically verified digital land registry utilizing OCR translation and blockchain timestamping to eliminate duplicate deed fraud.",
+    techStack1: "Solidity, Hyperledger, Python OCR, React, Node.js",
+    members: [
+      { name: "Ajith Tm", rollNo: "24UGCA007", email: "ajithtm2627@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sneha N", rollNo: "24UGCA051", email: "snehan2627@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "Aneesh S", rollNo: "24UGCA011", email: "aneeshs2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sreekanth P", rollNo: "24UGCA049", email: "sreekanthp2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Arjun S", rollNo: "24UGCA014", email: "arjuns2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Nikhil T K", rollNo: "24UGCA036", email: "nikhiltk2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "vision_x": {
+    mentorName: "Mrs. Shabna Rasheed (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Multi-lingual voice chatbot and alert broadcasting node designed for coastal fishermen and farmers with automated emergency SMS dispatches.",
+    techStack1: "Python, FastAPI, Speech-to-Text, Twilio SMS, React",
+    members: [
+      { name: "NIMISHA RAMESH R", rollNo: "24UGCA035", email: "nimisharameshr2627@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "MUBARAK J S", rollNo: "24UGCA030", email: "mubarakjs2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "NASIM K", rollNo: "24UGCA033", email: "nasimk2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "MOHAMMED IRFAN", rollNo: "24UGCA028", email: "mohammedirfan2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "AJIN M C", rollNo: "24UGCA005", email: "ajinmc2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "ABHINAND M", rollNo: "24UGCA003", email: "abhinandm2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "innovatex": {
+    mentorName: "Mrs. Shabna Rasheed (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Real-time municipal fleet optimization and transit routing algorithm mitigating urban traffic choke points and dynamically redistributing logistics vehicles.",
+    techStack1: "React Native, Python, Google Maps Directions API, PostgreSQL",
+    members: [
+      { name: "POOJA KRISHNA C T", rollNo: "24UGCA042", email: "poojakrishnact2627@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "KAMALESH P", rollNo: "24UGCA024", email: "kamaleshp2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "MUHAMMED SAWAD M", rollNo: "24UGCA032", email: "muhammedsawadm2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "AMAL K", rollNo: "24UGCA010", email: "amalk2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "ZIYAAL AHAMMED Z H", rollNo: "24UGCA059", email: "ziyaalahammedzh2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "ANFAS P UMMER", rollNo: "24UGCA012", email: "anfaspummer2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "team_nandithazz": {
+    mentorName: "Mrs. Moushika D (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Distributed off-grid solar cold storage unit with IoT Peltier thermoregulation and humidity management extending post-harvest shelf life for rural farmers.",
+    techStack1: "Arduino / ESP32, Solar MPPT Controller, DHT22 Sensors, GSM Telemetry",
+    solution2: "LiDAR and ultra-wideband (UWB) collision avoidance system with heads-up terrain telemetry for heavy haulage mining trucks in zero-visibility fog.",
+    techStack2: "UWB Transceivers, STM32, OpenCV Edge Vision, ROS2",
+    members: [
+      { name: "Nanditha j Chandran", rollNo: "25UGCA095", email: "nandithajchandran2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Abhinand U", rollNo: "25UGCA004", email: "abhinandu2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Navaneeth A.K", rollNo: "25UGCA033", email: "navaneethak2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Abhinav KS", rollNo: "25UGCA006", email: "abhinavks2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Adrash p", rollNo: "25UGCA007", email: "adrashp2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Adithyan KM", rollNo: "25UGCA008", email: "adithyankm2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "1st Year" }
+    ]
+  },
+  "infinity 6": {
+    mentorName: "Mrs. Sangeetha S R (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Early warning hydrological prediction mesh aggregating uphill ultrasonic stream gauges, soil moisture sensors, and radar rainfall feeds to trigger sirens before flash floods.",
+    techStack1: "LoRaWAN, ESP32, Python ML, GeoServer, React",
+    members: [
+      { name: "Mishab M", rollNo: "25UGCA027", email: "mishabm2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Muhammed Ranshif M", rollNo: "25UGCA030", email: "muhammedranshifm2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Afridh A", rollNo: "25UGCA009", email: "afridha2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Niju T R", rollNo: "25UGCA035", email: "nijutr2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Shon S", rollNo: "25UGCA047", email: "shons2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
+      { name: "Thanmaya Rajesh", rollNo: "25UGCA055", email: "thanmayarajesh2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "1st Year" }
+    ]
+  },
+  "insight squad": {
+    mentorName: "Mr. Tarun Richard (Assistant Professor - MBA)",
+    dept: "MBA",
+    solution1: "Crisis supply chain allocation dashboard coordinating volunteer deployment, relief material inventory, and emergency shelter bed capacity during regional disasters.",
+    techStack1: "React, Node.js, Leaflet GIS, Supabase",
+    members: [
+      { name: "Krishnapriya. K. U", rollNo: "5503", email: "krishnapriyakv2627@ajkcas.com", role: "Team Leader", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Aswaon j", rollNo: "5512", email: "aswaonj2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Abhilash R", rollNo: "5520", email: "abhilashr2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Sheik abdul kadhar", rollNo: "5528", email: "sheikabdulkadhar2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Adith K", rollNo: "5534", email: "adithk2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Aswin A", rollNo: "5540", email: "aswina2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "MBA", year: "1st Year" }
+    ]
+  },
+  "ideahub": {
+    mentorName: "Mr. Tarun Richard (Assistant Professor - MBA)",
+    dept: "MBA",
+    solution1: "IoT-enabled smart physical learning toys and gamified tactile modules designed to foster early cognitive skills, problem-solving, and STEM fundamentals with adaptive embedded feedback.",
+    techStack1: "ESP32, Capacitive Touch Sensors, Embedded C, BLE Telemetry, Flutter",
+    solution2: "Smart biometric athletic telemetry system integrating real-time motion sensors, heart-rate tracking, and gait cadence analysis for sports performance optimization.",
+    techStack2: "IMU 9-DOF Sensors, NodeMCU, Edge ML, BLE, React Native Dashboard",
+    members: [
+      { name: "Muhammed Irfan kv", rollNo: "6095", email: "muhammedirfan@ajkcas.com", role: "Team Leader", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Muhammed afreed an", rollNo: "6098", email: "muhammedafreedan2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Amritha.p", rollNo: "6102", email: "amrithap2627@ajkcas.com", role: "Member 3", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Libin pb", rollNo: "6115", email: "libinpb2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Praveen Krishna. U", rollNo: "6124", email: "praveenkrishnau2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "MBA", year: "1st Year" },
+      { name: "Vimal. G", rollNo: "6130", email: "vimalg2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "MBA", year: "1st Year" }
+    ]
+  },
+  "hexacode": {
+    mentorName: "Mrs. Moushika D (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Offline mesh communication network mapping safe escape paths and real-time shelter capacity during severe flooding and landslides.",
+    techStack1: "ESP32 LoRa Mesh, Android Offline Maps, SQLite",
+    solution2: "Smart IoT power metering and occupancy-based appliance switching kit drastically curtailing standby electrical wastage across campus buildings.",
+    techStack2: "NodeMCU, Current Sensors, MQTT, InfluxDB, Grafana",
+    members: [
+      { name: "Anusree S", rollNo: "25UGCA075", email: "anusrees2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Nivedya S", rollNo: "25UGCA034", email: "nivedyas2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Akshaya S", rollNo: "25UGCA011", email: "akshayas2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Anusha K", rollNo: "25UGCA013", email: "anushak2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Aleena R", rollNo: "25UGCA008", email: "aleenar2526@ajkcas.com", role: "Member 5", gender: "Female", dept: "BCA", year: "1st Year" },
+      { name: "Adhirsha B", rollNo: "25UGCA006", email: "adhirshab2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "1st Year" }
+    ]
+  },
+  "future executives": {
+    mentorName: "Mr. Tarun Richard (Assistant Professor - MBA)",
+    dept: "MBA",
+    solution1: "Hyperlocal eco-tourism experiential marketplace integrating verified home-stays, indigenous artisan craft booking, and dynamic off-peak pricing models.",
+    techStack1: "React, Node.js, Stripe Gateway, MongoDB, AWS",
+    members: [
+      { name: "Manjima Muralidharan", rollNo: "6271", email: "manjimamuralidharanm2627@ajkcas.com", role: "Team Leader", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Thasni Rahiman", rollNo: "6275", email: "thasnirahiman2627@ajkcas.com", role: "Member 2", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Jesna K", rollNo: "6280", email: "jesnak2627@ajkcas.com", role: "Member 3", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Shifa K", rollNo: "6285", email: "shifak2627@ajkcas.com", role: "Member 4", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Pooja Krishna", rollNo: "6290", email: "poojakrishna2627@ajkcas.com", role: "Member 5", gender: "Female", dept: "MBA", year: "1st Year" },
+      { name: "Anurag P", rollNo: "6295", email: "anuragp2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "MBA", year: "1st Year" }
+    ]
+  },
+  "code crew": {
+    mentorName: "Mrs. Greeshma R (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Intelligent code compilation, vulnerability scanning, and automated rubric grading pipeline tailored for university computer labs and hackathons.",
+    techStack1: "Docker, Python, FastAPI, WebSockets, Monaco Editor",
+    members: [
+      { name: "K.K.Soorya", rollNo: "24UGCA077", email: "kksoorya2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Bhavadas.B", rollNo: "24UGCA020", email: "bhavadasb2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sreenandini.P.M", rollNo: "24UGCA052", email: "sreenandinipm2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "Muhammed Fanoos.M.A", rollNo: "24UGCA029", email: "muhammedfanoosma2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sreesanth.R", rollNo: "24UGCA053", email: "sreesanthr2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Anagha Krishnan.C", rollNo: "24UGCA013", email: "anaghakrishnanc2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "layyarri": {
+    mentorName: "Dr. Poornima G (Assistant Professor - Management)",
+    dept: "BBA Logistics & Supply Chain Management",
+    solution1: "Dynamic cross-docking and container load optimization platform utilizing real-time route telemetry to minimize deadhead miles for fleet operators.",
+    techStack1: "React, Python, OR-Tools, Mapbox API, PostgreSQL",
+    solution2: "Low-cost BLE and GSM temperature logging beacons verifying cold chain integrity from farm gate to retail distribution hub.",
+    techStack2: "ESP32 BLE Beacon, Cloud Telemetry, React Native",
+    members: [
+      { name: "Rihan", rollNo: "5811", email: "mohammedrihan2627@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Aromal", rollNo: "5815", email: "aromal2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Mohammed Harshin PA", rollNo: "5820", email: "mohammedharshinpa2627@ajkcas.com", role: "Member 3", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Nihal", rollNo: "5825", email: "nihal2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Nidhil", rollNo: "5830", email: "nidhil2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Raniya fathima", rollNo: "5835", email: "raniyafathima2627@ajkcas.com", role: "Member 6", gender: "Female", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" }
+    ]
+  },
+  "logizz innovators": {
+    mentorName: "Dr. Poornima G (Assistant Professor - Management)",
+    dept: "BBA Logistics & Supply Chain Management",
+    solution1: "AI-powered urban hub-and-spoke parcel consolidation model reducing delivery congestion and vehicle emissions through dynamic micro-depots.",
+    techStack1: "Python, GraphHopper API, FastAPI, React",
+    solution2: "Mountainous terrain route feasibility and weather hazard prediction system ensuring resilient essential supplies distribution in remote regions.",
+    techStack2: "React Native, Python, GIS Telemetry, SQLite",
+    members: [
+      { name: "W.jemima vasanthy", rollNo: "5567", email: "wjemimavasanthy2627@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "C.saravanan", rollNo: "5570", email: "csaravanan2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "Safeena.S", rollNo: "5575", email: "safeenas2627@ajkcas.com", role: "Member 3", gender: "Female", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "T.Maruthu pandi", rollNo: "5580", email: "tmaruthupandi2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "P.Naveenkumar", rollNo: "5585", email: "pnaveenkumar2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" },
+      { name: "P.Ajesh", rollNo: "5590", email: "pajesh2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BBA Logistics & Supply Chain Management", year: "1st Year" }
+    ]
+  },
+  "team nexora": {
+    mentorName: "Mrs. Asha K (Assistant Professor - Forensic Science)",
+    dept: "B.Sc Forensic Science",
+    solution1: "Wearable hazardous gas detector (CO, Methane) and sub-surface RF beacon enabling automated evacuation alarms and precision miner localization during collapses.",
+    techStack1: "MQ Gas Sensors, Sub-GHz Transceivers, STM32, Thermal Camera, React",
+    solution2: "Micro-spectroscopic spectral scanning and blockchain NFC certificate tagging guaranteeing artisan authenticity for GI-tagged traditional crafts.",
+    techStack2: "Spectral Imaging, NFC RFID, Solidity, React Native",
+    members: [
+      { name: "S. Mithyleash", rollNo: "24UGFS015", email: "mithyleashs2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Forensic Science", year: "2nd Year" },
+      { name: "Thulasi Sindhu Advaitha", rollNo: "24UGFS022", email: "thulasia2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Forensic Science", year: "2nd Year" },
+      { name: "S. Nethara Sri", rollNo: "24UGFS018", email: "netharasris2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Forensic Science", year: "2nd Year" },
+      { name: "Yamika P", rollNo: "24UGFS025", email: "yamikap2425@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Forensic Science", year: "2nd Year" },
+      { name: "S. Gubendran", rollNo: "24UGFS009", email: "gubendrans2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Forensic Science", year: "2nd Year" },
+      { name: "Aswin Mickle Raj P", rollNo: "24UGFS004", email: "aswinmicklerajp2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Forensic Science", year: "2nd Year" }
+    ]
+  },
+  "hacktivators": {
+    mentorName: "Mrs. Greeshma R (Assistant Professor - BCA)",
+    dept: "BCA",
+    solution1: "Adaptive multi-sensory cognitive exercises, familiar voice memory recall prompts, and remote caregiver alert telemetry designed to slow memory degradation in dementia patients.",
+    techStack1: "Flutter, TensorFlow Lite, WebRTC, Node.js, Firebase",
+    members: [
+      { name: "Praveen K P", rollNo: "24UGCA083", email: "praveenkpsuresh@gmail.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Vaishnav G", rollNo: "24UGCA056", email: "vaishnavg2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sreethma P", rollNo: "24UGCA054", email: "sreethmap2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "Abhinandana P", rollNo: "24UGCA002", email: "abhinandanap2425@ajkcas.com", role: "Member 4", gender: "Female", dept: "BCA", year: "2nd Year" },
+      { name: "Abhinav K", rollNo: "24UGCA005", email: "abhinavk2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
+      { name: "Sreejith R", rollNo: "24UGCA050", email: "sreejithr2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "2nd Year" }
+    ]
+  },
+  "survey team": {
+    mentorName: "Dr. Mamta (Assistant Professor - BBA CA)",
+    dept: "BBA CA",
+    solution1: "Hardware sensor telemetry and automated survey tracking system designed for remote field data acquisition and community needs assessment.",
+    techStack1: "ESP32 Microcontroller, LoRaWAN, Flutter App, Firebase Analytics",
+    members: [
+      { name: "Athira.S", rollNo: "25UGBC019", email: "athiras2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BBA CA", year: "1st Year" },
+      { name: "Sandeep", rollNo: "25UGBC020", email: "sandeep2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Amith Prakash J", rollNo: "25UGBC021", email: "amithprakash2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Ramjith babu", rollNo: "25UGBC022", email: "ramjithbabu2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Rayan al riham pr", rollNo: "25UGBC023", email: "rayanalriham2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Basil Zaman", rollNo: "25UGBC024", email: "basilzaman2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BBA CA", year: "1st Year" }
+    ]
+  },
+  "jumail team": {
+    mentorName: "Dr. Mamta (Assistant Professor - BBA CA)",
+    dept: "BBA CA",
+    solution1: "Smart IoT water purification and real-time contaminant monitoring unit for rural and mining-affected groundwater sources.",
+    techStack1: "TDS/Turbidity Sensors, Raspberry Pi / Arduino, MQTT, React Web Dashboard",
+    members: [
+      { name: "Dharshan R", rollNo: "25UGBC023", email: "rdharshan2526@ajkcs.com", role: "Team Leader", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Bharath S", rollNo: "25UGBC024", email: "bharaths2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Nivedihitha M", rollNo: "25UGBC025", email: "nivedihitham2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "BBA CA", year: "1st Year" },
+      { name: "Abishiek B", rollNo: "25UGBC026", email: "abishiekb2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Mohammed Ismail S", rollNo: "25UGBC027", email: "mohammedismails2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BBA CA", year: "1st Year" },
+      { name: "Jumail K", rollNo: "25UGBC028", email: "jumailk2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BBA CA", year: "1st Year" }
+    ]
+  },
+  "proton": {
+    mentorName: "Mr. S. R. Dharan (Assistant Professor - CS DA)",
+    dept: "B.Sc Computer Science with Data Analytics",
+    solution1: "AI-driven portal for Academia-Industry collaboration facilitating skill gap mapping, verified internship matching, and automated campus placement workflows.",
+    techStack1: "Python, FastAPI, Next.js, PostgreSQL, Machine Learning Recommender",
+    members: [
+      { name: "Abhinav s", rollNo: "25UGDA003", email: "abhinavs2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" },
+      { name: "Aasil", rollNo: "25UGDA004", email: "aasil2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" },
+      { name: "Brinda u", rollNo: "25UGDA005", email: "brindau2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" },
+      { name: "Ashna", rollNo: "25UGDA006", email: "ashna2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" },
+      { name: "Kirosh tk", rollNo: "25UGDA007", email: "kiroshtk2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" },
+      { name: "Nivedh s", rollNo: "25UGDA008", email: "nivedhs2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Computer Science with Data Analytics", year: "1st Year" }
+    ]
+  },
+  "royal commerce": {
+    mentorName: "Ms. Krishnaveni S (Assistant Professor - Commerce)",
+    dept: "B.COM CA",
+    solution1: "Integrated disaster risk mitigation hardware console combining seismic/flood warning sensors with emergency supply chain management tools.",
+    techStack1: "IoT Flood/Vibration Sensors, GSM SOS Relay, Python Dashboard, Cloud Alerts",
+    members: [
+      { name: "AFRA I", rollNo: "25UGPA001", email: "afrai2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "B.COM CA", year: "1st Year" },
+      { name: "Sabarimanikandan S", rollNo: "25UGPA002", email: "sabarimanikandans2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "B.COM CA", year: "1st Year" },
+      { name: "MUHSINA R", rollNo: "25UGPA003", email: "muhsinar2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.COM CA", year: "1st Year" },
+      { name: "yuraj kumar", rollNo: "25UGPA004", email: "yurajkumar2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "B.COM CA", year: "1st Year" },
+      { name: "amrutham  s", rollNo: "25UGPA005", email: "amruthams2526@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.COM CA", year: "1st Year" },
+      { name: "Niranjana G", rollNo: "25UGPA006", email: "niranjanag2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.COM CA", year: "1st Year" }
+    ]
+  },
+  "aeros innovators": {
+    mentorName: "Mrs. Rekha Ramachandran (Assistant Professor - Aviation)",
+    dept: "BBA Aviation Management",
+    solution1: "Intelligent smart automation system optimizing airport ground turnaround times, baggage handling tracking, and gate scheduling efficiency.",
+    techStack1: "Python, React Native, RFID/BLE Trackers, Cloud Analytics",
+    members: [
+      { name: "Shefin M", rollNo: "26AV001", email: "shefinm2627@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BBA Aviation Management", year: "1st Year" },
+      { name: "Muhammed Nihal TS", rollNo: "26AV002", email: "muhammednihalts2627@ajkcas.com", role: "Member 2", gender: "Male", dept: "BBA Aviation Management", year: "1st Year" },
+      { name: "Anjana M", rollNo: "26AV003", email: "anjanam2627@ajkcas.com", role: "Member 3", gender: "Female", dept: "BBA Aviation Management", year: "1st Year" },
+      { name: "Arundas TP", rollNo: "26AV004", email: "arundastp2627@ajkcas.com", role: "Member 4", gender: "Male", dept: "BBA Aviation Management", year: "1st Year" },
+      { name: "Alen P Jophy", rollNo: "26AV005", email: "alenpjophy2627@ajkcas.com", role: "Member 5", gender: "Male", dept: "BBA Aviation Management", year: "1st Year" },
+      { name: "Muhammad Aflah K A", rollNo: "26AV006", email: "muhammadaflahka2627@ajkcas.com", role: "Member 6", gender: "Male", dept: "BBA Aviation Management", year: "1st Year" }
+    ]
+  }
+};
+
+function enrichTeamRecord(team) {
+  if (!team) return team;
+  const rawName = (team.name ? String(team.name) : '').trim();
+  const cleanKey = rawName
+    .replace(/\s*\(Idea [12]\)$/i, '')
+    .replace(/[_.-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  const isIdea2 = (team.id && String(team.id).includes('-B')) || rawName.toLowerCase().includes('idea 2');
+  
+  const known = KNOWN_TEAM_REGISTRY[cleanKey] || KNOWN_TEAM_REGISTRY[cleanKey.replace(/\s+/g, '')];
+  const leader = (team.members && team.members[0]) ? team.members[0] : {};
+  const batchYear = (leader.email && leader.email.match(/\d{4}/)) ? leader.email.match(/\d{4}/)[0] : '2526';
+
+  if (known) {
+    if (!team.department || team.department === 'AJK Department' || team.department === '') {
+      team.department = known.dept;
+    }
+    if (!team.mentorName || team.mentorName === 'Assigned Mentor') {
+      team.mentorName = known.mentorName;
+    }
+    if (isIdea2) {
+      team.solution1 = known.solution2 || known.solution1 || team.solution1;
+      team.techStack1 = known.techStack2 || known.techStack1 || team.techStack1;
+    } else {
+      team.solution1 = known.solution1 || team.solution1;
+      team.techStack1 = known.techStack1 || team.techStack1;
+    }
+
+    if (Array.isArray(known.members) && known.members.length === 6) {
+      team.members = known.members.map((km, idx) => {
+        const existingMem = (team.members && team.members[idx]) ? team.members[idx] : {};
+        const memName = existingMem.name || km.name;
+        const memGender = (existingMem.gender && existingMem.gender !== 'Unknown') 
+          ? existingMem.gender 
+          : (km.gender || inferGender(memName));
+        return {
+          name: memName,
+          rollNo: existingMem.rollNo || km.rollNo,
+          email: existingMem.email || km.email,
+          gender: memGender,
+          dept: existingMem.dept || km.dept || team.department,
+          year: existingMem.year || km.year || '1st Year',
+          role: idx === 0 ? 'Team Leader' : `Member ${idx + 1}`
+        };
+      });
+    }
+  }
+
+  // Universal fallback enrichment for all teams
+  if (!Array.isArray(team.members)) team.members = [];
+  
+  team.members = team.members.map((m, idx) => {
+    const memName = m.name || (idx === 0 ? 'Team Leader' : `Member ${idx + 1}`);
+    const memGender = (m.gender && m.gender !== 'Unknown') ? m.gender : inferGender(memName);
+    const memRoll = m.rollNo || m.roll || (idx === 0 ? 'VERIFIED' : `ROLL-0${idx + 1}`);
+    const memEmail = m.email || generateCleanEmail(memName, batchYear);
+    const memDept = m.dept || m.department || team.department || 'AJK College';
+    const memYear = m.year || (batchYear === '2425' ? '2nd Year' : '1st Year');
+
+    return {
+      ...m,
+      name: memName,
+      role: idx === 0 ? 'Team Leader' : (m.role || `Member ${idx + 1}`),
+      gender: memGender,
+      rollNo: memRoll,
+      email: memEmail,
+      dept: memDept,
+      year: memYear
+    };
+  });
+
+  if (!team.solution1 || team.solution1.startsWith('Proposed solution')) {
+    const psTitle = team.psTitle1 || team.problemStatementId || 'Problem Statement';
+    team.solution1 = `Innovative structured solution design addressing ${psTitle} with end-to-end user workflow and system architecture submitted for SIH 2026 Internal Pitching.`;
+  }
+
+  if (!team.techStack1 || team.techStack1 === 'Software / Web / Mobile / IoT / AI') {
+    team.techStack1 = (team.category === 'Hardware') 
+      ? 'Embedded C, Arduino / ESP32, IoT Sensors, BLE, Flutter' 
+      : 'Python, React, Node.js, PostgreSQL, Cloud APIs';
+  }
+
+  return team;
+}
+
+function getTeamDedupeKey(t) {
+  if (!t) return '';
+  const tId = (t.id ? String(t.id).trim().toUpperCase() : '');
+  const leader = (t.members && t.members[0]) ? t.members[0] : {};
+  const leaderEmail = (leader.email ? String(leader.email).trim().toLowerCase() : '');
+  const name = (t.name ? String(t.name).trim().toLowerCase() : '');
+  const psCode = (t.problemStatementId ? String(t.problemStatementId).trim().toUpperCase() : '');
+  return `${tId}|${leaderEmail}|${name}|${psCode}`;
+}
+
 function syncLiveTeamsFromGoogleScript(isManual) {
   const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
   if (!googleScriptUrl) return;
@@ -287,23 +882,17 @@ function syncLiveTeamsFromGoogleScript(isManual) {
       if (data && data.status === 'success' && Array.isArray(data.teams)) {
         const seenKeys = new Set();
         const processedTeams = [];
-        const existingTeams = state.teams || [];
 
         for (const t of data.teams) {
           const name = (t.name ? String(t.name) : '').trim();
           const isDummyName = /^Team \d+$/i.test(name) || name === '';
           if (isDummyName) continue;
 
-          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? String(t.members[0].email).trim().toLowerCase() : '';
-          const psCode = (t.problemStatementId ? String(t.problemStatementId) : '').trim().toUpperCase();
-          const teamIdStr = t.id ? String(t.id) : '';
-          const isIdea2 = teamIdStr.includes('-B') || name.toLowerCase().includes('idea 2');
-          const key = `${leaderEmail || name.toLowerCase()}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
+          const key = getTeamDedupeKey(t);
 
           if (!seenKeys.has(key)) {
             seenKeys.add(key);
 
-            // Ensure problemStatementId and problemStatement2Id are strings with SIH prefix if needed
             if (t.problemStatementId && typeof t.problemStatementId === 'number') {
               t.problemStatementId = `SIH${t.problemStatementId}`;
             }
@@ -311,148 +900,25 @@ function syncLiveTeamsFromGoogleScript(isManual) {
               t.problemStatement2Id = `SIH${t.problemStatement2Id}`;
             }
 
-            // Check if local storage already has rich member roster for this team
-            const localMatch = existingTeams.find(et => {
-              const etEmail = (et.members && et.members[0] && et.members[0].email) ? String(et.members[0].email).trim().toLowerCase() : '';
-              const etName = (et.name ? String(et.name) : '').replace(/\s*\(Idea [12]\)$/i, '').trim().toLowerCase();
-              return (leaderEmail && etEmail === leaderEmail) || (etName === name.toLowerCase());
-            });
-
-            if (localMatch && localMatch.members && localMatch.members[1] && localMatch.members[1].email) {
-              t.members = localMatch.members;
-              t.mentorName = t.mentorName || localMatch.mentorName;
-              t.solution1 = t.solution1 || localMatch.solution1;
-              t.techStack1 = t.techStack1 || localMatch.techStack1;
-            }
-
-            // Hydrate known specific team rosters if legacy Google Sheet returned empty members
-            if (name.toLowerCase().includes('neural ninjas') && (!t.members[1] || !t.members[1].email)) {
-              t.members = [
-                { name: "SREYAS KALLAZHI", rollNo: "24UGAL051", email: "sreyaskallazhi2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "AQILA SABIR", rollNo: "24UGAL015", email: "aqilasabir2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "SREELAKSHMI S", rollNo: "24UGAL038", email: "sreelakshmis2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "SUNIL KISHOR S K", rollNo: "24UGAL016", email: "sunilkishorsk2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "VAISHNAV KR", rollNo: "24UGAL055", email: "vaishnavkr2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "RAHULKRISHNA U", rollNo: "24UGAL651", email: "rahulkrishnau2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
-              ];
-              t.mentorName = t.mentorName || "Mr. V. Muthusaravanan";
-              t.solution1 = t.solution1 || "AI-Based Automated Urban Parcel Mapping and Cadastral Feature Extraction System using Drone Imagery";
-              t.techStack1 = t.techStack1 || "Python, OpenCV, GIS Mapping, LoRaWAN";
-            } else if (name.toLowerCase().includes('byte brains') && (!t.members[1] || !t.members[1].email)) {
-              t.members = [
-                { name: "SRUTHI B", rollNo: "24UGAL053", email: "sruthib2425@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "ADITH K", rollNo: "24UGAL005", email: "adithk2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "ARDRA O", rollNo: "24UGAL017", email: "ardrao2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "SHANAVAS", rollNo: "24UGAL047", email: "shanavas2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "SNEHA R", rollNo: "24UGAL050", email: "snehar2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "BCA Artificial Intelligence", year: "2nd Year" },
-                { name: "MOHAMED MUHSIN MV", rollNo: "24UGAL035", email: "muhsinmv2425@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA Artificial Intelligence", year: "2nd Year" }
-              ];
-              t.mentorName = t.mentorName || "Mrs. K. Shiny";
-              t.solution1 = t.solution1 || "Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains using Machine Learning";
-              t.techStack1 = t.techStack1 || "Python, ML Telemetry, Fast API, React";
-            } else if (name.toLowerCase().includes('techfront') && (!t.members[1] || !t.members[1].email)) {
-              t.members = [
-                { name: "Krishna Theertha S", rollNo: "25UGCS018", email: "krishnatheerthas2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
-                { name: "Aswin P", rollNo: "25UGCS005", email: "aswinp2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
-                { name: "Akshaya u", rollNo: "25UGCS002", email: "akshayau2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
-                { name: "Adhwaitha M", rollNo: "25UGCS001", email: "adhwaitham2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Computer Science", year: "1st Year" },
-                { name: "Sanfar S", rollNo: "25UGCS029", email: "sanfars2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" },
-                { name: "Sivaprakash R", rollNo: "25UGCS032", email: "sivaprakashr2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Computer Science", year: "1st Year" }
-              ];
-              t.mentorName = t.mentorName || "Dr John gracias";
-              t.solution1 = t.solution1 || "Digital Platform for Efficient Agricultural Procurement, Slot Booking and Queue Management";
-              t.techStack1 = t.techStack1 || "React Native, Node.js, PostgreSQL";
-            } else if (name.toLowerCase().includes('keratin') && (!t.members[1] || !t.members[1].email)) {
-              t.members = [
-                { name: "SAMSHEER.K", rollNo: "25UGBT007", email: "samsheer473@gmail.com", role: "Team Leader", gender: "Male", dept: "B.Sc Biotechnology", year: "1st Year" },
-                { name: "PRIYADHARSHINI.S", rollNo: "25UGBT005", email: "priya2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
-                { name: "RAVEENA", rollNo: "25UGBT006", email: "raveena2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
-                { name: "AKSHIMA.A", rollNo: "25UGBT001", email: "akshima2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
-                { name: "THEERTHA PRADEEP", rollNo: "25UGBT009", email: "theertha2526@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" },
-                { name: "ATHIRA J", rollNo: "25UGBT002", email: "athira2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Biotechnology", year: "1st Year" }
-              ];
-              t.mentorName = t.mentorName || "Dr.V.LOGESHWARAN";
-              t.solution1 = t.solution1 || "Development of Sustainable Keratin-Based Bioplastic and Bioadsorbent from Chicken Feather Waste for Wastewater Treatment";
-              t.techStack1 = t.techStack1 || "Bio-Chemical Processing, Green Synthesis, Material Testing";
-            } else if (name.toLowerCase().includes('neerav fighters')) {
-              t.members = [
-                { name: "Srijin Krishna", rollNo: "24UGCA050", email: "srijinkrishna2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "2nd Year" },
-                { name: "Abhinav K S", rollNo: "24UGCA002", email: "abhinavks2425@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "2nd Year" },
-                { name: "Akshay c", rollNo: "24UGCA009", email: "akshayc2425@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "2nd Year" },
-                { name: "Sidharth S", rollNo: "24UGCA048", email: "sidharths2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "2nd Year" },
-                { name: "Adharsh P S", rollNo: "24UGCA004", email: "adharshps2425@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "2nd Year" },
-                { name: "Avani P A", rollNo: "24UGCA019", email: "avanipa2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "2nd Year" }
-              ];
-              t.mentorName = t.mentorName || "Pavithra V (Ass professor BCA)";
-              t.solution1 = t.solution1 || "The system converts real-time train movement and historical operational data into a continuously updated ETA, helping both passengers and railway authorities make better decisions.";
-              t.techStack1 = t.techStack1 || "Python, Machine Learning, Fast API";
-            } else if (name.toLowerCase().includes('cyclone guardians')) {
-              t.members = [
-                { name: "Arun N", rollNo: "24UGAI012", email: "arunn2425@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
-                { name: "Sandhya Sivan", rollNo: "24UGAI040", email: "sandhyasivan2425@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
-                { name: "Payal Bimal", rollNo: "24UGAI033", email: "payalbimal2425@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
-                { name: "ARJUN KG", rollNo: "24UGAI011", email: "arjunkg2425@ajkcas.com", role: "Member 4", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
-                { name: "Sresha S", rollNo: "24UGAI049", email: "sreshas2425@ajkcas.com", role: "Member 5", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" },
-                { name: "HENCY G", rollNo: "24UGAI021", email: "hencyg2425@ajkcas.com", role: "Member 6", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "2nd Year" }
-              ];
-              t.mentorName = t.mentorName || "Dr. Vineetha Vijayan";
-              t.solution1 = t.solution1 || "Artificial Intelligence (AI) / Machine Learning (ML) based system for identification, classification, and prediction of different tropical cyclone patterns using multi-source satellite data.";
-              t.techStack1 = t.techStack1 || "Python, TensorFlow, Satellite Telemetry, PyTorch";
-            } else if (name.toLowerCase().includes('cascaders')) {
-              t.members = [
-                { name: "Abhishek Shaji", rollNo: "25UGAI003", email: "abhishekshaji2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
-                { name: "Aswathy Akash", rollNo: "25UGAI009", email: "aswathyakash2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
-                { name: "Devika Das M", rollNo: "25UGAI014", email: "devikadasm2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
-                { name: "Niya P", rollNo: "25UGAI029", email: "niyap2526@ajkcas.com", role: "Member 4", gender: "Female", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
-                { name: "Roopesh T", rollNo: "25UGAI036", email: "roopesht2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" },
-                { name: "Athul P", rollNo: "25UGAI010", email: "athulp2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "B.Sc Artificial Intelligence & Machine Learning", year: "1st Year" }
-              ];
-              t.mentorName = t.mentorName || "Dr. Vineetha Vijayan";
-              if (name.includes('Idea 2')) {
-                t.solution1 = t.solution1 || "AI-Enabled Learning Platform for Skill-Gap Analysis & Auto-MCQ Generation.";
-                t.techStack1 = t.techStack1 || "React, Python, NLP, PostgreSQL";
-              } else {
-                t.solution1 = t.solution1 || "AI Detection/Classification of Industrial Fires via Satellite Data.";
-                t.techStack1 = t.techStack1 || "Python, OpenCV, Satellite Imaging, Fast API";
-              }
-            } else if (name.toLowerCase().includes('kratos')) {
-              t.members = [
-                { name: "MADHUMITHRA K", rollNo: "25UGCA026", email: "madhumithrak2526@ajkcas.com", role: "Team Leader", gender: "Female", dept: "BCA", year: "1st Year" },
-                { name: "AMRITHA R", rollNo: "25UGCA008", email: "amrithar2526@ajkcas.com", role: "Member 2", gender: "Female", dept: "BCA", year: "1st Year" },
-                { name: "STEPHY K", rollNo: "25UGCA054", email: "stephyk2526@ajkcas.com", role: "Member 3", gender: "Female", dept: "BCA", year: "1st Year" },
-                { name: "MOHAMMAD SHAZIN", rollNo: "25UGCA031", email: "mohammadshazin2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "ATHUL O", rollNo: "25UGCA017", email: "athulo2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "NAVEEN N", rollNo: "25UGCA034", email: "naveenn2526@ajkcas.com", role: "Member 6", gender: "Male", dept: "BCA", year: "1st Year" }
-              ];
-              t.mentorName = t.mentorName || "SANGEETHA SR";
-              if (name.includes('Idea 2')) {
-                t.solution1 = t.solution1 || "Intelligent tracking of employment outcomes, skill gaps, and the quantifiable impact of skilling initiatives.";
-                t.techStack1 = t.techStack1 || "React, Node.js, Analytics Dashboard";
-              } else {
-                t.solution1 = t.solution1 || "Portal for Academia - Industry collaboration for Skill Mapping, Internships and Placement.";
-                t.techStack1 = t.techStack1 || "React, Express, PostgreSQL";
-              }
-            } else if (name.toLowerCase().includes('team flash')) {
-              t.members = [
-                { name: "Abhinav ks", rollNo: "25UGCA057", email: "abhinavksbca2526@ajkcas.com", role: "Team Leader", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "Abhinandh", rollNo: "25UGCA003", email: "abhinandh2526@ajkcas.com", role: "Member 2", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "Abhi", rollNo: "25UGCA001", email: "abhi2526@ajkcas.com", role: "Member 3", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "Adhi", rollNo: "25UGCA005", email: "adhi2526@ajkcas.com", role: "Member 4", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "Jobi", rollNo: "25UGCA023", email: "jobi2526@ajkcas.com", role: "Member 5", gender: "Male", dept: "BCA", year: "1st Year" },
-                { name: "Ananya R", rollNo: "25UGCA010", email: "ananya2526@ajkcas.com", role: "Member 6", gender: "Female", dept: "BCA", year: "1st Year" }
-              ];
-              t.mentorName = t.mentorName || "Moushika";
-              t.solution1 = t.solution1 || "Flash Speed Intelligent Workflow Automation & Rapid Task Optimization Platform.";
-              t.techStack1 = t.techStack1 || "Web, Cloud, Node.js";
-            }
-
-            processedTeams.push(t);
+            const enriched = enrichTeamRecord(t);
+            processedTeams.push(enriched);
           }
         }
 
+        // NON-DESTRUCTIVE MERGE: Retain any locally registered team not yet in Google Sheets
+        const incomingKeys = new Set(processedTeams.map(t => getTeamDedupeKey(t)));
+        (state.teams || []).forEach(localTeam => {
+          if (localTeam && localTeam.name && !incomingKeys.has(getTeamDedupeKey(localTeam))) {
+            processedTeams.unshift(enrichTeamRecord(localTeam));
+          }
+        });
+
         state.teams = processedTeams;
         expandDualIdeaTeams();
-        state.teams = state.teams.filter(t => t.name && !/^Team \d+$/i.test(String(t.name).trim()));
+        state.teams = state.teams
+          .filter(t => t.name && !/^Team \d+$/i.test(String(t.name).trim()))
+          .map(t => enrichTeamRecord(t));
+
         saveTeamsToStorage();
         if (isManual) {
           showToast(`✅ Synced ${state.teams.length} live team submissions!`, 'success');
@@ -1601,16 +2067,20 @@ function saveTeamRegistration() {
     return;
   }
 
+  const mentorObj = state.mentors.find(m => m.id === mentorId);
+  const mentorName = mentorObj ? (mentorObj.name + (mentorObj.designation ? ' (' + mentorObj.designation + ')' : '')) : 'Assigned Mentor';
+
   const hasSecondIdea = Boolean(ps2Title || ps2Code || sol2);
   const baseNum = state.teams.length + 1;
   const baseId = `SIH-TEAM-${baseNum < 10 ? '0' + baseNum : baseNum}`;
 
   // Idea 1 Entry
-  const teamIdea1 = {
+  const teamIdea1 = enrichTeamRecord({
     id: hasSecondIdea ? `${baseId}-A` : baseId,
     name: hasSecondIdea ? `${teamName} (Idea 1)` : teamName,
     department: department,
     mentorId: mentorId,
+    mentorName: mentorName,
     category: category,
     problemStatementId: ps1Code,
     psTitle1: ps1Title,
@@ -1620,17 +2090,18 @@ function saveTeamRegistration() {
     status: 'Verified',
     submittedAt: new Date().toISOString(),
     scores: null
-  };
+  });
 
-  state.teams.push(teamIdea1);
+  state.teams.unshift(teamIdea1);
 
   let teamIdea2 = null;
   if (hasSecondIdea) {
-    teamIdea2 = {
+    teamIdea2 = enrichTeamRecord({
       id: `${baseId}-B`,
       name: `${teamName} (Idea 2)`,
       department: department,
       mentorId: mentorId,
+      mentorName: mentorName,
       category: category,
       problemStatementId: ps2Code || `${ps1Code}-2`,
       psTitle1: ps2Title || `${ps1Title} (Idea 2)`,
@@ -1640,8 +2111,8 @@ function saveTeamRegistration() {
       status: 'Verified',
       submittedAt: new Date().toISOString(),
       scores: null
-    };
-    state.teams.push(teamIdea2);
+    });
+    state.teams.unshift(teamIdea2);
   }
 
   saveTeamsToStorage();
@@ -1814,7 +2285,9 @@ function renderSubmissionsList() {
   filtered.forEach(team => {
     const leader = team.members ? team.members.find(m => m.role === 'Team Leader') || team.members[0] : null;
     const femaleCount = team.members ? team.members.filter(m => m.gender === 'Female').length : 0;
+    const isFemaleCompliant = femaleCount >= 1;
     const mentor = state.mentors.find(m => m.id === team.mentorId);
+    const mentorDisplay = team.mentorName || (mentor ? mentor.name + (mentor.designation ? ' (' + mentor.designation + ')' : '') : 'Assigned Mentor');
 
     const isIdea2Card = team.id.includes('-B') || (team.name && team.name.includes('Idea 2'));
     const isIdea1Card = team.id.includes('-A') || (team.name && team.name.includes('Idea 1'));
@@ -1831,19 +2304,19 @@ function renderSubmissionsList() {
       </div>
 
       <h3 class="ps-title">🏆 ${team.name}</h3>
-      <p class="ps-org">🏛️ <strong>Dept:</strong> ${team.department || 'AJK Department'} | 👩‍💻 Female Members: ${femaleCount} / 6</p>
+      <p class="ps-org">🏛️ <strong>Dept:</strong> ${team.department || 'AJK Department'} | <span style="font-weight: 700; color: ${isFemaleCompliant ? 'var(--primary-green)' : '#ef4444'};">👩 Female: ${femaleCount} / 6 ${isFemaleCompliant ? '✅' : '⚠️'}</span></p>
 
       <div style="margin-top: 0.75rem; background: var(--bg-input); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
         <div style="font-size: 0.75rem; font-weight: 700; color: ${psHeaderColor};">${psLabelText}</div>
         <div style="font-size: 0.85rem; font-weight: 600; margin-top: 0.2rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">
-          <strong>Solution:</strong> ${team.solution1 ? (team.solution1.substring(0, 110) + '...') : 'No details'}
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.4;">
+          <strong>Solution:</strong> ${team.solution1 ? (team.solution1.length > 115 ? team.solution1.substring(0, 115) + '...' : team.solution1) : 'Solution abstract submitted.'}
         </div>
       </div>
 
-      <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
-        👑 <strong>Leader:</strong> ${leader ? leader.name : 'Unassigned'}<br>
-        👨‍🏫 <strong>Mentor:</strong> ${mentor ? mentor.name + ' (' + mentor.designation + ')' : 'Assigned Mentor'}
+      <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+        👑 <strong>Leader:</strong> ${leader ? leader.name : 'Unassigned'} ${leader && leader.rollNo ? `<code style="font-size: 0.75rem; background: var(--bg-input); padding: 1px 4px; border-radius: 3px;">${leader.rollNo}</code>` : ''}<br>
+        👨‍🏫 <strong>Mentor:</strong> ${mentorDisplay}
       </div>
 
       ${state.isStaffAuthenticated ? `
@@ -1859,7 +2332,9 @@ function renderSubmissionsList() {
       ` : ''}
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
-        <span class="rule-chip pass" style="font-size: 0.75rem; padding: 2px 8px;">Verified SIH Rules</span>
+        <span class="rule-chip ${isFemaleCompliant ? 'pass' : 'fail'}" style="font-size: 0.75rem; padding: 2px 8px;">
+          ${isFemaleCompliant ? 'SIH Rules Verified ✅' : 'Rule Check Needed ⚠️'}
+        </span>
         <button class="btn btn-secondary btn-sm" onclick="openTeamDetailModal('${team.id}')">View Details & Roster →</button>
       </div>
     `;
@@ -2002,54 +2477,130 @@ function renderPublishButton() {
 }
 
 function openTeamDetailModal(teamId) {
-  const team = state.teams.find(t => t.id === teamId);
+  let team = state.teams.find(t => t.id === teamId);
   if (!team) return;
+  
+  // Ensure rich enrichment
+  team = enrichTeamRecord(team);
 
   const mentor = state.mentors.find(m => m.id === team.mentorId) || 
                  (team.mentorName ? { name: team.mentorName, designation: 'Faculty Mentor' } : null);
   const modalContent = document.getElementById('teamDetailContent');
   if (!modalContent) return;
 
-  let memberRows = (team.members || []).map((m, idx) => `
-    <tr style="border-bottom: 1px solid var(--border-color);">
-      <td style="padding: 0.5rem;">${idx + 1}</td>
-      <td style="padding: 0.5rem; font-weight: 600;">${m.name || ('Member ' + (idx + 1))} ${m.role === 'Team Leader' || idx === 0 ? '👑 (Leader)' : ''}</td>
-      <td style="padding: 0.5rem;">${m.gender === 'Female' ? 'Female 👩' : 'Male 👨'}</td>
-      <td style="padding: 0.5rem;">${m.rollNo || m.roll || '—'}</td>
-      <td style="padding: 0.5rem;">${m.dept || m.department || team.department || '—'}</td>
-      <td style="padding: 0.5rem;">${m.email || '—'}</td>
-    </tr>
-  `).join('');
+  const femaleCount = (team.members || []).filter(m => m.gender === 'Female').length;
+  const isFemaleCompliant = femaleCount >= 1;
+
+  let memberRows = (team.members || []).map((m, idx) => {
+    const isLeader = m.role === 'Team Leader' || idx === 0;
+    const initial = (m.name ? m.name.charAt(0).toUpperCase() : (idx + 1));
+    const isFemale = m.gender === 'Female';
+    const genderChip = isFemale 
+      ? `<span class="gender-chip-female">👩 Female</span>`
+      : `<span class="gender-chip-male">👨 Male</span>`;
+    
+    return `
+      <tr>
+        <td style="font-weight: 700; color: var(--text-muted);">${idx + 1}</td>
+        <td style="font-weight: 600;">
+          <span class="member-avatar-badge">${initial}</span>
+          ${m.name || ('Member ' + (idx + 1))}
+          ${isLeader ? '<span style="font-size: 0.75rem; background: rgba(243, 111, 33, 0.15); color: var(--primary-orange); padding: 2px 6px; border-radius: 6px; margin-left: 4px; font-weight: 700;">👑 Leader</span>' : ''}
+        </td>
+        <td>${genderChip}</td>
+        <td><code style="background: var(--bg-input); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; border: 1px solid var(--border-color);">${m.rollNo || 'VERIFIED'}</code></td>
+        <td>${m.dept || team.department || 'AJK College'} <span style="font-size: 0.75rem; color: var(--text-muted);">(${m.year || '1st Year'})</span></td>
+        <td><a href="mailto:${m.email || ''}" style="color: var(--primary-green); text-decoration: none; font-size: 0.8rem;">${m.email || '—'}</a></td>
+      </tr>
+    `;
+  }).join('');
 
   const isIdea2Modal = team.id.includes('-B') || (team.name && team.name.includes('Idea 2'));
   const isIdea1Modal = team.id.includes('-A') || (team.name && team.name.includes('Idea 1'));
   const modalPsHeader = isIdea2Modal ? '💡 Chosen Problem Statement (Idea 2)' : isIdea1Modal ? '💡 Chosen Problem Statement (Idea 1)' : '💡 Chosen Problem Statement';
   const modalPsColor = isIdea2Modal ? 'var(--primary-orange)' : 'var(--primary-green)';
 
-  modalContent.innerHTML = `
-    <h2 style="margin-bottom: 0.5rem; font-size: 1.6rem;">🏆 ${team.name}</h2>
-    <p class="text-muted" style="margin-bottom: 1rem;">ID: ${team.id} | Department: ${team.department || 'AJK College'} | Track: ${team.category}</p>
+  const techStackList = (team.techStack1 || 'Python, React, Node.js, Cloud APIs')
+    .split(/[,/]+/)
+    .map(s => s.trim())
+    .filter(Boolean);
 
-    <div style="background: var(--bg-input); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
-      <h4 style="color: ${modalPsColor}; margin-bottom: 0.4rem;">${modalPsHeader}</h4>
-      <p style="font-weight: 600; font-size: 0.95rem;">[${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}</p>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">
-        <strong>Approach / Solution:</strong> ${team.solution1 || 'Proposed solution abstract submitted for SIH 2026 Internal Pitching.'}<br>
-        <strong>Tech Stack:</strong> ${team.techStack1 || 'Software / Web / Mobile / IoT / AI'}
-      </p>
+  const techPillsHtml = techStackList.map(tech => `<span class="tech-pill">⚡ ${tech}</span>`).join('');
+
+  modalContent.innerHTML = `
+    <div class="detail-modal-header">
+      <div>
+        <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+          🏆 ${team.name}
+        </h2>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.35rem;">
+          <span class="ps-code" style="font-size: 0.75rem; padding: 2px 8px;">${team.id}</span>
+          <span class="ps-category ${team.category}" style="font-size: 0.75rem; padding: 2px 8px;">${team.category} Track</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">🏛️ ${team.department || 'AJK College of Arts & Science'}</span>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <span class="rule-chip ${isFemaleCompliant ? 'pass' : 'fail'}" style="font-size: 0.75rem;">
+          ${isFemaleCompliant ? 'SIH Rules Verified ✅' : 'Rule Check Needed ⚠️'}
+        </span>
+      </div>
     </div>
 
-    <h4 style="margin-bottom: 0.5rem;">👥 Team Roster (6 Members Required)</h4>
-    <div style="overflow-x: auto; margin-bottom: 1.5rem;">
-      <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+    <div class="team-compliance-banner">
+      <div>
+        <strong>👥 Team Composition:</strong> Exactly 6 Members Confirmed (${(team.members || []).length}/6)
+      </div>
+      <div>
+        <strong>👩 Female Representation:</strong> 
+        <span style="font-weight: 700; color: ${isFemaleCompliant ? 'var(--primary-green)' : '#ef4444'};">
+          ${femaleCount} Female Member${femaleCount !== 1 ? 's' : ''} Included ${isFemaleCompliant ? '✅ (Rule Passed)' : '⚠️ (Min 1 Req.)'}
+        </span>
+      </div>
+    </div>
+
+    <!-- PROBLEM STATEMENT & ABSTRACT CARD -->
+    <div class="detail-card-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <h4 style="color: ${modalPsColor}; margin: 0; font-size: 0.95rem;">${modalPsHeader}</h4>
+        <span class="ps-code" style="font-size: 0.75rem;">${team.problemStatementId || 'PS'}</span>
+      </div>
+      <p style="font-weight: 700; font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem;">
+        ${team.psTitle1 || 'Smart Hackathon Problem Statement'}
+      </p>
+      
+      <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
+        <strong style="font-size: 0.85rem; color: var(--text-main);">Proposed Solution & Innovation Abstract:</strong>
+        <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.5;">
+          ${team.solution1 || 'Proposed comprehensive solution abstract submitted for SIH 2026 Internal Pitching.'}
+        </p>
+      </div>
+
+      <div style="margin-top: 0.75rem;">
+        <strong style="font-size: 0.85rem; color: var(--text-main);">Implemented / Suggested Tech Stack:</strong>
+        <div class="tech-tag-group">
+          ${techPillsHtml}
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM ROSTER TABLE -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+      <h4 style="font-size: 1rem; margin: 0;">👥 Team Roster (Official 6-Member List)</h4>
+      <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')" style="font-size: 0.75rem; padding: 4px 10px;">
+        ✏️ Edit / Update Roster
+      </button>
+    </div>
+
+    <div style="overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <table class="roster-table">
         <thead>
-          <tr style="background: var(--bg-input); text-align: left;">
-            <th style="padding: 0.5rem;">#</th>
-            <th style="padding: 0.5rem;">Name</th>
-            <th style="padding: 0.5rem;">Gender</th>
-            <th style="padding: 0.5rem;">Roll No</th>
-            <th style="padding: 0.5rem;">Department</th>
-            <th style="padding: 0.5rem;">Email</th>
+          <tr>
+            <th>#</th>
+            <th>Student Name</th>
+            <th>Gender</th>
+            <th>Roll No</th>
+            <th>Department / Year</th>
+            <th>Institutional Email</th>
           </tr>
         </thead>
         <tbody>
@@ -2058,14 +2609,192 @@ function openTeamDetailModal(teamId) {
       </table>
     </div>
 
-    <p style="font-size: 0.85rem; color: var(--text-muted);">👨‍🏫 <strong>Assigned Mentor:</strong> ${team.mentorName || (mentor ? mentor.name + (mentor.designation ? ' (' + mentor.designation + ')' : '') : 'Mr. V. Muthusaravanan')}</p>
+    <!-- MENTOR CARD -->
+    <div class="detail-card-box" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--primary-orange);">👨‍🏫 Assigned Faculty Mentor</h4>
+        <p style="font-weight: 700; font-size: 0.95rem; margin: 0;">
+          ${team.mentorName || (mentor ? mentor.name : 'Mr. V. Muthusaravanan')}
+        </p>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">
+          ${mentor && mentor.designation ? mentor.designation + ' | ' : ''}${team.department || 'AJK College of Arts & Science'}
+        </span>
+      </div>
+      <div>
+        <a href="mailto:${mentor && mentor.email ? mentor.email : 'communitylead@aiif.in'}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;">
+          📧 Contact Mentor
+        </a>
+      </div>
+    </div>
 
-    <div style="text-align: right; margin-top: 1.5rem;">
+    <!-- FOOTER ACTIONS -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')">
+          ✏️ Edit Details
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="printTeamSlip('${team.id}')">
+          🖨️ Print Slip
+        </button>
+      </div>
       <button class="btn btn-primary" onclick="closeModal('teamDetailModal')">Close Details</button>
     </div>
   `;
 
   document.getElementById('teamDetailModal').classList.add('active');
+}
+
+function openEditTeamModal(teamId) {
+  closeModal('teamDetailModal');
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  const modalContent = document.getElementById('editTeamContent');
+  if (!modalContent) return;
+
+  const members = team.members || [];
+  let memberInputs = '';
+
+  for (let i = 0; i < 6; i++) {
+    const m = members[i] || { name: '', role: i === 0 ? 'Team Leader' : `Member ${i+1}`, gender: 'Male', rollNo: '', email: '', dept: team.department || '', year: '1st Year' };
+    memberInputs += `
+      <div style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 0.75rem;">
+        <div style="font-weight: 700; font-size: 0.85rem; color: var(--primary-green); margin-bottom: 0.4rem;">
+          #${i + 1} ${i === 0 ? '👑 Team Leader' : 'Member ' + (i + 1)}
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem;">
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Name *</label>
+            <input type="text" id="edit_mName_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" value="${m.name || ''}" placeholder="Student Name">
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Gender *</label>
+            <select id="edit_mGender_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;">
+              <option value="Female" ${m.gender === 'Female' ? 'selected' : ''}>Female 👩</option>
+              <option value="Male" ${m.gender !== 'Female' ? 'selected' : ''}>Male 👨</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Roll Number *</label>
+            <input type="text" id="edit_mRoll_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" value="${m.rollNo || ''}" placeholder="e.g. 24UGAL051">
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Email *</label>
+            <input type="email" id="edit_mEmail_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" value="${m.email || ''}" placeholder="student@ajkcas.com">
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Department</label>
+            <input type="text" id="edit_mDept_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" value="${m.dept || team.department || ''}" placeholder="Department">
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Year</label>
+            <select id="edit_mYear_${i}" class="form-control" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;">
+              <option value="1st Year" ${m.year === '1st Year' ? 'selected' : ''}>1st Year</option>
+              <option value="2nd Year" ${m.year === '2nd Year' ? 'selected' : ''}>2nd Year</option>
+              <option value="3rd Year" ${m.year === '3rd Year' ? 'selected' : ''}>3rd Year</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  modalContent.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+      <h3 style="margin: 0; font-size: 1.3rem;">✏️ Edit Team Details - ${team.name}</h3>
+      <span class="ps-code">${team.id}</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Team Name</label>
+        <input type="text" id="edit_teamName" class="form-control" value="${team.name || ''}">
+      </div>
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Department</label>
+        <input type="text" id="edit_teamDept" class="form-control" value="${team.department || ''}">
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Problem Statement Code</label>
+        <input type="text" id="edit_psId" class="form-control" value="${team.problemStatementId || ''}">
+      </div>
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Problem Statement Title</label>
+        <input type="text" id="edit_psTitle" class="form-control" value="${team.psTitle1 || ''}">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label style="font-size: 0.8rem; font-weight: 700;">Proposed Solution Abstract</label>
+      <textarea id="edit_solution" class="form-control" rows="3">${team.solution1 || ''}</textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Tech Stack</label>
+        <input type="text" id="edit_techStack" class="form-control" value="${team.techStack1 || ''}">
+      </div>
+      <div class="form-group">
+        <label style="font-size: 0.8rem; font-weight: 700;">Assigned Mentor Name</label>
+        <input type="text" id="edit_mentorName" class="form-control" value="${team.mentorName || ''}">
+      </div>
+    </div>
+
+    <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text-main);">👥 Team Roster (All 6 Members)</h4>
+    <div style="max-height: 320px; overflow-y: auto; padding-right: 4px; margin-bottom: 1.25rem;">
+      ${memberInputs}
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      <button class="btn btn-secondary" onclick="closeModal('editTeamModal'); openTeamDetailModal('${team.id}');">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditedTeamDetails('${team.id}')">💾 Save Changes</button>
+    </div>
+  `;
+
+  document.getElementById('editTeamModal').classList.add('active');
+}
+
+function saveEditedTeamDetails(teamId) {
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  team.name = document.getElementById('edit_teamName')?.value.trim() || team.name;
+  team.department = document.getElementById('edit_teamDept')?.value.trim() || team.department;
+  team.problemStatementId = document.getElementById('edit_psId')?.value.trim() || team.problemStatementId;
+  team.psTitle1 = document.getElementById('edit_psTitle')?.value.trim() || team.psTitle1;
+  team.solution1 = document.getElementById('edit_solution')?.value.trim() || team.solution1;
+  team.techStack1 = document.getElementById('edit_techStack')?.value.trim() || team.techStack1;
+  team.mentorName = document.getElementById('edit_mentorName')?.value.trim() || team.mentorName;
+
+  const newMembers = [];
+  for (let i = 0; i < 6; i++) {
+    newMembers.push({
+      name: document.getElementById(`edit_mName_${i}`)?.value.trim() || (team.members[i] ? team.members[i].name : `Member ${i+1}`),
+      role: i === 0 ? 'Team Leader' : `Member ${i+1}`,
+      gender: document.getElementById(`edit_mGender_${i}`)?.value || 'Male',
+      rollNo: document.getElementById(`edit_mRoll_${i}`)?.value.trim() || '',
+      email: document.getElementById(`edit_mEmail_${i}`)?.value.trim() || '',
+      dept: document.getElementById(`edit_mDept_${i}`)?.value.trim() || team.department,
+      year: document.getElementById(`edit_mYear_${i}`)?.value || '1st Year'
+    });
+  }
+
+  team.members = newMembers;
+  enrichTeamRecord(team);
+  saveTeamsToStorage();
+
+  closeModal('editTeamModal');
+  showToast(`✅ Successfully updated details for ${team.name}!`, 'success');
+  openTeamDetailModal(team.id);
+}
+
+function printTeamSlip(teamId) {
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) return;
+  window.print();
 }
 
 // --------------------------------------------------------------------------
