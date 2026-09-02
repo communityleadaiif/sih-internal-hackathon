@@ -233,7 +233,35 @@ function doGet(e) {
       }
     }
 
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", teams: teams }))
+    // Canonical Deduplication: Ensure no duplicate submissions are returned
+    var uniqueTeams = [];
+    var seenNames = {};
+    var seenEmails = {};
+
+    for (var j = 0; j < teams.length; j++) {
+      var t = teams[j];
+      var rawName = (t.name || "").toString().trim();
+      var baseName = rawName.replace(/\s*\(Idea [12]\)$/i, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      var isIdea2 = (t.id && t.id.toString().indexOf("-B") !== -1) || rawName.toLowerCase().indexOf("idea 2") !== -1;
+      var isIdea1 = (t.id && t.id.toString().indexOf("-A") !== -1) || rawName.toLowerCase().indexOf("idea 1") !== -1;
+      var suffix = isIdea2 ? "B" : (isIdea1 ? "A" : "A");
+
+      var leaderMem = (t.members && t.members[0]) ? t.members[0] : {};
+      var lEmail = (leaderMem.email || "").toString().trim().toLowerCase();
+
+      var nameKey = baseName ? (baseName + "#" + suffix) : "";
+      var emailKey = lEmail ? (lEmail + "#" + suffix) : "";
+
+      var isDup = (nameKey && seenNames[nameKey]) || (emailKey && seenEmails[emailKey]);
+
+      if (!isDup) {
+        if (nameKey) seenNames[nameKey] = true;
+        if (emailKey) seenEmails[emailKey] = true;
+        uniqueTeams.push(t);
+      }
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", teams: uniqueTeams }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {

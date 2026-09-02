@@ -140,6 +140,67 @@ function purgeSystemCache() {
 }
 
 // LOCAL STORAGE PERSISTENCE
+function cleanPsCode(ps) {
+  if (!ps) return '';
+  let s = String(ps).trim().toUpperCase();
+  s = s.replace(/[\/\t].*$/, ''); // Remove trailing counts like /0/500 or \t0/500
+  s = s.replace(/\s+/g, '');
+  if (/^\d{5}$/.test(s)) s = 'SIH' + s;
+  if (/^SIH\d{3}$/.test(s)) s = s.replace('SIH', 'SIH26');
+  return s;
+}
+
+function getTeamDedupeKey(t) {
+  if (!t) return { nameKey: '', emailKey: '', rollKey: '' };
+  const rawName = (t.name ? String(t.name) : '').trim();
+  const baseName = rawName.replace(/\s*\(Idea [12]\)$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const isIdea2 = (t.id && String(t.id).includes('-B')) || rawName.toLowerCase().includes('idea 2');
+  const isIdea1 = (t.id && String(t.id).includes('-A')) || rawName.toLowerCase().includes('idea 1');
+  const ideaSuffix = isIdea2 ? 'B' : (isIdea1 ? 'A' : 'A');
+
+  const leader = (t.members && t.members[0]) ? t.members[0] : {};
+  const leaderEmail = (leader.email ? String(leader.email).trim().toLowerCase() : '');
+  const leaderRoll = (leader.rollNo ? String(leader.rollNo).trim().toUpperCase().replace(/[^A-Z0-9]/g, '') : '');
+
+  return {
+    nameKey: baseName ? `${baseName}#${ideaSuffix}` : '',
+    emailKey: leaderEmail ? `${leaderEmail}#${ideaSuffix}` : '',
+    rollKey: (leaderRoll && leaderRoll !== 'N/A' && !leaderRoll.startsWith('AJKTEMP')) ? `${leaderRoll}#${ideaSuffix}` : ''
+  };
+}
+
+function deduplicateTeams(teamList) {
+  if (!Array.isArray(teamList)) return [];
+  const seenName = new Set();
+  const seenEmail = new Set();
+  const seenRoll = new Set();
+  const result = [];
+
+  for (const t of teamList) {
+    if (!t || !t.name || /^Team \d+$/i.test(String(t.name).trim())) continue;
+    
+    if (t.problemStatementId) {
+      t.problemStatementId = cleanPsCode(t.problemStatementId);
+    }
+    if (t.problemStatement2Id && t.problemStatement2Id !== 'N/A') {
+      t.problemStatement2Id = cleanPsCode(t.problemStatement2Id);
+    }
+
+    const keys = getTeamDedupeKey(t);
+    const isDup = (keys.nameKey && seenName.has(keys.nameKey)) ||
+                  (keys.emailKey && seenEmail.has(keys.emailKey)) ||
+                  (keys.rollKey && seenRoll.has(keys.rollKey));
+
+    if (!isDup) {
+      if (keys.nameKey) seenName.add(keys.nameKey);
+      if (keys.emailKey) seenEmail.add(keys.emailKey);
+      if (keys.rollKey) seenRoll.add(keys.rollKey);
+      result.push(t);
+    }
+  }
+  return result;
+}
+
 function loadStoredState() {
   localStorage.removeItem('prajna_deleted_team_ids');
   state.deletedTeamIds = [];
@@ -149,22 +210,7 @@ function loadStoredState() {
     try {
       const parsed = JSON.parse(savedTeams);
       if (Array.isArray(parsed)) {
-        const seenKeys = new Set();
-        const deduplicated = [];
-        parsed.forEach(t => {
-          const leaderEmail = (t.members && t.members[0] && t.members[0].email) ? String(t.members[0].email).trim().toLowerCase() : '';
-          const nameClean = (t.name ? String(t.name) : '').trim().toLowerCase();
-          const psCode = (t.problemStatementId ? String(t.problemStatementId) : '').trim().toUpperCase();
-          const isIdea2 = (t.id ? String(t.id) : '').includes('-B') || nameClean.includes('idea 2');
-          const key = `${leaderEmail || nameClean}|${psCode}|${isIdea2 ? 'B' : 'A'}`;
-          
-          if (!seenKeys.has(key)) {
-            seenKeys.add(key);
-            deduplicated.push(t);
-          }
-        });
-        state.teams = deduplicated;
-        localStorage.setItem('prajna_teams', JSON.stringify(state.teams));
+        state.teams = deduplicateTeams(parsed);
       }
     } catch (e) {
       console.error('Failed to parse stored teams:', e);
@@ -215,13 +261,15 @@ function loadStoredState() {
 
   expandDualIdeaTeams();
   if (Array.isArray(state.teams)) {
-    state.teams = state.teams.map(t => enrichTeamRecord(t));
+    state.teams = deduplicateTeams(state.teams.map(t => enrichTeamRecord(t)));
+    localStorage.setItem('prajna_teams', JSON.stringify(state.teams));
   }
 }
 
 function expandDualIdeaTeams() {
   const expanded = [];
   (state.teams || []).forEach(team => {
+    if (!team) return;
     const ps2Title = (team.psTitle2 ? String(team.psTitle2) : '').trim();
     const ps2Code = (team.problemStatement2Id ? String(team.problemStatement2Id) : '').trim();
     
@@ -231,49 +279,48 @@ function expandDualIdeaTeams() {
                           ps2Code !== '' && 
                           ps2Code.toUpperCase() !== 'N/A';
 
-    if (hasValidIdea2) {
-      const teamIdStr = team.id ? String(team.id) : '';
-      if (!teamIdStr.includes('-A') && !teamIdStr.includes('-B')) {
-        const teamNameStr = team.name ? String(team.name) : '';
-        const teamA = {
-          ...team,
-          id: `${team.id}-A`,
-          name: teamNameStr.includes('(Idea') ? teamNameStr : `${teamNameStr} (Idea 1)`,
-          problemStatementId: team.problemStatementId,
-          psTitle1: team.psTitle1,
-          solution1: team.solution1,
-          techStack1: team.techStack1,
-          psTitle2: null,
-          problemStatement2Id: null,
-          solution2: null,
-          techStack2: null
-        };
+    const teamIdStr = team.id ? String(team.id) : '';
+    const teamNameStr = team.name ? String(team.name) : '';
+    const isAlreadySplit = teamIdStr.includes('-A') || teamIdStr.includes('-B') ||
+                           teamNameStr.toLowerCase().includes('(idea 1)') || teamNameStr.toLowerCase().includes('(idea 2)');
 
-        const teamB = {
-          ...team,
-          id: `${team.id}-B`,
-          name: `${teamNameStr.replace(/\s*\(Idea [12]\)$/i, '')} (Idea 2)`,
-          problemStatementId: team.problemStatement2Id || `${team.problemStatementId}-2`,
-          psTitle1: team.psTitle2,
-          solution1: team.solution2 || team.solution1,
-          techStack1: team.techStack2 || team.techStack1,
-          psTitle2: null,
-          problemStatement2Id: null,
-          solution2: null,
-          techStack2: null,
-          scores: null
-        };
+    if (hasValidIdea2 && !isAlreadySplit) {
+      const teamA = {
+        ...team,
+        id: `${team.id}-A`,
+        name: `${teamNameStr} (Idea 1)`,
+        problemStatementId: cleanPsCode(team.problemStatementId),
+        psTitle1: team.psTitle1,
+        solution1: team.solution1,
+        techStack1: team.techStack1,
+        psTitle2: null,
+        problemStatement2Id: null,
+        solution2: null,
+        techStack2: null
+      };
 
-        expanded.push(teamA);
-        expanded.push(teamB);
-      } else {
-        expanded.push(team);
-      }
+      const teamB = {
+        ...team,
+        id: `${team.id}-B`,
+        name: `${teamNameStr} (Idea 2)`,
+        problemStatementId: cleanPsCode(team.problemStatement2Id || `${team.problemStatementId}-2`),
+        psTitle1: team.psTitle2,
+        solution1: team.solution2 || team.solution1,
+        techStack1: team.techStack2 || team.techStack1,
+        psTitle2: null,
+        problemStatement2Id: null,
+        solution2: null,
+        techStack2: null,
+        scores: null
+      };
+
+      expanded.push(teamA);
+      expanded.push(teamB);
     } else {
       expanded.push(team);
     }
   });
-  state.teams = expanded;
+  state.teams = deduplicateTeams(expanded);
 }
 
 // --------------------------------------------------------------------------
@@ -858,16 +905,6 @@ function enrichTeamRecord(team) {
   return team;
 }
 
-function getTeamDedupeKey(t) {
-  if (!t) return '';
-  const tId = (t.id ? String(t.id).trim().toUpperCase() : '');
-  const leader = (t.members && t.members[0]) ? t.members[0] : {};
-  const leaderEmail = (leader.email ? String(leader.email).trim().toLowerCase() : '');
-  const name = (t.name ? String(t.name).trim().toLowerCase() : '');
-  const psCode = (t.problemStatementId ? String(t.problemStatementId).trim().toUpperCase() : '');
-  return `${tId}|${leaderEmail}|${name}|${psCode}`;
-}
-
 function syncLiveTeamsFromGoogleScript(isManual) {
   const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
   if (!googleScriptUrl) return;
@@ -880,48 +917,38 @@ function syncLiveTeamsFromGoogleScript(isManual) {
     .then(res => res.json())
     .then(data => {
       if (data && data.status === 'success' && Array.isArray(data.teams)) {
-        const seenKeys = new Set();
-        const processedTeams = [];
-
-        for (const t of data.teams) {
-          const name = (t.name ? String(t.name) : '').trim();
-          const isDummyName = /^Team \d+$/i.test(name) || name === '';
-          if (isDummyName) continue;
-
-          const key = getTeamDedupeKey(t);
-
-          if (!seenKeys.has(key)) {
-            seenKeys.add(key);
-
+        // 1. Enrich and clean incoming teams from Google Sheets
+        const incomingEnriched = data.teams
+          .filter(t => t && t.name && !/^Team \d+$/i.test(String(t.name).trim()))
+          .map(t => {
             if (t.problemStatementId && typeof t.problemStatementId === 'number') {
               t.problemStatementId = `SIH${t.problemStatementId}`;
             }
             if (t.problemStatement2Id && typeof t.problemStatement2Id === 'number') {
               t.problemStatement2Id = `SIH${t.problemStatement2Id}`;
             }
+            return enrichTeamRecord(t);
+          });
 
-            const enriched = enrichTeamRecord(t);
-            processedTeams.push(enriched);
-          }
+        // 2. Expand dual ideas from sheet if any
+        let merged = deduplicateTeams(incomingEnriched);
+        state.teams = merged;
+        expandDualIdeaTeams();
+        merged = state.teams;
+
+        // 3. Non-destructive merge: Retain any locally registered team not yet in Google Sheets
+        const existingTeams = (Array.isArray(state.teams) ? state.teams : []);
+        merged = deduplicateTeams([...merged, ...existingTeams]);
+
+        // Filter out any teams marked deleted
+        if (Array.isArray(state.deletedTeamIds) && state.deletedTeamIds.length > 0) {
+          merged = merged.filter(t => !state.deletedTeamIds.includes(t.id) && !state.deletedTeamIds.includes(t.id.replace(/-[AB]$/, '')));
         }
 
-        // NON-DESTRUCTIVE MERGE: Retain any locally registered team not yet in Google Sheets
-        const incomingKeys = new Set(processedTeams.map(t => getTeamDedupeKey(t)));
-        (state.teams || []).forEach(localTeam => {
-          if (localTeam && localTeam.name && !incomingKeys.has(getTeamDedupeKey(localTeam))) {
-            processedTeams.unshift(enrichTeamRecord(localTeam));
-          }
-        });
-
-        state.teams = processedTeams;
-        expandDualIdeaTeams();
-        state.teams = state.teams
-          .filter(t => t.name && !/^Team \d+$/i.test(String(t.name).trim()))
-          .map(t => enrichTeamRecord(t));
-
+        state.teams = merged.map(t => enrichTeamRecord(t));
         saveTeamsToStorage();
         if (isManual) {
-          showToast(`✅ Synced ${state.teams.length} live team submissions!`, 'success');
+          showToast(`✅ Synced ${state.teams.length} unique live team submissions!`, 'success');
         }
       }
     })
@@ -2067,6 +2094,20 @@ function saveTeamRegistration() {
     return;
   }
 
+  // Pre-check if team name or leader email is already registered
+  const leaderEmail = members[0]?.email?.trim().toLowerCase();
+  const rawBaseName = teamName.replace(/\s*\(Idea [12]\)$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const isAlreadyRegistered = state.teams.some(t => {
+    const tBase = (t.name || '').replace(/\s*\(Idea [12]\)$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const tLeaderEmail = (t.members?.[0]?.email || '').trim().toLowerCase();
+    return (tBase && tBase === rawBaseName) || (leaderEmail && tLeaderEmail === leaderEmail);
+  });
+
+  if (isAlreadyRegistered) {
+    showToast(`⚠️ Team "${teamName}" (or Team Leader) is already registered in the portal!`, 'error');
+    return;
+  }
+
   const mentorObj = state.mentors.find(m => m.id === mentorId);
   const mentorName = mentorObj ? (mentorObj.name + (mentorObj.designation ? ' (' + mentorObj.designation + ')' : '')) : 'Assigned Mentor';
 
@@ -2082,7 +2123,7 @@ function saveTeamRegistration() {
     mentorId: mentorId,
     mentorName: mentorName,
     category: category,
-    problemStatementId: ps1Code,
+    problemStatementId: cleanPsCode(ps1Code),
     psTitle1: ps1Title,
     solution1: sol1,
     techStack1: tech1,
@@ -2103,7 +2144,7 @@ function saveTeamRegistration() {
       mentorId: mentorId,
       mentorName: mentorName,
       category: category,
-      problemStatementId: ps2Code || `${ps1Code}-2`,
+      problemStatementId: cleanPsCode(ps2Code || `${ps1Code}-2`),
       psTitle1: ps2Title || `${ps1Title} (Idea 2)`,
       solution1: sol2 || sol1,
       techStack1: tech2 || tech1,
@@ -2115,6 +2156,7 @@ function saveTeamRegistration() {
     state.teams.unshift(teamIdea2);
   }
 
+  state.teams = deduplicateTeams(state.teams);
   saveTeamsToStorage();
   triggerEmailAcknowledgement(teamIdea1);
   if (teamIdea2) {
