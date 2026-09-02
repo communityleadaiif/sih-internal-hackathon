@@ -163,8 +163,43 @@ function doGet(e) {
         }
       }
 
+      var femaleNamesList = ["aqila", "sreelakshmi", "sruthi", "ardra", "sneha", "krishna", "akshaya", "akshitha", "adhwaitha", "priyadharshini", "raveena", "akshima", "theertha", "athira", "sandhya", "payal", "sresha", "hency", "aswathy", "devika", "niya", "madhumithra", "amritha", "stephy", "avani", "ananya", "nivya", "nimisha", "pooja", "nanditha", "thanmaya", "krishnapriya", "anusree", "nivedya", "anusha", "aleena", "adhirsha", "manjima", "thasni", "jesna", "shifa", "sreenandini", "anagha", "raniya", "jemima", "safeena", "thulasi", "nethara", "yamika", "sreethma", "abhinandana", "priya", "anitha", "kavya", "divya", "archana", "haritha", "geetha", "deepa", "lakshmi", "ranjitha", "ranjana", "fasna", "risa", "shaba", "nejila", "sinisha", "ridhika", "radhika", "jyothirmai", "jyothi", "srimathi", "mathi", "sweety", "shalo", "mohini", "vineetha", "roshini", "ashmi", "biniya", "afsana", "anjitha", "vinaya", "nivannya", "diya", "hibha", "sherin", "yasmin", "chandrapraba", "joshika", "mohana", "harshini", "ayisha", "ayesha", "fathima", "hasna", "abinaya", "abhinaya", "aparna"];
+
+      function detectFemale(nameStr) {
+        if (!nameStr) return false;
+        var cleanName = nameStr.toLowerCase().replace(/[^a-z]/g, " ").trim();
+        var tokens = cleanName.split(/\s+/);
+        for (var k = 0; k < tokens.length; k++) {
+          var tok = tokens[k];
+          for (var fIdx = 0; fIdx < femaleNamesList.length; fIdx++) {
+            var fn = femaleNamesList[fIdx];
+            if (tok === fn || tok.indexOf(fn) !== -1 || fn.indexOf(tok) !== -1) {
+              return true;
+            }
+          }
+        }
+        var noSp = cleanName.replace(/\s+/g, "");
+        for (var fIdx2 = 0; fIdx2 < femaleNamesList.length; fIdx2++) {
+          if (noSp.indexOf(femaleNamesList[fIdx2]) !== -1) return true;
+        }
+        return false;
+      }
+
       if (parsedData && Array.isArray(parsedData.members) && parsedData.members.length > 0) {
-        // Return 100% complete preserved data
+        var cleanParsedMembers = parsedData.members.map(function(m, mIdx) {
+          var g = (m.gender && m.gender !== 'Unknown' && m.gender !== 'undefined') 
+            ? m.gender 
+            : (detectFemale(m.name) ? 'Female' : 'Male');
+          return {
+            name: m.name || (mIdx === 0 ? "Team Leader" : "Member " + (mIdx + 1)),
+            role: m.role || (mIdx === 0 ? "Team Leader" : "Member " + (mIdx + 1)),
+            gender: g,
+            rollNo: m.rollNo || "",
+            email: m.email || "",
+            dept: m.dept || (r[3] ? r[3].toString().trim() : "")
+          };
+        });
+
         teams.push({
           id: teamId || (parsedData.id ? parsedData.id.toString() : ("SIH-TEAM-" + (i < 10 ? "0" + i : i))),
           name: teamName || parsedData.name,
@@ -179,7 +214,7 @@ function doGet(e) {
           solution1: parsedData.solution1 || (r[11] ? r[11].toString() : "") || "",
           techStack1: parsedData.techStack1 || (r[12] ? r[12].toString() : "") || "",
           submittedAt: r[0] || parsedData.submittedAt || new Date().toISOString(),
-          members: parsedData.members,
+          members: cleanParsedMembers,
           scores: parsedData.scores || null
         });
       } else {
@@ -193,17 +228,8 @@ function doGet(e) {
           { name: (r[18] || r[20] || "").toString().trim(), role: "Member 6" }
         ].filter(function(m) { return m.name && m.name.toString().trim() !== ""; });
 
-        var femaleNamesList = ["aqila", "sreelakshmi", "sruthi", "ardra", "sneha", "krishna", "akshaya", "adhwaitha", "priyadharshini", "raveena", "akshima", "theertha", "athira", "sandhya", "payal", "sresha", "hency", "aswathy", "devika", "niya", "madhumithra", "amritha", "stephy", "avani", "ananya", "nivya", "nimisha", "pooja", "nanditha", "thanmaya", "krishnapriya", "anusree", "nivedya", "anusha", "aleena", "adhirsha", "manjima", "thasni", "jesna", "shifa", "sreenandini", "anagha", "raniya", "jemima", "safeena", "thulasi", "nethara", "yamika", "sreethma", "abhinandana", "priya", "anitha", "kavya", "divya", "archana", "haritha", "geetha", "deepa", "lakshmi"];
-
         var enrichedMembers = rawMembers.map(function(m, idx) {
-          var nameTokens = m.name.toLowerCase().replace(/[^a-z]/g, " ").trim().split(/\s+/);
-          var isFemale = false;
-          for (var k = 0; k < nameTokens.length; k++) {
-            if (femaleNamesList.indexOf(nameTokens[k]) !== -1) {
-              isFemale = true;
-              break;
-            }
-          }
+          var isFemale = detectFemale(m.name);
           return {
             name: m.name,
             role: m.role || (idx === 0 ? "Team Leader" : "Member " + (idx + 1)),

@@ -329,20 +329,33 @@ function expandDualIdeaTeams() {
 
 const FEMALE_TOKENS_SET = new Set([
   'amritha', 'safeena', 'thulasi', 'jemima', 'sreethma', 'anushree', 'athira',
-  'kaviya', 'priya', 'priyadharshini', 'anusha', 'harini', 'swetha', 'sneha', 'keerthana',
+  'kaviya', 'kavya', 'priya', 'priyadharshini', 'anusha', 'harini', 'swetha', 'sneha', 'keerthana',
   'deepika', 'divya', 'pavithra', 'sandhiya', 'nandhini', 'kavitha', 'monisha',
-  'sangeetha', 'revathi', 'lakshmi', 'gayathri', 'abirami', 'bhavani', 'soundarya',
+  'sangeetha', 'revathi', 'lakshmi', 'gayathri', 'abirami', 'abinaya', 'abhinaya', 'bhavani', 'soundarya',
   'varsha', 'pooja', 'madhumitha', 'shalini', 'aishwarya', 'archana', 'dharani',
   'ramya', 'swathi', 'sowmya', 'renuka', 'preethi', 'shobana', 'sindhu',
-  'nanditha', 'nandhitha', 'fathima', 'ayesha', 'mary', 'ann', 'anjali', 'reshma',
-  'rinsha', 'nihala', 'shamna', 'fidha', 'nivedha', 'niveditha', 'nivedihitha', 'brinda',
+  'nanditha', 'nandhitha', 'fathima', 'ayesha', 'ayisha', 'aisha', 'aysha', 'parveen', 'mary', 'anjali', 'reshma',
+  'rinsha', 'nihala', 'niha', 'shamna', 'fidha', 'nivedha', 'niveditha', 'nivedihitha', 'brinda',
   'ashna', 'afra', 'muhsina', 'amrutham', 'niranjana', 'anjana', 'krishnapriya',
   'devika', 'gopika', 'ananya', 'arya', 'architha', 'malavika', 'shruti', 'sruthi',
   'alfeena', 'farhana', 'asna', 'lubna', 'hadiya', 'hasna', 'nafia', 'sana', 'shahana',
-  'anagha', 'raniya', 'vasanthy', 'advaitha', 'theertha', 'raveena', 'akshima', 'sreelakshmi',
+  'anagha', 'raniya', 'vasanthy', 'advaitha', 'theertha', 'raveena', 'akshima', 'akshaya', 'akshitha', 'sreelakshmi',
   'aqila', 'sresha', 'payal', 'sandhya', 'hency', 'aswathy', 'niya', 'madhumithra', 'stephy',
   'avani', 'nivya', 'nimisha', 'thanmaya', 'anusree', 'nivedya', 'aleena', 'adhirsha', 'manjima',
-  'thasni', 'jesna', 'shifa', 'sreenandini', 'nethara', 'yamika', 'abhinandana'
+  'thasni', 'jesna', 'shifa', 'sreenandini', 'nethara', 'yamika', 'abhinandana',
+  'ranjitha', 'ranjana', 'renjitha', 'fasna', 'risa', 'shaba', 'nejila', 'sinisha', 'ridhika', 'radhika',
+  'jyothirmai', 'jyothi', 'srimathi', 'mathi', 'sweety', 'shalo', 'mohini', 'vineetha', 'vinitha', 'roshini', 'roshni',
+  'ashmi', 'biniya', 'bincy', 'afsana', 'anjitha', 'anupama', 'anitha', 'vinaya', 'nivannya', 'diya', 'dhiya',
+  'hibha', 'sherin', 'yasmin', 'chandrapraba', 'prabha', 'joshika', 'mohana', 'harshini', 'bhavana', 'bhavya',
+  'dhanya', 'geetha', 'keerthi', 'lavanya', 'meera', 'meenakshi', 'mithra', 'mythili', 'preetha', 'poornima',
+  'priyanka', 'ragavi', 'rakshana', 'reshmi', 'saranya', 'shilpa', 'shobha', 'sreedevi', 'subhashini', 'suchitra',
+  'suganya', 'sumathi', 'supriya', 'sushmitha', 'tanuja', 'tharani', 'vaishali', 'vidya', 'vimala',
+  'vinodhini', 'yamuna', 'amala', 'ammu', 'anju', 'arundhathi', 'chinju', 'drishya', 'greeshma', 'haritha',
+  'kalyani', 'nayana', 'neethu', 'nima', 'nimmy', 'parvathy', 'parvati', 'remya', 'revathy', 'rohini', 'sahla',
+  'salma', 'saritha', 'silpa', 'smrithi', 'surabhi', 'veena', 'vrinda', 'dilsha', 'jamsheera', 'mubeena',
+  'nasreen', 'nida', 'noureen', 'raheema', 'rahana', 'rasheeda', 'rizwana', 'safna', 'sameera', 'shabana',
+  'shafna', 'shahida', 'shameema', 'sumayya', 'tasneem', 'thasleema', 'zainab', 'zubaida', 'ardra', 'chandana',
+  'dharshini', 'swathy', 'aparna', 'snehashree', 'nivedhitha', 'dhanalakshmi', 'karpagam'
 ]);
 
 const MALE_EXACT_TOKENS = new Set([
@@ -350,23 +363,27 @@ const MALE_EXACT_TOKENS = new Set([
   'ajay', 'srijin', 'sreyas', 'soorya', 'rihan', 'nihal', 'nivedh', 'nived', 'basil',
   'sandeep', 'amith', 'ramjith', 'rayan', 'dharshan', 'bharath', 'abishiek', 'ismail',
   'jumail', 'abhinav', 'aasil', 'kirosh', 'sabarimanikandan', 'yuraj', 'shefin', 'arundas',
-  'alen', 'aflah', 'kamalesh', 'sawad', 'amal', 'ziyaal', 'anfas', 'abhinand', 'navaneeth',
+  'alen', 'aflah', 'kamalesh', 'sawad', 'amal', 'ziyaal', 'anfas', 'abhinand', 'abhinandh', 'navaneeth',
   'adrash', 'adithyan', 'mishab', 'ranshif', 'afridh', 'niju', 'shon', 'aswaon', 'abhilash',
   'sheik', 'adith', 'aswin', 'anurag', 'bhavadas', 'fanoos', 'sreesanth', 'aromal', 'harshin',
   'nidhil', 'saravanan', 'maruthu', 'naveenkumar', 'ajesh', 'mithyleash', 'gubendran',
-  'mickle', 'vaishnav', 'sreejith', 'samsheer', 'sanfar', 'sivaprakash', 'rahulkrishna'
+  'mickle', 'vaishnav', 'sreejith', 'samsheer', 'sanfar', 'sivaprakash', 'rahulkrishna',
+  'sreehari', 'abhiram', 'shinan', 'mukesh', 'abhijith', 'hijas', 'sureshkumar', 'sasikumar',
+  'kumar', 'kailas', 'pranav', 'dhanush', 'kirthik', 'lakshan', 'harish', 'vigneshwaran',
+  'swalih', 'madesh', 'balasubbramanian', 'kishore', 'rojer', 'karthikkannan', 'prethive',
+  'vishal', 'ashfaq', 'srinanth', 'deepak', 'harisath', 'mithilesh', 'anderson', 'thoufeeq'
 ]);
 
 function inferGender(name) {
   if (!name) return 'Male';
   const clean = String(name).toLowerCase().replace(/[^a-z\s]/g, ' ');
-  const tokens = clean.split(/\s+/).filter(t => t.length >= 3);
+  const tokens = clean.split(/\s+/).filter(t => t.length >= 2);
   
   let hasFemale = false;
   let hasMale = false;
 
   for (const token of tokens) {
-    if (FEMALE_TOKENS_SET.has(token) || Array.from(FEMALE_TOKENS_SET).some(f => token.startsWith(f) || f.startsWith(token) && f.length >= 4)) {
+    if (FEMALE_TOKENS_SET.has(token) || Array.from(FEMALE_TOKENS_SET).some(f => token === f || (token.startsWith(f) && f.length >= 4) || (f.startsWith(token) && token.length >= 4))) {
       hasFemale = true;
     }
     if (MALE_EXACT_TOKENS.has(token) || Array.from(MALE_EXACT_TOKENS).some(m => token === m || (token.startsWith(m) && m.length >= 4))) {
@@ -374,11 +391,21 @@ function inferGender(name) {
     }
   }
 
+  // Compound check for names with merged tokens e.g. "nejilafathima"
+  const noSpace = clean.replace(/\s+/g, '');
+  for (const f of FEMALE_TOKENS_SET) {
+    if (f.length >= 5 && noSpace.includes(f)) {
+      hasFemale = true;
+      break;
+    }
+  }
+
   if (hasFemale && !hasMale) return 'Female';
   if (hasFemale && hasMale) {
     const first = tokens[0] || '';
     if (FEMALE_TOKENS_SET.has(first) || Array.from(FEMALE_TOKENS_SET).some(f => first.startsWith(f))) return 'Female';
-    return 'Male';
+    if (MALE_EXACT_TOKENS.has(first) || Array.from(MALE_EXACT_TOKENS).some(m => first.startsWith(m))) return 'Male';
+    return 'Female';
   }
   return 'Male';
 }
