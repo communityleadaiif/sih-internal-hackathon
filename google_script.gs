@@ -278,13 +278,31 @@ function doGet(e) {
       var nameKey = baseName ? (baseName + "#" + suffix) : "";
       var emailKey = lEmail ? (lEmail + "#" + suffix) : "";
 
-      var isDup = (nameKey && seenNames[nameKey]) || (emailKey && seenEmails[emailKey]);
-
       if (!isDup) {
         if (nameKey) seenNames[nameKey] = true;
         if (emailKey) seenEmails[emailKey] = true;
         uniqueTeams.push(t);
       }
+    }
+
+    // Ensure all team IDs in response are strictly unique
+    var seenRespIds = {};
+    for (var u = 0; u < uniqueTeams.length; u++) {
+      var item = uniqueTeams[u];
+      var candidate = (item.id || "").toString().trim().toUpperCase();
+      var uSuffix = (candidate.indexOf("-B") !== -1 || item.name.indexOf("Idea 2") !== -1) ? "-B" : ((candidate.indexOf("-A") !== -1 || item.name.indexOf("Idea 1") !== -1) ? "-A" : "");
+      
+      if (!candidate || seenRespIds[candidate]) {
+        var numStr = (u + 1 < 10 ? "0" + (u + 1) : "" + (u + 1));
+        candidate = "SIH-TEAM-" + numStr + uSuffix;
+        var loopCnt = 1;
+        while (seenRespIds[candidate]) {
+          candidate = "SIH-TEAM-" + numStr + "-" + loopCnt + uSuffix;
+          loopCnt++;
+        }
+        item.id = candidate;
+      }
+      seenRespIds[candidate] = true;
     }
 
     return ContentService.createTextOutput(JSON.stringify({ status: "success", teams: uniqueTeams }))

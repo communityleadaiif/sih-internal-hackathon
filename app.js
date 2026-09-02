@@ -198,7 +198,37 @@ function deduplicateTeams(teamList) {
       result.push(t);
     }
   }
-  return result;
+  return ensureUniqueTeamIds(result);
+}
+
+function ensureUniqueTeamIds(teams) {
+  if (!Array.isArray(teams)) return [];
+  const seenIds = new Set();
+  
+  teams.forEach((t, idx) => {
+    if (!t) return;
+    let candidateId = (t.id ? String(t.id).trim().toUpperCase() : '');
+    const isIdea2 = (candidateId.includes('-B')) || (t.name && String(t.name).includes('Idea 2'));
+    const isIdea1 = (candidateId.includes('-A')) || (t.name && String(t.name).includes('Idea 1'));
+    const suffix = isIdea2 ? '-B' : (isIdea1 ? '-A' : '');
+
+    // If ID is missing or duplicate, generate a unique sequential ID
+    if (!candidateId || seenIds.has(candidateId)) {
+      const num = idx + 1;
+      const numPad = num < 10 ? '0' + num : String(num);
+      candidateId = `SIH-TEAM-${numPad}${suffix}`;
+      
+      let counter = 1;
+      while (seenIds.has(candidateId)) {
+        candidateId = `SIH-TEAM-${numPad}-${counter}${suffix}`;
+        counter++;
+      }
+      t.id = candidateId;
+    }
+    seenIds.add(t.id);
+  });
+
+  return teams;
 }
 
 function loadStoredState() {
