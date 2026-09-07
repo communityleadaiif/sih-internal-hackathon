@@ -2947,18 +2947,20 @@ const JURY_HALL_MAP = {
 function assignHallToTeam(team) {
   if (team.hall && HALL_CONFIG[team.hall]) return team.hall;
   const dept = (team.department || '').toLowerCase();
-  if (dept.includes('artificial intelligence') || dept.includes('cyber') || dept.includes('computer science') || dept.includes('ai & ml')) {
-    return 'Hall 1';
-  } else if (dept.includes('bca') || dept.includes('information technology') || dept.includes('data science')) {
-    return 'Hall 2';
-  } else if (dept.includes('electronic') || dept.includes('physics') || dept.includes('math') || dept.includes('chemistry') || dept.includes('biotech')) {
-    return 'Hall 3';
-  } else if (dept.includes('commerce') || dept.includes('b.com') || dept.includes('accounting') || dept.includes('finance')) {
-    return 'Hall 4';
-  } else if (dept.includes('management') || dept.includes('bba') || dept.includes('catering') || dept.includes('hotel') || dept.includes('aviation')) {
-    return 'Hall 5';
-  } else if (dept.includes('visual communication') || dept.includes('costume') || dept.includes('fashion') || dept.includes('english') || dept.includes('tamil') || dept.includes('languages')) {
+  
+  // 1. VisCom, Fashion & Languages (Check first so 'Electronics Media' does not falsely match Science)
+  if (dept.includes('visual communication') || dept.includes('viscom') || dept.includes('costume') || dept.includes('fashion') || dept.includes('design') || dept.includes('languages') || dept.includes('english') || dept.includes('tamil')) {
     return 'Hall 6';
+  } else if (dept.includes('management') || dept.includes('bba') || dept.includes('catering') || dept.includes('hotel') || dept.includes('aviation') || dept.includes('logistics')) {
+    return 'Hall 5';
+  } else if (dept.includes('commerce') || dept.includes('b.com') || dept.includes('m.com') || dept.includes('accounting') || dept.includes('finance')) {
+    return 'Hall 4';
+  } else if (dept.includes('bca') || dept.includes('information technology') || dept.includes('data science') || dept.includes('ar & vr') || dept.includes('augmented')) {
+    return 'Hall 2';
+  } else if (dept.includes('artificial intelligence') || dept.includes('cyber') || dept.includes('computer science') || dept.includes('ai & ml') || dept.includes('m.sc cs')) {
+    return 'Hall 1';
+  } else if (dept.includes('physics') || dept.includes('math') || dept.includes('chemistry') || dept.includes('biotech') || dept.includes('forensic')) {
+    return 'Hall 3';
   }
   return 'Hall 1';
 }
