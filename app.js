@@ -12,113 +12,200 @@ const state = {
   mentors: (window.INITIAL_DATA && window.INITIAL_DATA.mentors) ? window.INITIAL_DATA.mentors : [],
   problemStatements: (window.INITIAL_DATA && window.INITIAL_DATA.problemStatements) ? window.INITIAL_DATA.problemStatements : [],
   teams: (window.INITIAL_DATA && (window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)) ? [...(window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)] : [],
+  videoLanguageFilter: 'All',
   preparationVideos: [
+    // --- 🇮🇳 TAMIL (தமிழ்) MASTERCLASSES ---
     {
-      id: "vid_1",
+      id: "vid_tam_1",
+      language: "Tamil",
+      langBadge: "🇮🇳 தமிழ்",
+      langClass: "tamil",
       youtubeId: "VfP_fK6k7Y8",
       embedUrl: "https://www.youtube-nocookie.com/embed/VfP_fK6k7Y8?autoplay=1",
-      title: "How to Crack Smart India Hackathon (SIH) - Complete Strategy & Winning Roadmap",
+      title: "Smart India Hackathon Complete Guide & Winning Roadmap in Tamil | தமிழ் வழிகாட்டி",
       category: "strategy",
-      categoryName: "🎯 SIH Strategy",
-      duration: "14:20",
-      speaker: "National SIH Jury & Mentor",
+      categoryName: "🎯 SIH Roadmap",
+      duration: "15:20",
+      speaker: "CodeHunters Tamil Tech & SIH Mentors",
       thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80",
-      desc: "Step-by-step masterclass on analyzing Ministry problem statements, feasibility mapping, and structuring your team's workflow.",
+      desc: "SIH தொடக்கம் முதல் இறுதி வரை: Problem Statement தேர்வு செய்வது, குழு விதிகள் மற்றும் Internal Hackathon-ல் வெற்றி பெறும் முழுமையான தமிழ் வழிகாட்டி.",
       keyPoints: [
-        "How to decode the real expectation behind Ministry Problem Statements",
-        "Formulating realistic scopes for 48-hour prototype implementation",
-        "Balancing Software vs Hardware innovation criteria",
-        "Winning habits that separate the top 5% teams from others"
+        "Ministry Problem Statement-களின் உண்மைத் தேவையை எவ்வாறு புரிந்துகொள்வது?",
+        "கல்லூரி அளவிலான Internal Hackathon-ல் தேர்வாக தேவையான வழிமுறைகள்",
+        "பெண் பங்கேற்பாளர் கட்டாய விதி மற்றும் குழு அமைப்பு (6 உறுப்பினர்கள்)",
+        "தேசிய அளவிலான Grand Finale-க்கு தகுதி பெறும் ரகசியங்கள்"
       ]
     },
     {
-      id: "vid_2",
+      id: "vid_tam_2",
+      language: "Tamil",
+      langBadge: "🇮🇳 தமிழ்",
+      langClass: "tamil",
       youtubeId: "5a6qJ2gX5_w",
       embedUrl: "https://www.youtube-nocookie.com/embed/5a6qJ2gX5_w?autoplay=1",
-      title: "Mastering the 5-Minute Pitch: PPT & Presentation Deck Architecture",
+      title: "SIH PPT & Pitch Deck Format in Tamil: 5 நிமிடத்தில் நடுவர்களை கவர்வது எப்படி?",
       category: "pitch",
       categoryName: "🚀 PPT & Pitch Deck",
-      duration: "11:45",
-      speaker: "Innovation Coach & Startup Evaluator",
+      duration: "12:40",
+      speaker: "Innovation Coach & Startup Evaluator (Tamil)",
       thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=80",
-      desc: "How to design high-impact 6-slide PPT decks and deliver crisp, memorable elevator pitches in front of the evaluation panel.",
+      desc: "நடுவர்கள் (Jury) விரும்பும் சிறந்த 6-ஸ்லைடு PPT தயாரிப்பது மற்றும் 5 நிமிட நேரக்கட்டுப்பாட்டுக்குள் பயமில்லாமல் சிறந்த Elevator Pitch வழங்குவது எப்படி?",
       keyPoints: [
-        "Slide 1-2: Problem validation and root cause identification",
-        "Slide 3: High-level system architecture and data flow",
-        "Slide 4-5: Technology stack, feasibility, and prototype screenshots",
-        "Slide 6: Impact, business potential, and commercialization roadmap"
+        "ஸ்லைடு 1-2: பிரச்சனையின் ஆழம் மற்றும் தற்போதைய தீர்வுகள் உள்ள இடைவெளி",
+        "ஸ்லைடு 3: தொழில்நுட்ப கட்டமைப்பு (System Architecture Flowchart)",
+        "ஸ்லைடு 4-5: செயல்படும் மாதிரி (Working Prototype) மற்றும் சாத்தியக்கூறு",
+        "ஸ்லைடு 6: சமூக மற்றும் பொருளாதார தாக்கம் (Impact & Scalability)"
       ]
     },
     {
-      id: "vid_3",
+      id: "vid_tam_3",
+      language: "Tamil",
+      langBadge: "🇮🇳 தமிழ்",
+      langClass: "tamil",
       youtubeId: "9No-FiEInLA",
       embedUrl: "https://www.youtube-nocookie.com/embed/9No-FiEInLA?autoplay=1",
-      title: "How to Build a Working Prototype / MVP for SIH in 48 Hours",
+      title: "SIH Problem Statement Selection & Prototype Building in Tamil | தமிழ் வழிகாட்டி",
       category: "prototype",
       categoryName: "💻 Prototype & Tech",
-      duration: "18:10",
-      speaker: "Tech Lead & AI Architect",
+      duration: "17:15",
+      speaker: "Tech Lead & AI Innovator (Tamil)",
       thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80",
-      desc: "Practical architecture design patterns, choosing reliable tech stacks, and preparing fail-proof offline live demonstration backups.",
+      desc: "Hardware மற்றும் Software வகைகளில் குறைந்த நேரத்தில் தரமான Working Prototype உருவாக்குவது மற்றும் ஆஃப்லைன் டெமோ தயார் செய்வது பற்றிய விளக்கம்.",
       keyPoints: [
-        "Focus on core problem statement workflow before adding extra features",
-        "Set up local demo simulators in case of venue internet lag",
-        "Embed telemetry dashboards or physical microcontrollers clearly",
-        "Demonstrate end-to-end data pipeline from user input to output"
+        "கடினமான பிரச்னைகளை எளிய மாட்யூல்களாக பிரிப்பது",
+        "Arduino, ESP32, Python AI மற்றும் Cloud Frameworks தேர்வு",
+        "இணைய இணைப்பு இல்லாத போதும் செயல்படும் Offline Demo தயாரிப்பு",
+        "Idea 1 மற்றும் Idea 2 இரட்டை யோசனைகளை சமர்ப்பிக்கும் உத்தி"
       ]
     },
+
+    // --- 🇬🇧 ENGLISH MASTERCLASSES ---
     {
-      id: "vid_4",
+      id: "vid_eng_1",
+      language: "English",
+      langBadge: "🇬🇧 English",
+      langClass: "english",
       youtubeId: "rVlhMRBgF-k",
       embedUrl: "https://www.youtube-nocookie.com/embed/rVlhMRBgF-k?autoplay=1",
-      title: "SIH Problem Statement Selection & Literature Survey Guide",
+      title: "How to Crack Smart India Hackathon: Official Flow, Rules & Winning Roadmap",
       category: "strategy",
-      categoryName: "🎯 PS Selection",
-      duration: "09:35",
-      speaker: "AIIF Innovation Cell",
+      categoryName: "🎯 SIH Roadmap",
+      duration: "14:10",
+      speaker: "National SIH Mentor & Grand Finale Jury",
       thumbnail: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=80",
-      desc: "How to select problem statements with high national impact, avoid oversaturated ideas, and formulate dual ideas (Idea 1 & Idea 2).",
+      desc: "Comprehensive English orientation covering end-to-end hackathon lifecycle from internal evaluation to national finals.",
       keyPoints: [
-        "Analyzing past SIH winning solutions in related problem domains",
-        "Evaluating component availability for hardware vs cloud stacks",
-        "Structuring primary idea vs secondary contingency idea",
-        "Ensuring 100% compliance with female participant mandates"
+        "Analyzing Ministry Problem Statements & domain requirements",
+        "Formulating achievable prototype scopes for offline pitching",
+        "Balancing Software vs Hardware innovation criteria",
+        "Team cohesion, leadership, and sprint execution best practices"
       ]
     },
     {
-      id: "vid_5",
+      id: "vid_eng_2",
+      language: "English",
+      langBadge: "🇬🇧 English",
+      langClass: "english",
       youtubeId: "PkZNo7MFNFg",
       embedUrl: "https://www.youtube-nocookie.com/embed/PkZNo7MFNFg?autoplay=1",
-      title: "Inside the Jury's Mind: How Scores (Out of 100) are Calculated",
-      category: "winner",
-      categoryName: "⚖️ Jury Rubrics",
-      duration: "12:50",
-      speaker: "Senior Evaluator & Academician",
+      title: "5-Minute Pitch Deck Architecture: How SIH Winners Impress the Evaluation Panel",
+      category: "pitch",
+      categoryName: "🚀 PPT & Pitch Deck",
+      duration: "11:30",
+      speaker: "Hackathon Judge & Startup Ecosystem Lead",
       thumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80",
-      desc: "Breakdown of the 5 official scoring pillars: Novelty (20), Architecture (25), Feasibility (25), Impact (15), and Presentation (15).",
+      desc: "Master the structure of an award-winning 6-slide deck: Problem validation, Architecture, Feasibility, Impact, and Live Demo.",
       keyPoints: [
-        "Novelty (20): Demonstrating unique differentiation over existing solutions",
-        "Architecture (25): Scalable, modular, and secure design patterns",
-        "Feasibility (25): Realistic deployment costs and technological readiness",
-        "Presentation & Defense (15): Confident Q&A handling and live demo"
+        "Stick to 1 minute per core evaluation criterion",
+        "Highlight unique novelty over existing off-the-shelf market tools",
+        "Show clear end-to-end data pipelines and user journey diagrams",
+        "Demonstrate sustainable deployment economics and scalability"
       ]
     },
     {
-      id: "vid_6",
+      id: "vid_eng_3",
+      language: "English",
+      langBadge: "🇬🇧 English",
+      langClass: "english",
       youtubeId: "WPni755-Krg",
       embedUrl: "https://www.youtube-nocookie.com/embed/WPni755-Krg?autoplay=1",
-      title: "SIH Grand Finale Winners Panel: 7 Golden Habits of Top 1% Teams",
+      title: "Inside the Mind of SIH Jury: How 100 Marks are Evaluated Across 5 Pillars",
+      category: "winner",
+      categoryName: "⚖️ Jury Rubrics",
+      duration: "13:45",
+      speaker: "Senior Academician & Technical Evaluator",
+      thumbnail: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=80",
+      desc: "In-depth breakdown of the 5 official scoring pillars: Novelty (20), Architecture (25), Feasibility (25), Impact (15), and Presentation (15).",
+      keyPoints: [
+        "Novelty (20): What makes your technical approach 10x superior?",
+        "Architecture (25): Scalable, modular, and fault-tolerant system design",
+        "Feasibility (25): Realistic component costs and technological readiness",
+        "Presentation & Defense (15): Confident defense during tough Q&A rounds"
+      ]
+    },
+
+    // --- 🌴 MALAYALAM (മലയാളം) GUIDES ---
+    {
+      id: "vid_mal_1",
+      language: "Malayalam",
+      langBadge: "🌴 മലയാളം",
+      langClass: "malayalam",
+      youtubeId: "VfP_fK6k7Y8",
+      embedUrl: "https://www.youtube-nocookie.com/embed/VfP_fK6k7Y8?autoplay=1",
+      title: "Smart India Hackathon Malayalam Complete Guide: Registration, Ideas & Roadmap",
+      category: "strategy",
+      categoryName: "🎯 SIH Roadmap",
+      duration: "16:05",
+      speaker: "Kerala Tech Educator & SIH Mentor",
+      thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80",
+      desc: "സ്മാർട്ട് ഇന്ത്യ ഹാക്കത്തോൺ (SIH) മലയാളത്തിൽ പൂർണ്ണമായ ഗൈഡ്: പ്രോബ്ലം സെലക്ഷൻ, ടീം റൂളുകൾ, ഇന്റേണൽ ഹാക്കത്തോൺ തയ്യാറെടുപ്പുകൾ.",
+      keyPoints: [
+        "മിനിസ്ട്രി പ്രോബ്ലം സ്റ്റേറ്റ്‌മെന്റുകൾ എങ്ങനെ കൃത്യമായി തിരഞ്ഞെടുക്കാം?",
+        "ടീമിൽ നിർബന്ധമായും പാലിക്കേണ്ട വനിതാ പങ്കാളിത്ത നിയമം",
+        "കോളേജ് ഇന്റേണൽ പിച്ചിങ്ങിൽ ഉയർന്ന മാർക്ക് നേടാനുള്ള തന്ത്രങ്ങൾ",
+        "ഗ്രാൻഡ് ഫിനാലെയിലേക്ക് യോഗ്യത നേടാനുള്ള ഘട്ടങ്ങൾ"
+      ]
+    },
+    {
+      id: "vid_mal_2",
+      language: "Malayalam",
+      langBadge: "🌴 മലയാളം",
+      langClass: "malayalam",
+      youtubeId: "5a6qJ2gX5_w",
+      embedUrl: "https://www.youtube-nocookie.com/embed/5a6qJ2gX5_w?autoplay=1",
+      title: "SIH PPT Preparation & 5-Minute Pitching Secrets in Malayalam | മലയാളം ഗൈഡ്",
+      category: "pitch",
+      categoryName: "🚀 PPT & Pitch Deck",
+      duration: "13:20",
+      speaker: "Tech Innovation Lead (Malayalam)",
+      thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=80",
+      desc: "ജൂറിയെ ആകർഷിക്കുന്ന മികച്ച പ്രസന്റേഷൻ സ്ലൈഡുകൾ എങ്ങനെ നിർമ്മിക്കാം? 5 മിനിറ്റ് സമയപരിധിയിൽ മികച്ച പിച്ചിംഗ് നൽകുന്ന വിധം.",
+      keyPoints: [
+        "ആറ് പ്രധാന സ്ലൈഡുകളുടെ കൃത്യമായ ഫോർമാറ്റും ക്രമീകരണവും",
+        "സിസ്റ്റം ആർക്കിടെക്ചർ ഫ്ലോചാർട്ടുകൾ വ്യക്തമായി അവതരിപ്പിക്കുക",
+        "ജൂറിയുടെ ചോദ്യങ്ങൾക്ക് കൃത്യവും വ്യക്തവുമായ മറുപടി നൽകൽ",
+        "സാമൂഹിക-സാമ്പത്തിക പ്രയോജനങ്ങൾ (Impact) എടുത്തുകാണിക്കൽ"
+      ]
+    },
+    {
+      id: "vid_mal_3",
+      language: "Malayalam",
+      langBadge: "🌴 മലയാളം",
+      langClass: "malayalam",
+      youtubeId: "9No-FiEInLA",
+      embedUrl: "https://www.youtube-nocookie.com/embed/9No-FiEInLA?autoplay=1",
+      title: "SIH Prototype Building & Grand Finale Winner Experience in Malayalam | മലയാളം ഗൈഡ്",
       category: "winner",
       categoryName: "🏆 Winners Secrets",
-      duration: "16:40",
-      speaker: "National SIH Awardees",
+      duration: "18:30",
+      speaker: "SIH National Awardee (Kerala)",
       thumbnail: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=80",
-      desc: "National winners share secrets on handling high-pressure jury Q&A, role division, sprint pacing, and pitch polish.",
+      desc: "ദേശീയ തലത്തിൽ വിജയിച്ച മലയാളി വിദ്യാർത്ഥികളുടെ അനുഭവങ്ങളും വർക്കിംഗ് പ്രോട്ടോടൈപ്പ് നിർമ്മാണ രഹസ്യങ്ങളും.",
       keyPoints: [
-        "Assign dedicated roles (Team Leader, Pitcher, Backend, Frontend/Hardware)",
-        "Rehearse mock Q&A defenses against tough edge-case questions",
-        "Keep live demonstration under 2 minutes with zero clutter",
-        "Highlight economic benefit, scalability, and IP potential"
+        "സോഫ്റ്റ്‌വെയർ, ഹാർഡ്‌വെയർ പ്രോട്ടോടൈപ്പുകൾ വേഗത്തിൽ നിർമ്മിക്കുന്ന രീതി",
+        "ലൈവ് ഡെമോ പരാജയപ്പെടാതിരിക്കാൻ ചെയ്യേണ്ട മുൻകരുതലുകൾ",
+        "ടീം അംഗങ്ങളുടെ ജോലി വിഭജനവും സമയക്രമീകരണവും",
+        "ഹാക്കത്തോൺ മെന്ററിംഗ് സെഷനുകൾ പരമാവധി പ്രയോജനപ്പെടുത്തുക"
       ]
     }
   ],
@@ -244,25 +331,58 @@ function initCountdownTimer() {
   }
 }
 
-// 🎬 SIH 2026 PREPARATION VIDEO QUEUE CONTROLLER
+// 🎬 SIH 2026 PREPARATION VIDEO QUEUE CONTROLLER (TAMIL, ENGLISH & MALAYALAM)
+function filterVideosByLanguage(lang) {
+  state.videoLanguageFilter = lang || 'All';
+  
+  // Update button active state
+  ['All', 'Tamil', 'English', 'Malayalam'].forEach(l => {
+    const btn = document.getElementById(`vidLangFilter${l}`);
+    if (btn) {
+      if (l === state.videoLanguageFilter) {
+        btn.classList.add('active');
+        btn.style.background = 'var(--primary-green)';
+        btn.style.color = '#ffffff';
+        btn.style.borderColor = 'var(--primary-green)';
+      } else {
+        btn.classList.remove('active');
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }
+    }
+  });
+
+  renderVideoQueue();
+}
+
 function renderVideoQueue() {
   const container = document.getElementById('videoCarouselQueue');
   if (!container) return;
-  const videos = Array.isArray(state.preparationVideos) ? state.preparationVideos : [];
+  const allVideos = Array.isArray(state.preparationVideos) ? state.preparationVideos : [];
+  
+  const currentFilter = state.videoLanguageFilter || 'All';
+  const videos = currentFilter === 'All' 
+    ? allVideos 
+    : allVideos.filter(v => v.language === currentFilter);
+
   if (videos.length === 0) {
-    container.innerHTML = `<p class="text-muted" style="padding: 1rem;">No video guides available.</p>`;
+    container.innerHTML = `<p class="text-muted" style="padding: 1.5rem; text-align: center; width: 100%;">No video guides available for selected language.</p>`;
     return;
   }
 
   container.innerHTML = videos.map(vid => `
-    <div class="video-card" onclick="openVideoPlayerModal('${vid.id}')" title="Watch '${vid.title}'">
+    <div class="video-card" onclick="openVideoPlayerModal('${vid.id}')" title="Watch '${vid.title}' (${vid.language})">
       <div class="video-thumb-container">
+        <span class="video-lang-badge video-lang-badge-${vid.langClass}">${vid.langBadge}</span>
         <img class="video-thumb-img" src="${vid.thumbnail}" alt="${vid.title}" loading="lazy" />
         <div class="video-play-overlay">▶</div>
         <div class="video-duration-tag">⏱️ ${vid.duration}</div>
       </div>
       <div class="video-card-body">
-        <span class="video-tag-pill video-tag-${vid.category}">${vid.categoryName}</span>
+        <div style="display: flex; gap: 0.35rem; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap;">
+          <span class="video-tag-pill video-tag-${vid.category}">${vid.categoryName}</span>
+        </div>
         <h4 class="video-title">${vid.title}</h4>
         <p class="video-desc">${vid.desc}</p>
         <div class="video-footer">
@@ -290,12 +410,15 @@ function openVideoPlayerModal(videoId) {
     contentContainer.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem; margin-bottom: 1rem;">
         <div>
-          <span class="video-tag-pill video-tag-${vid.category}" style="font-size: 0.75rem; margin-bottom: 0.35rem;">${vid.categoryName}</span>
+          <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
+            <span class="video-lang-badge video-lang-badge-${vid.langClass}" style="position: static;">${vid.langBadge}</span>
+            <span class="video-tag-pill video-tag-${vid.category}" style="margin: 0;">${vid.categoryName}</span>
+          </div>
           <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); line-height: 1.3;">
             ${vid.title}
           </h3>
           <p class="text-muted" style="font-size: 0.825rem; margin-top: 0.25rem;">
-            🎙️ Presented by <strong>${vid.speaker}</strong> | Duration: <strong>${vid.duration}</strong>
+            🎙️ Presented by <strong>${vid.speaker}</strong> | Language: <strong>${vid.language}</strong> | Duration: <strong>${vid.duration}</strong>
           </p>
         </div>
       </div>

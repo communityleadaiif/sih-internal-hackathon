@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIH 2026 INTERNAL HACKATHON | AJK College & AIIF</title>
   <meta name="description" content="SIH 2026 Internal Hackathon Platform organized by AJK College of Arts & Science in association with AIIF (AJK Innovation Incubator Foundation). Collect team details, up to 2 chosen problem statements, and solutions.">
-  <link rel="stylesheet" href="styles.css?v=4.2">
+  <link rel="stylesheet" href="styles.css?v=4.3">
 </head>
 <body>
 
@@ -211,9 +211,17 @@
             <h2>🎬 SIH 2026 Preparation & Winning Guide Videos</h2>
             <p>Click any video guide to watch pitching strategies, prototype building tips, and jury evaluation secrets</p>
           </div>
-          <div class="video-nav-controls">
-            <button class="video-nav-btn" onclick="scrollVideoQueue('left')" title="Scroll Left">◀</button>
-            <button class="video-nav-btn" onclick="scrollVideoQueue('right')" title="Scroll Right">▶</button>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div class="video-lang-filters" style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm active" id="vidLangFilterAll" onclick="filterVideosByLanguage('All')">🌐 All Languages</button>
+              <button class="btn btn-secondary btn-sm" id="vidLangFilterTamil" onclick="filterVideosByLanguage('Tamil')">🇮🇳 தமிழ் (Tamil)</button>
+              <button class="btn btn-secondary btn-sm" id="vidLangFilterEnglish" onclick="filterVideosByLanguage('English')">🇬🇧 English</button>
+              <button class="btn btn-secondary btn-sm" id="vidLangFilterMalayalam" onclick="filterVideosByLanguage('Malayalam')">🌴 മലയാളം (Malayalam)</button>
+            </div>
+            <div class="video-nav-controls">
+              <button class="video-nav-btn" onclick="scrollVideoQueue('left')" title="Scroll Left">◀</button>
+              <button class="video-nav-btn" onclick="scrollVideoQueue('right')" title="Scroll Right">▶</button>
+            </div>
           </div>
         </div>
 
@@ -1024,7 +1032,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCRIPTS -->
-  <script src="data.js?v=4.2"></script>
-  <script src="app.js?v=4.2"></script>
+  <script src="data.js?v=4.3"></script>
+  <script src="app.js?v=4.3"></script>
 </body>
 </html>
