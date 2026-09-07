@@ -110,7 +110,7 @@ function doPost(e) {
                "KEY UPCOMING DATES:\n" +
                "-----------------------------------------------------------\n" +
                "⏰ Registration Deadline: September 05, 2026\n" +
-               "🎯 Offline Campus Pitching: September 07, 2026 at AJK College Campus\n\n" +
+               "🎯 Offline Campus Pitching: September 09, 2026 at AJK College Campus\n\n" +
                "Best Regards,\n" +
                "SIH 2026 Organising Committee\n" +
                "AJK College of Arts & Science & AIIF (AJK Innovation Incubator Foundation)\n" +

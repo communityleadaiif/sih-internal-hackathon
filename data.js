@@ -19,7 +19,7 @@ const INITIAL_DATA = {
     primaryColor: "#00a859",
     secondaryColor: "#1e3a8a",
     venue: "AJK College Campus",
-    dates: "Registration Deadline: Sep 5, 2026 | Internal Pitching & Shortlisting: Sep 7, 2026",
+    dates: "Registration Deadline: Sep 5, 2026 | Internal Pitching & Shortlisting: Sep 9, 2026",
     targetShortlist: 50,
     minTeamsPerDept: 2
   },
