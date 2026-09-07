@@ -350,6 +350,7 @@ function doGet(e) {
       var nameKey = baseName ? (baseName + "#" + suffix) : "";
       var emailKey = lEmail ? (lEmail + "#" + suffix) : "";
 
+      var isDup = (nameKey && seenNames[nameKey]) || (emailKey && seenEmails[emailKey]);
       if (!isDup) {
         if (nameKey) seenNames[nameKey] = true;
         if (emailKey) seenEmails[emailKey] = true;
