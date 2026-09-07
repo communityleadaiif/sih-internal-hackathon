@@ -295,6 +295,8 @@ function loadStoredState() {
     state.mentors = (window.INITIAL_DATA && window.INITIAL_DATA.mentors) ? [...window.INITIAL_DATA.mentors] : [];
   }
 
+  state.isLeaderboardPublished = (localStorage.getItem('prajna_leaderboard_published') === 'true');
+
   expandDualIdeaTeams();
   if (Array.isArray(state.teams)) {
     state.teams = deduplicateTeams(state.teams.map(t => enrichTeamRecord(t)));
@@ -1125,14 +1127,29 @@ function verifyStaffPasscode() {
 function applyStaffProtection() {
   const isAuth = state.isStaffAuthenticated || (sessionStorage.getItem('sih_staff_auth') === 'true');
   state.isStaffAuthenticated = isAuth;
+  const isPublished = state.isLeaderboardPublished || (localStorage.getItem('prajna_leaderboard_published') === 'true');
+  state.isLeaderboardPublished = isPublished;
 
-  document.querySelectorAll('.staff-only-tab').forEach(tab => {
-    tab.style.display = isAuth ? 'inline-flex' : 'none';
-  });
+  // Jury tab is ONLY accessible/visible for staff
+  const juryTab = document.querySelector('.nav-tab[data-tab="jury"]');
+  if (juryTab) juryTab.style.display = isAuth ? 'inline-flex' : 'none';
+
+  // Leaderboard tab is visible to ALL participants if published, or to staff if authenticated
+  const lbTab = document.querySelector('.nav-tab[data-tab="leaderboard"]');
+  if (lbTab) {
+    lbTab.style.display = (isAuth || isPublished) ? 'inline-flex' : 'none';
+    if (isPublished && !isAuth) {
+      lbTab.innerHTML = '🏆 5. Top 50 Shortlist & Certificates';
+    } else if (isAuth) {
+      lbTab.innerHTML = '🏆 6. Leaderboard & Certificates';
+    }
+  }
 
   document.querySelectorAll('.staff-only-btn').forEach(btn => {
     btn.style.display = isAuth ? 'inline-flex' : 'none';
   });
+
+  renderPublishButton();
 }
 
 function toggleTheme() {
