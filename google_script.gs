@@ -37,30 +37,32 @@ function doPost(e) {
       if (!jurySheet) {
         jurySheet = ss.insertSheet("Jury_Evaluations");
         jurySheet.appendRow([
-          "Timestamp", "Team ID", "Team Name", "Department", "Jury ID", 
+          "Timestamp", "Team ID", "Team Name", "Department", "Pitch Hall", "Jury ID", 
           "Novelty (20)", "Architecture (25)", "Feasibility (25)", "Impact (15)", "Presentation (15)", 
           "Total Score (100)", "Jury Comments & Rationale"
         ]);
-        jurySheet.getRange(1, 1, 1, 12).setFontWeight("bold").setBackground("#1e3a8a").setFontColor("#ffffff");
+        jurySheet.getRange(1, 1, 1, 13).setFontWeight("bold").setBackground("#1e3a8a").setFontColor("#ffffff");
       }
 
       var nowStr = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
       var juryId = data.juryId || "Jury 1";
       var teamId = data.teamId || "N/A";
+      var hall = data.hall || "Hall 1";
       
       // Update existing row if this Jury already scored this Team, else append
       var updated = false;
       var lastRow = jurySheet.getLastRow();
       if (lastRow >= 2) {
-        var values = jurySheet.getRange(2, 2, lastRow - 1, 4).getValues(); // Team ID is col 2, Jury ID is col 5
+        var values = jurySheet.getRange(2, 2, lastRow - 1, 5).getValues(); // Team ID is col 2, Jury ID is col 6
         for (var i = 0; i < values.length; i++) {
-          if (values[i][0].toString().trim() === teamId && values[i][3].toString().trim() === juryId) {
+          if (values[i][0].toString().trim() === teamId && values[i][4].toString().trim() === juryId) {
             var targetRow = i + 2;
-            jurySheet.getRange(targetRow, 1, 1, 12).setValues([[
+            jurySheet.getRange(targetRow, 1, 1, 13).setValues([[
               nowStr,
               teamId,
               data.teamName || "",
               data.department || "",
+              hall,
               juryId,
               data.novelty || 0,
               data.architecture || 0,
@@ -82,6 +84,7 @@ function doPost(e) {
           teamId,
           data.teamName || "",
           data.department || "",
+          hall,
           juryId,
           data.novelty || 0,
           data.architecture || 0,
@@ -95,7 +98,7 @@ function doPost(e) {
 
       return ContentService.createTextOutput(JSON.stringify({ 
         status: "success", 
-        message: "Jury score recorded successfully for " + teamId + " by " + juryId 
+        message: "Jury score recorded successfully for " + teamId + " by " + juryId + " in " + hall 
       })).setMimeType(ContentService.MimeType.JSON);
     }
 

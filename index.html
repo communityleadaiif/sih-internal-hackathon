@@ -535,48 +535,69 @@
     <section id="tab-jury" class="tab-content">
       <div class="section-header">
         <div class="section-title">
-          <h2>⚖️ Jury Desk - 100-Point SIH Shortlisting Rubric</h2>
-          <p>AIIF Evaluator Panel scoring desk for selecting the Top 50 teams for official SIH nomination.</p>
+          <h2>⚖️ Jury Evaluation Desk & Pitching Halls</h2>
+          <p>Distributed 6-Hall pitching panel with 2 dedicated juries per hall for SIH 2026 Top 50 shortlisting.</p>
         </div>
       </div>
 
-      <!-- ACTIVE JURY EVALUATOR PROFILE BAR -->
-      <div class="jury-evaluator-bar" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm);">
+      <!-- ACTIVE JURY EVALUATOR & HALL BAR -->
+      <div class="jury-evaluator-bar" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm);">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <span style="font-size: 1.5rem;">⚖️</span>
           <div>
-            <div style="font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700;">Active Evaluator Profile</div>
-            <div style="font-weight: 800; font-size: 1.05rem; color: var(--primary-orange);" id="activeJuryTitle">Jury Member 01</div>
+            <div style="font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700;">Active Evaluator & Pitch Venue</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem;">
+              <span style="font-weight: 800; font-size: 1.05rem; color: var(--primary-orange);" id="activeJuryTitle">Jury Member 01</span>
+              <span class="hall-badge" id="activeJuryHallTag">📍 Hall 1 / Panel A</span>
+            </div>
           </div>
         </div>
         <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
-          <label for="juryProfileSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">Switch Evaluator:</label>
+          <label for="juryProfileSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">Switch Evaluator Profile:</label>
           <select id="juryProfileSelect" class="form-control" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.875rem; font-weight: 700; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-highlight);" onchange="changeActiveJuryProfile(this.value)">
-            <option value="Jury 1">⚖️ Jury 01 (Panelist 1)</option>
-            <option value="Jury 2">⚖️ Jury 02 (Panelist 2)</option>
-            <option value="Jury 3">⚖️ Jury 03 (Panelist 3)</option>
-            <option value="Jury 4">⚖️ Jury 04 (Panelist 4)</option>
-            <option value="Jury 5">⚖️ Jury 05 (Panelist 5)</option>
-            <option value="Jury 6">⚖️ Jury 06 (Panelist 6)</option>
-            <option value="Jury 7">⚖️ Jury 07 (Panelist 7)</option>
-            <option value="Jury 8">⚖️ Jury 08 (Panelist 8)</option>
-            <option value="Jury 9">⚖️ Jury 09 (Panelist 9)</option>
-            <option value="Jury 10">⚖️ Jury 10 (Panelist 10)</option>
-            <option value="Jury 11">⚖️ Jury 11 (Panelist 11)</option>
-            <option value="Jury 12">⚖️ Jury 12 (Panelist 12)</option>
-            <option value="Organiser">🏛️ Organiser Master View</option>
+            <option value="Jury 1">⚖️ Jury 01 (Hall 1 / Panel A)</option>
+            <option value="Jury 2">⚖️ Jury 02 (Hall 1 / Panel A)</option>
+            <option value="Jury 3">⚖️ Jury 03 (Hall 2 / Panel B)</option>
+            <option value="Jury 4">⚖️ Jury 04 (Hall 2 / Panel B)</option>
+            <option value="Jury 5">⚖️ Jury 05 (Hall 3 / Panel C)</option>
+            <option value="Jury 6">⚖️ Jury 06 (Hall 3 / Panel C)</option>
+            <option value="Jury 7">⚖️ Jury 07 (Hall 4 / Panel D)</option>
+            <option value="Jury 8">⚖️ Jury 08 (Hall 4 / Panel D)</option>
+            <option value="Jury 9">⚖️ Jury 09 (Hall 5 / Panel E)</option>
+            <option value="Jury 10">⚖️ Jury 10 (Hall 5 / Panel E)</option>
+            <option value="Jury 11">⚖️ Jury 11 (Hall 6 / Panel F)</option>
+            <option value="Jury 12">⚖️ Jury 12 (Hall 6 / Panel F)</option>
+            <option value="Organiser">🏛️ Organiser Master Command Center</option>
           </select>
-          <button class="btn btn-secondary btn-sm" onclick="exportMultiJuryMatrixExcel()" title="Export all 12-Jury Score Matrix as CSV/Excel">📊 Export Multi-Jury Matrix</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportMultiJuryMatrixExcel()" title="Export all 6-Hall Multi-Jury Score Matrix as CSV/Excel">📊 Export Multi-Jury Matrix</button>
         </div>
+      </div>
+
+      <!-- 6-HALL LIVE PROGRESS MATRIX (Organiser & Evaluators Overview) -->
+      <div id="hallProgressMatrixContainer" class="hall-progress-grid">
+        <!-- Rendered dynamically by renderHallProgressMatrix() in app.js -->
       </div>
 
       <div class="jury-desk-grid">
         <!-- LEFT: TEAM LIST SIDEBAR -->
         <div class="jury-sidebar-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
-            <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">Teams Roster</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+            <h3 style="font-size: 1rem; font-weight: 700; margin: 0;">Teams Roster</h3>
             <span class="rule-chip pass" style="font-size: 0.725rem; padding: 2px 8px;" id="juryEvaluatedStats">0 / 0 Scored</span>
           </div>
+
+          <!-- HALL FILTER TABS -->
+          <div class="hall-filter-tabs" id="hallFilterTabs">
+            <button class="hall-filter-btn active" id="hallFilterMyHall" onclick="setHallFilter('my')">🏢 My Hall</button>
+            <button class="hall-filter-btn" id="hallFilterAll" onclick="setHallFilter('all')">All Halls</button>
+            <button class="hall-filter-btn" id="hallFilterHall1" onclick="setHallFilter('Hall 1')">H1</button>
+            <button class="hall-filter-btn" id="hallFilterHall2" onclick="setHallFilter('Hall 2')">H2</button>
+            <button class="hall-filter-btn" id="hallFilterHall3" onclick="setHallFilter('Hall 3')">H3</button>
+            <button class="hall-filter-btn" id="hallFilterHall4" onclick="setHallFilter('Hall 4')">H4</button>
+            <button class="hall-filter-btn" id="hallFilterHall5" onclick="setHallFilter('Hall 5')">H5</button>
+            <button class="hall-filter-btn" id="hallFilterHall6" onclick="setHallFilter('Hall 6')">H6</button>
+          </div>
+
           <div style="margin-bottom: 0.75rem;">
             <input type="text" id="jurySearchInput" class="form-control" placeholder="🔍 Filter by team, roll, dept..." oninput="filterJuryTeamList(this.value)" style="font-size: 0.825rem; padding: 0.45rem 0.75rem;">
           </div>
