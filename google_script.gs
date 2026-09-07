@@ -30,6 +30,75 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // Handle Multi-Jury Score Submission to dedicated Jury_Evaluations tab
+    if (data.action === 'submitJuryScore') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var jurySheet = ss.getSheetByName("Jury_Evaluations");
+      if (!jurySheet) {
+        jurySheet = ss.insertSheet("Jury_Evaluations");
+        jurySheet.appendRow([
+          "Timestamp", "Team ID", "Team Name", "Department", "Jury ID", 
+          "Novelty (20)", "Architecture (25)", "Feasibility (25)", "Impact (15)", "Presentation (15)", 
+          "Total Score (100)", "Jury Comments & Rationale"
+        ]);
+        jurySheet.getRange(1, 1, 1, 12).setFontWeight("bold").setBackground("#1e3a8a").setFontColor("#ffffff");
+      }
+
+      var nowStr = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+      var juryId = data.juryId || "Jury 1";
+      var teamId = data.teamId || "N/A";
+      
+      // Update existing row if this Jury already scored this Team, else append
+      var updated = false;
+      var lastRow = jurySheet.getLastRow();
+      if (lastRow >= 2) {
+        var values = jurySheet.getRange(2, 2, lastRow - 1, 4).getValues(); // Team ID is col 2, Jury ID is col 5
+        for (var i = 0; i < values.length; i++) {
+          if (values[i][0].toString().trim() === teamId && values[i][3].toString().trim() === juryId) {
+            var targetRow = i + 2;
+            jurySheet.getRange(targetRow, 1, 1, 12).setValues([[
+              nowStr,
+              teamId,
+              data.teamName || "",
+              data.department || "",
+              juryId,
+              data.novelty || 0,
+              data.architecture || 0,
+              data.feasibility || 0,
+              data.impact || 0,
+              data.presentation || 0,
+              data.total || 0,
+              data.feedback || ""
+            ]]);
+            updated = true;
+            break;
+          }
+        }
+      }
+
+      if (!updated) {
+        jurySheet.appendRow([
+          nowStr,
+          teamId,
+          data.teamName || "",
+          data.department || "",
+          juryId,
+          data.novelty || 0,
+          data.architecture || 0,
+          data.feasibility || 0,
+          data.impact || 0,
+          data.presentation || 0,
+          data.total || 0,
+          data.feedback || ""
+        ]);
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({ 
+        status: "success", 
+        message: "Jury score recorded successfully for " + teamId + " by " + juryId 
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Setup Header Row if sheet is new
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([

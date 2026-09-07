@@ -540,92 +540,139 @@
         </div>
       </div>
 
+      <!-- ACTIVE JURY EVALUATOR PROFILE BAR -->
+      <div class="jury-evaluator-bar" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">⚖️</span>
+          <div>
+            <div style="font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700;">Active Evaluator Profile</div>
+            <div style="font-weight: 800; font-size: 1.05rem; color: var(--primary-orange);" id="activeJuryTitle">Jury Member 01</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+          <label for="juryProfileSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">Switch Evaluator:</label>
+          <select id="juryProfileSelect" class="form-control" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.875rem; font-weight: 700; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-highlight);" onchange="changeActiveJuryProfile(this.value)">
+            <option value="Jury 1">⚖️ Jury 01 (Panelist 1)</option>
+            <option value="Jury 2">⚖️ Jury 02 (Panelist 2)</option>
+            <option value="Jury 3">⚖️ Jury 03 (Panelist 3)</option>
+            <option value="Jury 4">⚖️ Jury 04 (Panelist 4)</option>
+            <option value="Jury 5">⚖️ Jury 05 (Panelist 5)</option>
+            <option value="Jury 6">⚖️ Jury 06 (Panelist 6)</option>
+            <option value="Jury 7">⚖️ Jury 07 (Panelist 7)</option>
+            <option value="Jury 8">⚖️ Jury 08 (Panelist 8)</option>
+            <option value="Jury 9">⚖️ Jury 09 (Panelist 9)</option>
+            <option value="Jury 10">⚖️ Jury 10 (Panelist 10)</option>
+            <option value="Jury 11">⚖️ Jury 11 (Panelist 11)</option>
+            <option value="Jury 12">⚖️ Jury 12 (Panelist 12)</option>
+            <option value="Organiser">🏛️ Organiser Master View</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="exportMultiJuryMatrixExcel()" title="Export all 12-Jury Score Matrix as CSV/Excel">📊 Export Multi-Jury Matrix</button>
+        </div>
+      </div>
+
       <div class="jury-desk-grid">
         <!-- LEFT: TEAM LIST SIDEBAR -->
         <div class="jury-sidebar-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color);">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Select Team to Evaluate</h3>
-            <span class="rule-chip pass" style="font-size: 0.725rem; padding: 2px 8px;">AIIF Panel</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">Teams Roster</h3>
+            <span class="rule-chip pass" style="font-size: 0.725rem; padding: 2px 8px;" id="juryEvaluatedStats">0 / 0 Scored</span>
+          </div>
+          <div style="margin-bottom: 0.75rem;">
+            <input type="text" id="jurySearchInput" class="form-control" placeholder="🔍 Filter by team, roll, dept..." oninput="filterJuryTeamList(this.value)" style="font-size: 0.825rem; padding: 0.45rem 0.75rem;">
           </div>
           <div class="team-selector-list" id="juryTeamList">
             <!-- Teams rendered by JS -->
           </div>
         </div>
 
-        <!-- RIGHT: SCORING RUBRIC -->
-        <div class="rubric-card">
-          <div id="evalTeamHeader">
-            <h3 id="evalTeamName">Select a team from the list</h3>
-            <p id="evalTeamPs" class="text-muted" style="font-size: 0.85rem;">Click on any team to load the evaluation rubric.</p>
+        <!-- RIGHT: DOSSIER & SCORING RUBRIC -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- PRE-PITCH TEAM DOSSIER CARD -->
+          <div class="jury-dossier-card" id="juryTeamDossier">
+            <!-- Rendered dynamically by loadTeamForEvaluation() in app.js -->
           </div>
 
-          <div id="rubricControls" style="display: flex; flex-direction: column; gap: 1.25rem;">
-            <!-- RUBRIC ITEM 1 -->
-            <div class="rubric-item">
-              <div class="rubric-label">
-                <span>1. Problem Understanding & Novelty</span>
-                <span class="rubric-score-display"><span id="valNovelty">18</span> / 20 pts</span>
-              </div>
-              <input type="range" class="slider-control" min="0" max="20" value="18" id="slideNovelty" oninput="updateRubricTotal()">
-              <p style="font-size: 0.75rem; color: var(--text-muted);">Clarity of problem analysis, root cause understanding, and original perspective.</p>
-            </div>
-
-            <!-- RUBRIC ITEM 2 -->
-            <div class="rubric-item">
-              <div class="rubric-label">
-                <span>2. Solution Architecture & Technical Stack</span>
-                <span class="rubric-score-display"><span id="valArchitecture">23</span> / 25 pts</span>
-              </div>
-              <input type="range" class="slider-control" min="0" max="25" value="23" id="slideArchitecture" oninput="updateRubricTotal()">
-              <p style="font-size: 0.75rem; color: var(--text-muted);">Quality of proposed technical solution architecture, stack choice, and data flow.</p>
-            </div>
-
-            <!-- RUBRIC ITEM 3 -->
-            <div class="rubric-item">
-              <div class="rubric-label">
-                <span>3. Prototype Technical Feasibility & Scope</span>
-                <span class="rubric-score-display"><span id="valFeasibility">22</span> / 25 pts</span>
-              </div>
-              <input type="range" class="slider-control" min="0" max="25" value="22" id="slideFeasibility" oninput="updateRubricTotal()">
-              <p style="font-size: 0.75rem; color: var(--text-muted);">Feasibility of building prototype during hackathon timeline and resource realism.</p>
-            </div>
-
-            <!-- RUBRIC ITEM 4 -->
-            <div class="rubric-item">
-              <div class="rubric-label">
-                <span>4. Potential Impact & Practical Utility</span>
-                <span class="rubric-score-display"><span id="valImpact">14</span> / 15 pts</span>
-              </div>
-              <input type="range" class="slider-control" min="0" max="15" value="14" id="slideImpact" oninput="updateRubricTotal()">
-              <p style="font-size: 0.75rem; color: var(--text-muted);">Real-world impact on target sector/ministry and deployment scalability.</p>
-            </div>
-
-            <!-- RUBRIC ITEM 5 -->
-            <div class="rubric-item">
-              <div class="rubric-label">
-                <span>5. Campus Pitch & Female Representation</span>
-                <span class="rubric-score-display"><span id="valPresentation">14</span> / 15 pts</span>
-              </div>
-              <input type="range" class="slider-control" min="0" max="15" value="14" id="slidePresentation" oninput="updateRubricTotal()">
-              <p style="font-size: 0.75rem; color: var(--text-muted);">Presentation defense quality, team synergy, and mandatory female member inclusion.</p>
-            </div>
-
-            <!-- TOTAL SCORE BOX -->
-            <div class="score-total-box">
+          <!-- SCORING RUBRIC -->
+          <div class="rubric-card">
+            <div id="evalTeamHeader" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
               <div>
-                <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Total SIH Score</p>
-                <h3 id="valTotalScore">91 / 100</h3>
+                <h3 id="evalTeamName" style="margin: 0; font-size: 1.2rem;">Select a team from the list</h3>
+                <p id="evalTeamPs" class="text-muted" style="font-size: 0.85rem; margin-top: 0.2rem;">Click on any team to load the pitch briefing dossier and scoring rubric.</p>
               </div>
-              <span class="rule-chip pass" id="evalScoreStatus">Nominated for Top 50</span>
+              <span class="rule-chip" id="evalCurrentJuryBadge" style="background: rgba(2, 132, 199, 0.15); border: 1px solid var(--primary-blue); color: var(--primary-blue); font-weight: 700;">Evaluator: Jury 1</span>
             </div>
 
-            <!-- FEEDBACK INPUT -->
-            <div class="form-group">
-              <label for="evalFeedback">Jury Comments & Shortlist Rationale</label>
-              <textarea id="evalFeedback" class="form-control" rows="3" placeholder="Enter evaluation feedback for SIH nomination..."></textarea>
-            </div>
+            <div id="rubricControls" style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <!-- RUBRIC ITEM 1 -->
+              <div class="rubric-item">
+                <div class="rubric-label">
+                  <span>1. Problem Understanding & Novelty</span>
+                  <span class="rubric-score-display"><span id="valNovelty">18</span> / 20 pts</span>
+                </div>
+                <input type="range" class="slider-control" min="0" max="20" value="18" id="slideNovelty" oninput="updateRubricTotal()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Clarity of problem analysis, root cause understanding, and original perspective.</p>
+              </div>
 
-            <button class="btn btn-primary" onclick="submitJuryEvaluation()">💾 Submit Score & Update Ranking</button>
+              <!-- RUBRIC ITEM 2 -->
+              <div class="rubric-item">
+                <div class="rubric-label">
+                  <span>2. Solution Architecture & Technical Stack</span>
+                  <span class="rubric-score-display"><span id="valArchitecture">23</span> / 25 pts</span>
+                </div>
+                <input type="range" class="slider-control" min="0" max="25" value="23" id="slideArchitecture" oninput="updateRubricTotal()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Quality of proposed technical solution architecture, stack choice, and data flow.</p>
+              </div>
+
+              <!-- RUBRIC ITEM 3 -->
+              <div class="rubric-item">
+                <div class="rubric-label">
+                  <span>3. Prototype Technical Feasibility & Scope</span>
+                  <span class="rubric-score-display"><span id="valFeasibility">22</span> / 25 pts</span>
+                </div>
+                <input type="range" class="slider-control" min="0" max="25" value="22" id="slideFeasibility" oninput="updateRubricTotal()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Feasibility of building prototype during hackathon timeline and resource realism.</p>
+              </div>
+
+              <!-- RUBRIC ITEM 4 -->
+              <div class="rubric-item">
+                <div class="rubric-label">
+                  <span>4. Potential Impact & Practical Utility</span>
+                  <span class="rubric-score-display"><span id="valImpact">14</span> / 15 pts</span>
+                </div>
+                <input type="range" class="slider-control" min="0" max="15" value="14" id="slideImpact" oninput="updateRubricTotal()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Real-world impact on target sector/ministry and deployment scalability.</p>
+              </div>
+
+              <!-- RUBRIC ITEM 5 -->
+              <div class="rubric-item">
+                <div class="rubric-label">
+                  <span>5. Campus Pitch & Female Representation</span>
+                  <span class="rubric-score-display"><span id="valPresentation">14</span> / 15 pts</span>
+                </div>
+                <input type="range" class="slider-control" min="0" max="15" value="14" id="slidePresentation" oninput="updateRubricTotal()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Presentation defense quality, team synergy, and mandatory female member inclusion.</p>
+              </div>
+
+              <!-- TOTAL SCORE BOX -->
+              <div class="score-total-box">
+                <div>
+                  <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">My Score as <span id="myJuryNameScoreLbl">Jury 1</span></p>
+                  <h3 id="valTotalScore">91 / 100</h3>
+                </div>
+                <div style="text-align: right;">
+                  <span class="rule-chip pass" id="evalScoreStatus">Nominated for Top 50</span>
+                  <div id="evalConsensusAvg" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Consensus Avg: Pending</div>
+                </div>
+              </div>
+
+              <!-- FEEDBACK INPUT -->
+              <div class="form-group">
+                <label for="evalFeedback">Jury Comments & Shortlist Rationale</label>
+                <textarea id="evalFeedback" class="form-control" rows="3" placeholder="Enter evaluation feedback and suggestions for this team..."></textarea>
+              </div>
+
+              <button class="btn btn-primary" onclick="submitJuryEvaluation()" style="font-size: 1rem; padding: 0.85rem 1.5rem; justify-content: center;">💾 Submit Jury Score & Sync to Cloud</button>
+            </div>
           </div>
         </div>
       </div>
