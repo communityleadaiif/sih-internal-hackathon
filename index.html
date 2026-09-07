@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIH 2026 INTERNAL HACKATHON | AJK College & AIIF</title>
   <meta name="description" content="SIH 2026 Internal Hackathon Platform organized by AJK College of Arts & Science in association with AIIF (AJK Innovation Incubator Foundation). Collect team details, up to 2 chosen problem statements, and solutions.">
-  <link rel="stylesheet" href="styles.css?v=4.0">
+  <link rel="stylesheet" href="styles.css?v=4.2">
 </head>
 <body>
 
@@ -195,6 +195,30 @@
         <div class="action-buttons">
           <a href="https://sih.gov.in/sih2026PS" target="_blank" class="btn btn-primary" style="text-decoration: none;">🌐 Open Official SIH Portal (sih.gov.in/sih2026PS) ↗</a>
           <button class="btn btn-secondary" onclick="switchTab('registration')">👥 Register 6-Member Team</button>
+        </div>
+      </div>
+
+      <!-- 🎬 SIH 2026 MASTERCLASS & PREPARATION VIDEO QUEUE -->
+      <div class="video-queue-section" style="margin-bottom: 2.25rem;">
+        <div class="section-header" style="margin-bottom: 1rem;">
+          <div class="section-title">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="live-pulse-dot" style="background: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);"></span>
+              <span style="font-weight: 800; font-size: 0.75rem; letter-spacing: 0.5px; color: #ef4444; text-transform: uppercase;">
+                STUDENT ORIENTATION & PITCHING MASTERCLASS
+              </span>
+            </div>
+            <h2>🎬 SIH 2026 Preparation & Winning Guide Videos</h2>
+            <p>Click any video guide to watch pitching strategies, prototype building tips, and jury evaluation secrets</p>
+          </div>
+          <div class="video-nav-controls">
+            <button class="video-nav-btn" onclick="scrollVideoQueue('left')" title="Scroll Left">◀</button>
+            <button class="video-nav-btn" onclick="scrollVideoQueue('right')" title="Scroll Right">▶</button>
+          </div>
+        </div>
+
+        <div class="video-carousel-container" id="videoCarouselQueue">
+          <!-- Rendered dynamically by JS -->
         </div>
       </div>
 
@@ -986,11 +1010,21 @@
     </div>
   </div>
 
+  <!-- MODAL 6: SIH PREPARATION VIDEO PLAYER MODAL -->
+  <div class="modal-backdrop" id="sihVideoModal">
+    <div class="modal-card" style="max-width: 860px; max-height: 92vh; overflow-y: auto; padding: 1.5rem;">
+      <button class="modal-close-btn" onclick="closeVideoPlayerModal()">✕</button>
+      <div id="sihVideoModalContent">
+        <!-- Loaded dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCRIPTS -->
-  <script src="data.js?v=4.0"></script>
-  <script src="app.js?v=4.0"></script>
+  <script src="data.js?v=4.2"></script>
+  <script src="app.js?v=4.2"></script>
 </body>
 </html>

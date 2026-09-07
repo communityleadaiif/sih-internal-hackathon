@@ -12,6 +12,116 @@ const state = {
   mentors: (window.INITIAL_DATA && window.INITIAL_DATA.mentors) ? window.INITIAL_DATA.mentors : [],
   problemStatements: (window.INITIAL_DATA && window.INITIAL_DATA.problemStatements) ? window.INITIAL_DATA.problemStatements : [],
   teams: (window.INITIAL_DATA && (window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)) ? [...(window.INITIAL_DATA.teams || window.INITIAL_DATA.sampleTeams)] : [],
+  preparationVideos: [
+    {
+      id: "vid_1",
+      youtubeId: "VfP_fK6k7Y8",
+      embedUrl: "https://www.youtube-nocookie.com/embed/VfP_fK6k7Y8?autoplay=1",
+      title: "How to Crack Smart India Hackathon (SIH) - Complete Strategy & Winning Roadmap",
+      category: "strategy",
+      categoryName: "🎯 SIH Strategy",
+      duration: "14:20",
+      speaker: "National SIH Jury & Mentor",
+      thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80",
+      desc: "Step-by-step masterclass on analyzing Ministry problem statements, feasibility mapping, and structuring your team's workflow.",
+      keyPoints: [
+        "How to decode the real expectation behind Ministry Problem Statements",
+        "Formulating realistic scopes for 48-hour prototype implementation",
+        "Balancing Software vs Hardware innovation criteria",
+        "Winning habits that separate the top 5% teams from others"
+      ]
+    },
+    {
+      id: "vid_2",
+      youtubeId: "5a6qJ2gX5_w",
+      embedUrl: "https://www.youtube-nocookie.com/embed/5a6qJ2gX5_w?autoplay=1",
+      title: "Mastering the 5-Minute Pitch: PPT & Presentation Deck Architecture",
+      category: "pitch",
+      categoryName: "🚀 PPT & Pitch Deck",
+      duration: "11:45",
+      speaker: "Innovation Coach & Startup Evaluator",
+      thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=80",
+      desc: "How to design high-impact 6-slide PPT decks and deliver crisp, memorable elevator pitches in front of the evaluation panel.",
+      keyPoints: [
+        "Slide 1-2: Problem validation and root cause identification",
+        "Slide 3: High-level system architecture and data flow",
+        "Slide 4-5: Technology stack, feasibility, and prototype screenshots",
+        "Slide 6: Impact, business potential, and commercialization roadmap"
+      ]
+    },
+    {
+      id: "vid_3",
+      youtubeId: "9No-FiEInLA",
+      embedUrl: "https://www.youtube-nocookie.com/embed/9No-FiEInLA?autoplay=1",
+      title: "How to Build a Working Prototype / MVP for SIH in 48 Hours",
+      category: "prototype",
+      categoryName: "💻 Prototype & Tech",
+      duration: "18:10",
+      speaker: "Tech Lead & AI Architect",
+      thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80",
+      desc: "Practical architecture design patterns, choosing reliable tech stacks, and preparing fail-proof offline live demonstration backups.",
+      keyPoints: [
+        "Focus on core problem statement workflow before adding extra features",
+        "Set up local demo simulators in case of venue internet lag",
+        "Embed telemetry dashboards or physical microcontrollers clearly",
+        "Demonstrate end-to-end data pipeline from user input to output"
+      ]
+    },
+    {
+      id: "vid_4",
+      youtubeId: "rVlhMRBgF-k",
+      embedUrl: "https://www.youtube-nocookie.com/embed/rVlhMRBgF-k?autoplay=1",
+      title: "SIH Problem Statement Selection & Literature Survey Guide",
+      category: "strategy",
+      categoryName: "🎯 PS Selection",
+      duration: "09:35",
+      speaker: "AIIF Innovation Cell",
+      thumbnail: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=80",
+      desc: "How to select problem statements with high national impact, avoid oversaturated ideas, and formulate dual ideas (Idea 1 & Idea 2).",
+      keyPoints: [
+        "Analyzing past SIH winning solutions in related problem domains",
+        "Evaluating component availability for hardware vs cloud stacks",
+        "Structuring primary idea vs secondary contingency idea",
+        "Ensuring 100% compliance with female participant mandates"
+      ]
+    },
+    {
+      id: "vid_5",
+      youtubeId: "PkZNo7MFNFg",
+      embedUrl: "https://www.youtube-nocookie.com/embed/PkZNo7MFNFg?autoplay=1",
+      title: "Inside the Jury's Mind: How Scores (Out of 100) are Calculated",
+      category: "winner",
+      categoryName: "⚖️ Jury Rubrics",
+      duration: "12:50",
+      speaker: "Senior Evaluator & Academician",
+      thumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80",
+      desc: "Breakdown of the 5 official scoring pillars: Novelty (20), Architecture (25), Feasibility (25), Impact (15), and Presentation (15).",
+      keyPoints: [
+        "Novelty (20): Demonstrating unique differentiation over existing solutions",
+        "Architecture (25): Scalable, modular, and secure design patterns",
+        "Feasibility (25): Realistic deployment costs and technological readiness",
+        "Presentation & Defense (15): Confident Q&A handling and live demo"
+      ]
+    },
+    {
+      id: "vid_6",
+      youtubeId: "WPni755-Krg",
+      embedUrl: "https://www.youtube-nocookie.com/embed/WPni755-Krg?autoplay=1",
+      title: "SIH Grand Finale Winners Panel: 7 Golden Habits of Top 1% Teams",
+      category: "winner",
+      categoryName: "🏆 Winners Secrets",
+      duration: "16:40",
+      speaker: "National SIH Awardees",
+      thumbnail: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=80",
+      desc: "National winners share secrets on handling high-pressure jury Q&A, role division, sprint pacing, and pitch polish.",
+      keyPoints: [
+        "Assign dedicated roles (Team Leader, Pitcher, Backend, Frontend/Hardware)",
+        "Rehearse mock Q&A defenses against tough edge-case questions",
+        "Keep live demonstration under 2 minutes with zero clutter",
+        "Highlight economic benefit, scalability, and IP potential"
+      ]
+    }
+  ],
   activeTab: 'overview',
   deptTrackerFilter: 'All',
   leaderboardFilter: 'All',
@@ -37,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   safeRun(initBranding, 'initBranding');
   safeRun(initNavTabs, 'initNavTabs');
   safeRun(initCountdownTimer, 'initCountdownTimer');
+  safeRun(renderVideoQueue, 'renderVideoQueue');
   safeRun(renderMembersForm, 'renderMembersForm');
   safeRun(populateDepartmentSelect, 'populateDepartmentSelect');
   safeRun(populatePsSelects, 'populatePsSelects');
@@ -130,6 +241,110 @@ function initCountdownTimer() {
     setInterval(updateTimer, 1000);
   } catch (err) {
     console.warn('Timer init note:', err);
+  }
+}
+
+// 🎬 SIH 2026 PREPARATION VIDEO QUEUE CONTROLLER
+function renderVideoQueue() {
+  const container = document.getElementById('videoCarouselQueue');
+  if (!container) return;
+  const videos = Array.isArray(state.preparationVideos) ? state.preparationVideos : [];
+  if (videos.length === 0) {
+    container.innerHTML = `<p class="text-muted" style="padding: 1rem;">No video guides available.</p>`;
+    return;
+  }
+
+  container.innerHTML = videos.map(vid => `
+    <div class="video-card" onclick="openVideoPlayerModal('${vid.id}')" title="Watch '${vid.title}'">
+      <div class="video-thumb-container">
+        <img class="video-thumb-img" src="${vid.thumbnail}" alt="${vid.title}" loading="lazy" />
+        <div class="video-play-overlay">▶</div>
+        <div class="video-duration-tag">⏱️ ${vid.duration}</div>
+      </div>
+      <div class="video-card-body">
+        <span class="video-tag-pill video-tag-${vid.category}">${vid.categoryName}</span>
+        <h4 class="video-title">${vid.title}</h4>
+        <p class="video-desc">${vid.desc}</p>
+        <div class="video-footer">
+          <span>🎙️ ${vid.speaker}</span>
+          <span style="color: #ef4444; font-weight: 700;">Watch Guide →</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function scrollVideoQueue(direction) {
+  const container = document.getElementById('videoCarouselQueue');
+  if (!container) return;
+  const scrollAmount = direction === 'left' ? -330 : 330;
+  container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+}
+
+function openVideoPlayerModal(videoId) {
+  const vid = state.preparationVideos.find(v => v.id === videoId);
+  if (!vid) return;
+
+  const contentContainer = document.getElementById('sihVideoModalContent');
+  if (contentContainer) {
+    contentContainer.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem; margin-bottom: 1rem;">
+        <div>
+          <span class="video-tag-pill video-tag-${vid.category}" style="font-size: 0.75rem; margin-bottom: 0.35rem;">${vid.categoryName}</span>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); line-height: 1.3;">
+            ${vid.title}
+          </h3>
+          <p class="text-muted" style="font-size: 0.825rem; margin-top: 0.25rem;">
+            🎙️ Presented by <strong>${vid.speaker}</strong> | Duration: <strong>${vid.duration}</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="video-modal-iframe-wrapper">
+        <iframe 
+          src="${vid.embedUrl}" 
+          title="${vid.title}" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="font-size: 0.925rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+          📌 Masterclass Overview & Key Takeaways
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          ${vid.desc}
+        </p>
+        
+        <div style="font-size: 0.825rem; font-weight: 700; color: var(--primary-green); margin-bottom: 0.4rem;">
+          🎯 Essential SIH Hackathon Preparation Checklist:
+        </div>
+        <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.825rem; color: var(--text-main); line-height: 1.6;">
+          ${vid.keyPoints.map(kp => `<li>${kp}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 0.85rem;">
+        <a href="https://www.youtube.com/watch?v=${vid.youtubeId}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+          ▶ Open on YouTube App / Website ↗
+        </a>
+        <button class="btn btn-primary btn-sm" onclick="closeVideoPlayerModal()">Done Watching</button>
+      </div>
+    `;
+  }
+
+  const modal = document.getElementById('sihVideoModal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeVideoPlayerModal() {
+  const modal = document.getElementById('sihVideoModal');
+  if (modal) {
+    modal.classList.remove('active');
+    // Stop video audio/playback by clearing iframe src
+    const contentContainer = document.getElementById('sihVideoModalContent');
+    if (contentContainer) contentContainer.innerHTML = '';
   }
 }
 
