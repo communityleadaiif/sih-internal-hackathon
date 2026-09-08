@@ -213,12 +213,27 @@ const state = {
   deptTrackerFilter: 'All',
   leaderboardFilter: 'All',
   selectedTeamForJuryId: null,
+  currentUser: (function() {
+    try {
+      const u = sessionStorage.getItem('sih_auth_user');
+      return u ? JSON.parse(u) : null;
+    } catch(e) { return null; }
+  })(),
   activeJuryId: (function() {
-    try { return sessionStorage.getItem('sih_active_jury_id') || 'Jury 1'; } catch(e) { return 'Jury 1'; }
+    try {
+      const u = sessionStorage.getItem('sih_auth_user');
+      if (u) {
+        const parsed = JSON.parse(u);
+        return parsed.juryId || 'Jury 1';
+      }
+      return sessionStorage.getItem('sih_active_jury_id') || 'Jury 1';
+    } catch(e) { return 'Jury 1'; }
   })(),
   activeHallFilter: 'my',
   jurySearchQuery: '',
-  isStaffAuthenticated: false,
+  isStaffAuthenticated: (function() {
+    try { return !!sessionStorage.getItem('sih_auth_user') || sessionStorage.getItem('sih_staff_auth') === 'true'; } catch(e) { return false; }
+  })(),
   isLeaderboardPublished: false,
   deletedTeamIds: []
 };
@@ -1431,60 +1446,388 @@ function switchTab(tabId) {
   }
 }
 
-// PROTECTED STAFF & JURY AUTHENTICATION
+// --------------------------------------------------------------------------
+// DEDICATED 12-JURY & ORGANISER AUTHENTICATION ENGINE (STRICT CREDENTIALS)
+// --------------------------------------------------------------------------
+
+const AUTH_ACCOUNTS = {
+  'organiser': {
+    id: 'organiser',
+    role: 'organiser',
+    juryId: 'Organiser',
+    name: 'Organiser Command Center',
+    passcodes: ['Organiser@2026', 'admin2026', 'ajkaiif2026', 'organiser2026'],
+    hall: 'All',
+    hallName: 'All 6 Halls (Master Command)',
+    track: 'All Tracks (Master View)',
+    displayPass: 'Organiser@2026'
+  },
+  'admin': {
+    id: 'organiser',
+    role: 'organiser',
+    juryId: 'Organiser',
+    name: 'Organiser Command Center',
+    passcodes: ['Organiser@2026', 'admin2026', 'ajkaiif2026', 'organiser2026'],
+    hall: 'All',
+    hallName: 'All 6 Halls (Master Command)',
+    track: 'All Tracks (Master View)',
+    displayPass: 'Organiser@2026'
+  },
+  // Hall A Juries (Teams 1 - 13)
+  'jury1': {
+    id: 'jury1',
+    role: 'jury',
+    juryId: 'Jury 1',
+    name: 'Dr. Aneesh Kumar (Internal)',
+    passcodes: ['Aneesh@HallA', 'jury1@2026', 'jury1pass', 'Jury1#2026'],
+    hall: 'Hall A',
+    hallName: 'Hall A (Third Floor)',
+    track: 'AI, ML, Cyber & Tech (Teams 1–13)',
+    displayPass: 'Aneesh@HallA'
+  },
+  'jury2': {
+    id: 'jury2',
+    role: 'jury',
+    juryId: 'Jury 2',
+    name: 'Hall A Co-Jury (Panel A)',
+    passcodes: ['CoJuryA#2026', 'jury2@2026', 'jury2pass', 'Jury2#2026'],
+    hall: 'Hall A',
+    hallName: 'Hall A (Third Floor)',
+    track: 'AI, ML, Cyber & Tech (Teams 1–13)',
+    displayPass: 'CoJuryA#2026'
+  },
+  // Hall B Juries (Teams 14 - 26)
+  'jury3': {
+    id: 'jury3',
+    role: 'jury',
+    juryId: 'Jury 3',
+    name: 'Dr. Vineetha (Internal)',
+    passcodes: ['Vineetha@HallB', 'jury3@2026', 'jury3pass', 'Jury3#2026'],
+    hall: 'Hall B',
+    hallName: 'Hall B (Third Floor)',
+    track: 'CS, BCA & Data Analytics (Teams 14–26)',
+    displayPass: 'Vineetha@HallB'
+  },
+  'jury4': {
+    id: 'jury4',
+    role: 'jury',
+    juryId: 'Jury 4',
+    name: 'Hall B Co-Jury (Panel B)',
+    passcodes: ['CoJuryB#2026', 'jury4@2026', 'jury4pass', 'Jury4#2026'],
+    hall: 'Hall B',
+    hallName: 'Hall B (Third Floor)',
+    track: 'CS, BCA & Data Analytics (Teams 14–26)',
+    displayPass: 'CoJuryB#2026'
+  },
+  // Hall C Juries (Teams 27 - 39)
+  'jury5': {
+    id: 'jury5',
+    role: 'jury',
+    juryId: 'Jury 5',
+    name: 'Dr. John Grasias (Internal)',
+    passcodes: ['John@HallC', 'jury5@2026', 'jury5pass', 'Jury5#2026'],
+    hall: 'Hall C',
+    hallName: 'Hall C (Third Floor)',
+    track: 'Biotech, Forensic & Sciences (Teams 27–39)',
+    displayPass: 'John@HallC'
+  },
+  'jury6': {
+    id: 'jury6',
+    role: 'jury',
+    juryId: 'Jury 6',
+    name: 'Hall C Co-Jury (Panel C)',
+    passcodes: ['CoJuryC#2026', 'jury6@2026', 'jury6pass', 'Jury6#2026'],
+    hall: 'Hall C',
+    hallName: 'Hall C (Third Floor)',
+    track: 'Biotech, Forensic & Sciences (Teams 27–39)',
+    displayPass: 'CoJuryC#2026'
+  },
+  // Hall D Juries (Teams 40 - 51)
+  'jury7': {
+    id: 'jury7',
+    role: 'jury',
+    juryId: 'Jury 7',
+    name: 'Mrs. Sariga (Internal)',
+    passcodes: ['Sariga@HallD', 'jury7@2026', 'jury7pass', 'Jury7#2026'],
+    hall: 'Hall D',
+    hallName: 'Hall D (Third Floor)',
+    track: 'Commerce & FinTech (Teams 40–51)',
+    displayPass: 'Sariga@HallD'
+  },
+  'jury8': {
+    id: 'jury8',
+    role: 'jury',
+    juryId: 'Jury 8',
+    name: 'Hall D Co-Jury (Panel D)',
+    passcodes: ['CoJuryD#2026', 'jury8@2026', 'jury8pass', 'Jury8#2026'],
+    hall: 'Hall D',
+    hallName: 'Hall D (Third Floor)',
+    track: 'Commerce & FinTech (Teams 40–51)',
+    displayPass: 'CoJuryD#2026'
+  },
+  // Hall E Juries (Teams 52 - 63, 77)
+  'jury9': {
+    id: 'jury9',
+    role: 'jury',
+    juryId: 'Jury 9',
+    name: 'Mr. Sachin (Internal)',
+    passcodes: ['Sachin@HallE', 'jury9@2026', 'jury9pass', 'Jury9#2026'],
+    hall: 'Hall E',
+    hallName: 'Hall E (Third Floor)',
+    track: 'Management, Hotel & Aviation (Teams 52–63, 77)',
+    displayPass: 'Sachin@HallE'
+  },
+  'jury10': {
+    id: 'jury10',
+    role: 'jury',
+    juryId: 'Jury 10',
+    name: 'Hall E Co-Jury (Panel E)',
+    passcodes: ['CoJuryE#2026', 'jury10@2026', 'jury10pass', 'Jury10#2026'],
+    hall: 'Hall E',
+    hallName: 'Hall E (Third Floor)',
+    track: 'Management, Hotel & Aviation (Teams 52–63, 77)',
+    displayPass: 'CoJuryE#2026'
+  },
+  // Hall F Juries (Teams 64 - 76)
+  'jury11': {
+    id: 'jury11',
+    role: 'jury',
+    juryId: 'Jury 11',
+    name: 'Dr. Bharathi (Internal)',
+    passcodes: ['Bharathi@HallF', 'jury11@2026', 'jury11pass', 'Jury11#2026'],
+    hall: 'Hall F',
+    hallName: 'Hall F (Third Floor)',
+    track: 'VisCom, Design & Media (Teams 64–76)',
+    displayPass: 'Bharathi@HallF'
+  },
+  'jury12': {
+    id: 'jury12',
+    role: 'jury',
+    juryId: 'Jury 12',
+    name: 'Hall F Co-Jury (Panel F)',
+    passcodes: ['CoJuryF#2026', 'jury12@2026', 'jury12pass', 'Jury12#2026'],
+    hall: 'Hall F',
+    hallName: 'Hall F (Third Floor)',
+    track: 'VisCom, Design & Media (Teams 64–76)',
+    displayPass: 'CoJuryF#2026'
+  }
+};
+
 function openStaffAuthModal() {
   const modal = document.getElementById('staffAuthModal');
   if (modal) {
     modal.classList.add('active');
-    const input = document.getElementById('staffPasscode');
-    if (input) {
-      input.value = '';
-      setTimeout(() => input.focus(), 100);
+    const uInput = document.getElementById('staffUserId');
+    const pInput = document.getElementById('staffPasscode');
+    if (uInput) {
+      setTimeout(() => uInput.focus(), 100);
     }
+    if (pInput) pInput.value = '';
   }
+}
+
+function selectAuthAccount(userId) {
+  const uInput = document.getElementById('staffUserId');
+  const pInput = document.getElementById('staffPasscode');
+  if (uInput) uInput.value = userId;
+  if (pInput) {
+    pInput.value = '';
+    pInput.focus();
+  }
+  const acc = AUTH_ACCOUNTS[userId.toLowerCase()];
+  if (acc) {
+    showToast(`Selected ${acc.name}. Please enter your passcode to log in.`, 'info');
+  }
+}
+
+function verifyStaffLogin() {
+  const uInput = document.getElementById('staffUserId');
+  const pInput = document.getElementById('staffPasscode');
+  const userId = uInput ? uInput.value.trim() : '';
+  const passcode = pInput ? pInput.value.trim() : '';
+  
+  if (!userId || !passcode) {
+    showToast('⚠️ Please enter BOTH your Login ID and Passcode.', 'warning');
+    if (!userId && uInput) uInput.focus();
+    else if (!passcode && pInput) pInput.focus();
+    return;
+  }
+
+  loginUser(userId, passcode);
 }
 
 function verifyStaffPasscode() {
-  const input = document.getElementById('staffPasscode');
-  const code = input ? input.value.trim() : '';
+  verifyStaffLogin();
+}
 
-  const validPasscodes = ['ajkaiif2026', 'admin', '1234', 'sih2026', 'ajk2026', 'jury'];
+function loginUser(username, passcode) {
+  const u = (username || '').trim().toLowerCase().replace(/\s+/g, '');
+  const p = (passcode || '').trim();
 
-  if (validPasscodes.includes(code.toLowerCase())) {
-    state.isStaffAuthenticated = true;
-    try { sessionStorage.setItem('sih_staff_auth', 'true'); } catch (e) {}
-    applyStaffProtection();
-    closeModal('staffAuthModal');
-    showToast('Unlocked Organiser & Jury Access Portal! 🔓', 'success');
-    switchTab('jury');
-  } else {
-    showToast('Incorrect Passcode. Access Denied.', 'error');
+  if (!u || !p) {
+    showToast('⚠️ Please enter both Login ID and Passcode.', 'warning');
+    return false;
+  }
+
+  let targetAccount = null;
+
+  // Exact username lookup
+  if (AUTH_ACCOUNTS[u]) {
+    targetAccount = AUTH_ACCOUNTS[u];
+  } else if (u.startsWith('jury0')) {
+    const norm = 'jury' + u.replace('jury0', '');
+    if (AUTH_ACCOUNTS[norm]) targetAccount = AUTH_ACCOUNTS[norm];
+  } else if (u.startsWith('jury')) {
+    const num = u.replace('jury', '');
+    if (AUTH_ACCOUNTS['jury' + num]) targetAccount = AUTH_ACCOUNTS['jury' + num];
+  }
+
+  // Validate credentials strictly
+  if (targetAccount) {
+    const validMatches = targetAccount.passcodes.some(code => code.toLowerCase() === p.toLowerCase());
+    if (validMatches) {
+      setCurrentUser(targetAccount);
+      closeModal('staffAuthModal');
+      showToast(`Welcome, ${targetAccount.name}! 🔓`, 'success');
+      switchTab('jury');
+      return true;
+    }
+  }
+
+  showToast('❌ Invalid Login ID or Passcode. Access Denied.', 'error');
+  return false;
+}
+
+function setCurrentUser(account) {
+  state.currentUser = account;
+  state.isStaffAuthenticated = true;
+  state.activeJuryId = account.juryId;
+  state.activeHallFilter = account.role === 'organiser' ? 'all' : account.hall;
+
+  try {
+    sessionStorage.setItem('sih_auth_user', JSON.stringify(account));
+    sessionStorage.setItem('sih_staff_auth', 'true');
+    sessionStorage.setItem('sih_active_jury_id', account.juryId);
+  } catch (e) {}
+
+  applyStaffProtection();
+  initJuryProfile();
+  renderJuryTeamList();
+  if (account.role === 'organiser') {
+    renderMasterMultiJuryMatrix();
   }
 }
 
+function logoutUser() {
+  state.currentUser = null;
+  state.isStaffAuthenticated = false;
+  state.activeJuryId = 'Jury 1';
+  state.activeHallFilter = 'my';
+
+  try {
+    sessionStorage.removeItem('sih_auth_user');
+    sessionStorage.removeItem('sih_staff_auth');
+    sessionStorage.removeItem('sih_active_jury_id');
+  } catch (e) {}
+
+  applyStaffProtection();
+  initJuryProfile();
+  renderJuryTeamList();
+  showToast('You have logged out successfully. 🚪', 'info');
+  switchTab('overview');
+}
+
 function applyStaffProtection() {
-  const isAuth = state.isStaffAuthenticated || (sessionStorage.getItem('sih_staff_auth') === 'true');
+  // Restore user from session if available
+  if (!state.currentUser) {
+    try {
+      const stored = sessionStorage.getItem('sih_auth_user');
+      if (stored) state.currentUser = JSON.parse(stored);
+    } catch (e) {}
+  }
+
+  const isAuth = !!state.currentUser || state.isStaffAuthenticated || (sessionStorage.getItem('sih_staff_auth') === 'true');
   state.isStaffAuthenticated = isAuth;
+  const isOrganiser = state.currentUser && state.currentUser.role === 'organiser';
+  const isJury = state.currentUser && state.currentUser.role === 'jury';
+
   const isPublished = state.isLeaderboardPublished || (localStorage.getItem('prajna_leaderboard_published') === 'true');
   state.isLeaderboardPublished = isPublished;
 
-  // Jury tab is ONLY accessible/visible for staff
-  const juryTab = document.querySelector('.nav-tab[data-tab="jury"]');
-  if (juryTab) juryTab.style.display = isAuth ? 'inline-flex' : 'none';
+  // 1. Update Header Auth Badge & Login Button
+  const headerBadge = document.getElementById('headerAuthBadge');
+  const headerText = document.getElementById('headerAuthText');
+  const headerLoginBtn = document.getElementById('headerLoginBtn');
 
-  // Leaderboard tab is visible to ALL participants if published, or to staff if authenticated
+  if (headerBadge && headerText && headerLoginBtn) {
+    if (isAuth && state.currentUser) {
+      headerBadge.style.display = 'inline-flex';
+      headerText.innerHTML = isOrganiser 
+        ? '🏛️ Organiser Command Center' 
+        : `⚖️ ${state.currentUser.name} (${state.currentUser.hall})`;
+      headerLoginBtn.style.display = 'none';
+    } else {
+      headerBadge.style.display = 'none';
+      headerLoginBtn.style.display = 'inline-flex';
+    }
+  }
+
+  // 2. Navigation Tab Visibility
+  const juryTab = document.querySelector('.nav-tab[data-tab="jury"]');
+  if (juryTab) {
+    juryTab.style.display = isAuth ? 'inline-flex' : 'none';
+    if (isJury) {
+      juryTab.innerHTML = `⚖️ 5. My Pitch Hall (${state.currentUser.hall})`;
+    } else {
+      juryTab.innerHTML = '⚖️ 5. Jury Evaluation Desk';
+    }
+  }
+
   const lbTab = document.querySelector('.nav-tab[data-tab="leaderboard"]');
   if (lbTab) {
-    lbTab.style.display = (isAuth || isPublished) ? 'inline-flex' : 'none';
-    if (isPublished && !isAuth) {
+    lbTab.style.display = (isOrganiser || isPublished) ? 'inline-flex' : 'none';
+    if (isPublished && !isOrganiser) {
       lbTab.innerHTML = '🏆 5. Top 50 Shortlist & Certificates';
-    } else if (isAuth) {
+    } else if (isOrganiser) {
       lbTab.innerHTML = '🏆 6. Leaderboard & Certificates';
     }
   }
 
+  // 3. Organiser vs Jury Desk Customization
+  const profileSwitcherWrapper = document.getElementById('juryProfileSwitcherWrapper');
+  if (profileSwitcherWrapper) {
+    profileSwitcherWrapper.style.display = isOrganiser ? 'flex' : 'none';
+  }
+
+  const masterMatrixSec = document.getElementById('organiserMasterMatrixSection');
+  if (masterMatrixSec) {
+    masterMatrixSec.style.display = isOrganiser ? 'block' : 'none';
+    if (isOrganiser) renderMasterMultiJuryMatrix();
+  }
+
+  // 4. Hall Filter Tabs: Lock for individual Jury
+  const hallFilterTabs = document.getElementById('hallFilterTabs');
+  if (hallFilterTabs) {
+    if (isJury) {
+      hallFilterTabs.querySelectorAll('.hall-filter-btn').forEach(btn => {
+        if (btn.id === 'hallFilterMyHall') {
+          btn.style.display = 'inline-flex';
+          btn.textContent = `🏢 My Hall (${state.currentUser.hall})`;
+          btn.classList.add('active');
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+      state.activeHallFilter = state.currentUser.hall;
+    } else {
+      hallFilterTabs.querySelectorAll('.hall-filter-btn').forEach(btn => {
+        btn.style.display = 'inline-flex';
+      });
+    }
+  }
+
   document.querySelectorAll('.staff-only-btn').forEach(btn => {
-    btn.style.display = isAuth ? 'inline-flex' : 'none';
+    btn.style.display = isOrganiser ? 'inline-flex' : 'none';
   });
 
   renderPublishButton();
@@ -3264,68 +3607,134 @@ function printTeamSlip(teamId) {
 // --------------------------------------------------------------------------
 
 const HALL_CONFIG = {
-  'Hall 1': { name: 'Hall 1 (Panel A)', juries: ['Jury 1', 'Jury 2'], track: 'AI, ML, Cyber & Tech', icon: '🤖' },
-  'Hall 2': { name: 'Hall 2 (Panel B)', juries: ['Jury 3', 'Jury 4'], track: 'BCA & Information Tech', icon: '💻' },
-  'Hall 3': { name: 'Hall 3 (Panel C)', juries: ['Jury 5', 'Jury 6'], track: 'Electronics, Physics & Sciences', icon: '⚡' },
-  'Hall 4': { name: 'Hall 4 (Panel D)', juries: ['Jury 7', 'Jury 8'], track: 'Commerce, Accounting & FinTech', icon: '📊' },
-  'Hall 5': { name: 'Hall 5 (Panel E)', juries: ['Jury 9', 'Jury 10'], track: 'Management, Hotel & Aviation', icon: '✈️' },
-  'Hall 6': { name: 'Hall 6 (Panel F)', juries: ['Jury 11', 'Jury 12'], track: 'VisCom, Design & Languages', icon: '🎨' }
+  'Hall A': { 
+    name: 'Hall A (Third Floor)', 
+    shortName: 'Hall A', 
+    letter: 'A',
+    internalJury: 'Dr. Aneesh Kumar',
+    juries: ['Jury 1', 'Jury 2'], 
+    juryNames: { 'Jury 1': 'Dr. Aneesh Kumar (Internal)', 'Jury 2': 'Hall A Co-Jury (Panel A)' },
+    track: 'AI, ML, Cyber & Tech (Teams 1–13)', 
+    icon: '🤖' 
+  },
+  'Hall B': { 
+    name: 'Hall B (Third Floor)', 
+    shortName: 'Hall B', 
+    letter: 'B',
+    internalJury: 'Dr. Vineetha',
+    juries: ['Jury 3', 'Jury 4'], 
+    juryNames: { 'Jury 3': 'Dr. Vineetha (Internal)', 'Jury 4': 'Hall B Co-Jury (Panel B)' },
+    track: 'CS, BCA & Data Analytics (Teams 14–26)', 
+    icon: '💻' 
+  },
+  'Hall C': { 
+    name: 'Hall C (Third Floor)', 
+    shortName: 'Hall C', 
+    letter: 'C',
+    internalJury: 'Dr. John Grasias',
+    juries: ['Jury 5', 'Jury 6'], 
+    juryNames: { 'Jury 5': 'Dr. John Grasias (Internal)', 'Jury 6': 'Hall C Co-Jury (Panel C)' },
+    track: 'Biotech, Forensic & Sciences (Teams 27–39)', 
+    icon: '🔬' 
+  },
+  'Hall D': { 
+    name: 'Hall D (Third Floor)', 
+    shortName: 'Hall D', 
+    letter: 'D',
+    internalJury: 'Mrs. Sariga',
+    juries: ['Jury 7', 'Jury 8'], 
+    juryNames: { 'Jury 7': 'Mrs. Sariga (Internal)', 'Jury 8': 'Hall D Co-Jury (Panel D)' },
+    track: 'Commerce & FinTech (Teams 40–51)', 
+    icon: '📊' 
+  },
+  'Hall E': { 
+    name: 'Hall E (Third Floor)', 
+    shortName: 'Hall E', 
+    letter: 'E',
+    internalJury: 'Mr. Sachin',
+    juries: ['Jury 9', 'Jury 10'], 
+    juryNames: { 'Jury 9': 'Mr. Sachin (Internal)', 'Jury 10': 'Hall E Co-Jury (Panel E)' },
+    track: 'Management, Hotel & Aviation (Teams 52–63)', 
+    icon: '✈️' 
+  },
+  'Hall F': { 
+    name: 'Hall F (Third Floor)', 
+    shortName: 'Hall F', 
+    letter: 'F',
+    internalJury: 'Dr. Bharathi',
+    juries: ['Jury 11', 'Jury 12'], 
+    juryNames: { 'Jury 11': 'Dr. Bharathi (Internal)', 'Jury 12': 'Hall F Co-Jury (Panel F)' },
+    track: 'VisCom, Design & Media (Teams 64–76)', 
+    icon: '🎨' 
+  }
 };
 
 const JURY_HALL_MAP = {
-  'Jury 1': 'Hall 1', 'Jury 2': 'Hall 1',
-  'Jury 3': 'Hall 2', 'Jury 4': 'Hall 2',
-  'Jury 5': 'Hall 3', 'Jury 6': 'Hall 3',
-  'Jury 7': 'Hall 4', 'Jury 8': 'Hall 4',
-  'Jury 9': 'Hall 5', 'Jury 10': 'Hall 5',
-  'Jury 11': 'Hall 6', 'Jury 12': 'Hall 6',
+  'Jury 1': 'Hall A', 'Jury 2': 'Hall A',
+  'Jury 3': 'Hall B', 'Jury 4': 'Hall B',
+  'Jury 5': 'Hall C', 'Jury 6': 'Hall C',
+  'Jury 7': 'Hall D', 'Jury 8': 'Hall D',
+  'Jury 9': 'Hall E', 'Jury 10': 'Hall E',
+  'Jury 11': 'Hall F', 'Jury 12': 'Hall F',
   'Organiser': 'All'
 };
 
 function assignHallToTeam(team) {
   if (team.hall && HALL_CONFIG[team.hall]) return team.hall;
-  const dept = (team.department || '').toLowerCase();
+  if (team.hallLetter && HALL_CONFIG['Hall ' + team.hallLetter]) return 'Hall ' + team.hallLetter;
   
-  // 1. VisCom, Fashion & Languages (Check first so 'Electronics Media' does not falsely match Science)
-  if (dept.includes('visual communication') || dept.includes('viscom') || dept.includes('costume') || dept.includes('fashion') || dept.includes('design') || dept.includes('languages') || dept.includes('english') || dept.includes('tamil')) {
-    return 'Hall 6';
-  } else if (dept.includes('management') || dept.includes('bba') || dept.includes('catering') || dept.includes('hotel') || dept.includes('aviation') || dept.includes('logistics')) {
-    return 'Hall 5';
-  } else if (dept.includes('commerce') || dept.includes('b.com') || dept.includes('m.com') || dept.includes('accounting') || dept.includes('finance')) {
-    return 'Hall 4';
-  } else if (dept.includes('bca') || dept.includes('information technology') || dept.includes('data science') || dept.includes('ar & vr') || dept.includes('augmented')) {
-    return 'Hall 2';
-  } else if (dept.includes('artificial intelligence') || dept.includes('cyber') || dept.includes('computer science') || dept.includes('ai & ml') || dept.includes('m.sc cs')) {
-    return 'Hall 1';
-  } else if (dept.includes('physics') || dept.includes('math') || dept.includes('chemistry') || dept.includes('biotech') || dept.includes('forensic')) {
-    return 'Hall 3';
-  }
-  return 'Hall 1';
+  // Explicit mapping based on verified SIH allocation dataset
+  const num = parseInt(team.teamNumber || (team.id ? team.id.replace(/[^0-9]/g, '') : 0));
+  if (num >= 1 && num <= 13) return 'Hall A';
+  if (num >= 14 && num <= 26) return 'Hall B';
+  if (num >= 27 && num <= 39) return 'Hall C';
+  if (num >= 40 && num <= 51) return 'Hall D';
+  if (num >= 52 && num <= 63) return 'Hall E';
+  if (num >= 64 && num <= 76) return 'Hall F';
+
+  const dept = (team.department || '').toLowerCase();
+  if (dept.includes('viscom') || dept.includes('visual') || dept.includes('costume') || dept.includes('fashion') || dept.includes('design')) return 'Hall F';
+  if (dept.includes('management') || dept.includes('bba') || dept.includes('hotel') || dept.includes('catering') || dept.includes('aviation') || dept.includes('logistics')) return 'Hall E';
+  if (dept.includes('commerce') || dept.includes('b.com') || dept.includes('m.com') || dept.includes('finance')) return 'Hall D';
+  if (dept.includes('biotech') || dept.includes('forensic') || dept.includes('physics') || dept.includes('chemistry')) return 'Hall C';
+  if (dept.includes('computer science') || dept.includes('bca') || dept.includes('data analytics') || dept.includes('ar & vr')) return 'Hall B';
+  return 'Hall A';
 }
 
 function getActiveJuryId() {
+  if (state.currentUser && state.currentUser.role === 'jury') {
+    return state.currentUser.juryId;
+  }
   return state.activeJuryId || 'Jury 1';
 }
 
 function initJuryProfile() {
   const activeJury = getActiveJuryId();
-  const hall = JURY_HALL_MAP[activeJury] || 'Hall 1';
+  const isOrganiser = (state.currentUser && state.currentUser.role === 'organiser') || activeJury === 'Organiser';
+  const hall = JURY_HALL_MAP[activeJury] || 'Hall A';
   const hallInfo = HALL_CONFIG[hall];
 
   const titleElem = document.getElementById('activeJuryTitle');
   if (titleElem) {
-    titleElem.textContent = activeJury === 'Organiser' ? '🏛️ Organiser Command Center' : `⚖️ ${activeJury} (Evaluator)`;
+    if (isOrganiser) {
+      titleElem.textContent = '🏛️ Organiser Command Center';
+    } else {
+      const juryAcc = Object.values(AUTH_ACCOUNTS).find(a => a.juryId === activeJury);
+      titleElem.textContent = `⚖️ ${juryAcc ? juryAcc.name : activeJury}`;
+    }
   }
 
   const tagElem = document.getElementById('activeJuryHallTag');
   if (tagElem) {
-    tagElem.textContent = activeJury === 'Organiser' ? '📍 All 6 Halls (Master View)' : `📍 ${hallInfo ? hallInfo.name : hall}`;
+    tagElem.textContent = isOrganiser ? '📍 All 6 Halls (Master Command)' : `📍 ${hallInfo ? hallInfo.name : hall}`;
   }
 
   const selElem = document.getElementById('juryProfileSelect');
   if (selElem) selElem.value = activeJury;
+  
   const badgeElem = document.getElementById('evalCurrentJuryBadge');
   if (badgeElem) badgeElem.textContent = `Evaluator: ${activeJury} (${hall})`;
+  
   const lblElem = document.getElementById('myJuryNameScoreLbl');
   if (lblElem) lblElem.textContent = `${activeJury} [${hall}]`;
 
@@ -3333,6 +3742,11 @@ function initJuryProfile() {
 }
 
 function changeActiveJuryProfile(juryId) {
+  // Only organiser can switch profile freely
+  if (state.currentUser && state.currentUser.role === 'jury') {
+    juryId = state.currentUser.juryId;
+  }
+
   state.activeJuryId = juryId || 'Jury 1';
   try {
     sessionStorage.setItem('sih_active_jury_id', state.activeJuryId);
@@ -3348,6 +3762,11 @@ function changeActiveJuryProfile(juryId) {
 }
 
 function setHallFilter(hallFilter) {
+  // If jury is logged in, restrict to their hall
+  if (state.currentUser && state.currentUser.role === 'jury') {
+    hallFilter = state.currentUser.hall;
+  }
+
   state.activeHallFilter = hallFilter;
   document.querySelectorAll('#hallFilterTabs .hall-filter-btn').forEach(btn => {
     btn.classList.remove('active');
@@ -3374,7 +3793,8 @@ function renderHallProgressMatrix() {
   container.innerHTML = '';
 
   const activeJury = getActiveJuryId();
-  const currentJuryHall = JURY_HALL_MAP[activeJury] || 'Hall 1';
+  const currentJuryHall = JURY_HALL_MAP[activeJury] || 'Hall A';
+  const isOrganiser = (state.currentUser && state.currentUser.role === 'organiser') || activeJury === 'Organiser';
 
   Object.keys(HALL_CONFIG).forEach(hallKey => {
     const config = HALL_CONFIG[hallKey];
@@ -3395,20 +3815,27 @@ function renderHallProgressMatrix() {
     });
 
     const percent = totalTeams > 0 ? Math.round((fullyEvaluated / totalTeams) * 100) : 0;
-    const isCurrentHall = hallKey === currentJuryHall && activeJury !== 'Organiser';
+    const isCurrentHall = hallKey === currentJuryHall && !isOrganiser;
     const isFiltered = state.activeHallFilter === hallKey || (state.activeHallFilter === 'my' && isCurrentHall);
+
+    // If logged in as jury, only render their own hall or show others muted
+    if (state.currentUser && state.currentUser.role === 'jury' && hallKey !== state.currentUser.hall) {
+      return; // Hide other halls for isolated view
+    }
 
     const card = document.createElement('div');
     card.className = `hall-card ${isFiltered ? 'active' : ''}`;
-    card.onclick = () => setHallFilter(hallKey);
+    card.onclick = () => {
+      if (isOrganiser) setHallFilter(hallKey);
+    };
 
     card.innerHTML = `
       <div class="hall-card-header">
         <span class="hall-name-title">
           <span>${config.icon}</span> ${config.name}
-          ${isCurrentHall ? '<span class="rule-chip pass" style="font-size:0.65rem; padding:1px 5px;">My Hall</span>' : ''}
+          ${isCurrentHall ? '<span class="rule-chip pass" style="font-size:0.65rem; padding:1px 5px;">My Assigned Hall</span>' : ''}
         </span>
-        <span class="hall-juries-tag">${config.juries[0]} & ${config.juries[1]}</span>
+        <span class="hall-juries-tag">${config.internalJury || config.juries[0]}</span>
       </div>
       <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
         ${config.track}
@@ -3419,10 +3846,9 @@ function renderHallProgressMatrix() {
           ${fullyEvaluated}/${totalTeams} Completed (${percent}%)
         </span>
       </div>
-      <div class="hall-progress-bar-bg">
-        <div class="hall-progress-bar-fill" style="width: ${percent}%;"></div>
+      <div class="progress-bar-bg" style="margin-top: 0.4rem; height: 6px;">
+        <div class="progress-bar-fill" style="width: ${percent}%; background: ${percent === 100 ? 'var(--primary-green)' : 'var(--primary-orange)'};"></div>
       </div>
-      ${partiallyEvaluated > 0 ? `<div style="font-size: 0.7rem; color: var(--primary-blue); margin-top: 0.35rem;">⚡ ${partiallyEvaluated} team(s) awaiting 2nd jury score</div>` : ''}
     `;
 
     container.appendChild(card);
@@ -3435,12 +3861,19 @@ function renderJuryTeamList() {
   container.innerHTML = '';
 
   const activeJury = getActiveJuryId();
-  const currentJuryHall = JURY_HALL_MAP[activeJury] || 'Hall 1';
+  const currentJuryHall = JURY_HALL_MAP[activeJury] || 'Hall A';
   const query = state.jurySearchQuery || '';
-  const hallFilter = state.activeHallFilter || 'my';
+  const isOrganiser = (state.currentUser && state.currentUser.role === 'organiser') || activeJury === 'Organiser';
+  const isJury = state.currentUser && state.currentUser.role === 'jury';
 
-  // Determine which hall to filter for
-  const targetHall = (hallFilter === 'my') ? (activeJury === 'Organiser' ? 'all' : currentJuryHall) : hallFilter;
+  // Determine target hall filter
+  let targetHall = 'all';
+  if (isJury) {
+    targetHall = state.currentUser.hall; // Strictly locked to jury's assigned hall
+  } else {
+    const hallFilter = state.activeHallFilter || 'all';
+    targetHall = (hallFilter === 'my') ? (isOrganiser ? 'all' : currentJuryHall) : hallFilter;
+  }
 
   const filteredTeams = state.teams.filter(t => {
     const teamHall = t.hall || assignHallToTeam(t);
@@ -3453,16 +3886,23 @@ function renderJuryTeamList() {
     const id = (t.id || '').toLowerCase();
     const dept = (t.department || '').toLowerCase();
     const ps = (t.psTitle1 || t.problemStatementId || '').toLowerCase();
+    const mentor = (t.mentorName || '').toLowerCase();
     const rolls = (t.members || []).map(m => (m.rollNo || '').toLowerCase()).join(' ');
-    return name.includes(query) || id.includes(query) || dept.includes(query) || ps.includes(query) || rolls.includes(query);
+    const leader = (t.members && t.members[0] ? t.members[0].name : '').toLowerCase();
+    return name.includes(query) || id.includes(query) || dept.includes(query) || ps.includes(query) || rolls.includes(query) || mentor.includes(query) || leader.includes(query);
+  });
+
+  // Sort by Team Number ascending
+  filteredTeams.sort((a, b) => {
+    const numA = parseInt(a.teamNumber || a.id?.replace(/[^0-9]/g, '') || 999);
+    const numB = parseInt(b.teamNumber || b.id?.replace(/[^0-9]/g, '') || 999);
+    return numA - numB;
   });
 
   // Calculate stats for current filter
   let scoredCount = 0;
   filteredTeams.forEach(t => {
-    const teamHall = t.hall || assignHallToTeam(t);
-    const hallJuries = HALL_CONFIG[teamHall]?.juries || ['Jury 1', 'Jury 2'];
-    if (activeJury === 'Organiser') {
+    if (isOrganiser) {
       if (t.scores && t.scores.total) scoredCount++;
     } else {
       if (t.juryEvaluations && t.juryEvaluations[activeJury]) scoredCount++;
@@ -3495,7 +3935,7 @@ function renderJuryTeamList() {
 
     if (j1Score && j2Score) {
       statusChipClass = 'pass';
-      statusText = `✅ 2/2 Complete (${team.scores?.total || 0}/100)`;
+      statusText = `✅ 2/2 Complete (${team.scores?.total || Math.round((j1Score.total + j2Score.total)/2)}/100)`;
     } else if (j1Score || j2Score) {
       statusChipClass = 'pending';
       const who = j1Score ? hallJuries[0] : hallJuries[1];
@@ -3504,18 +3944,25 @@ function renderJuryTeamList() {
     }
 
     const myScoreDisplay = juryEval ? `Mine: ${juryEval.total}/100` : 'Not Scored';
+    const leaderName = team.members && team.members[0] ? team.members[0].name : '';
 
     item.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-weight: 700; font-size: 0.925rem; color: var(--text-main);">${team.name}</span>
+        <span style="font-weight: 800; font-size: 0.925rem; color: var(--text-main);">
+          <span style="color: var(--primary-orange);">#${team.teamNumber || ''}</span> ${team.name}
+        </span>
         <span class="hall-badge" style="font-size: 0.65rem; padding: 1px 5px;">${teamHall}</span>
+      </div>
+      <div style="font-size: 0.725rem; color: var(--text-muted); margin-top: 0.2rem; display: flex; justify-content: space-between;">
+        <span>⏰ ${team.slot || '10.30 - 11.15am'}</span>
+        <span>${team.problemStatementId || 'PS Code'}</span>
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.35rem;">
         <span class="rule-chip ${statusChipClass}" style="font-size: 0.675rem; padding: 2px 6px;">
           ${statusText}
         </span>
         <span style="font-size: 0.725rem; font-weight: 700; color: ${juryEval ? 'var(--primary-green)' : 'var(--text-muted)'};">
-          ${myScoreDisplay}
+          ${isOrganiser ? `Consensus: ${team.scores?.total || 'Pending'}` : myScoreDisplay}
         </span>
       </div>
     `;
@@ -3543,23 +3990,22 @@ function renderTeamPitchDossier(team) {
   }
 
   const teamHall = team.hall || assignHallToTeam(team);
-  const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'] };
-  const mentor = state.mentors.find(m => m.id === team.mentorId) || { name: team.mentorName || 'Assigned Faculty Mentor', dept: team.department || '', email: team.mentorEmail || '' };
+  const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'], internalJury: 'Assigned Jury' };
   const femaleCount = team.members ? team.members.filter(m => m.gender === 'Female').length : 0;
   const isFemaleCompliant = femaleCount >= 1;
 
   const j1Eval = team.juryEvaluations && team.juryEvaluations[hallConfig.juries[0]];
   const j2Eval = team.juryEvaluations && team.juryEvaluations[hallConfig.juries[1]];
   const juriesScoredCount = (j1Eval ? 1 : 0) + (j2Eval ? 1 : 0);
-  const avgScore = team.scores ? team.scores.total : 'Pending';
+  const avgScore = team.scores ? team.scores.total : (j1Eval && j2Eval ? Math.round((j1Eval.total + j2Eval.total)/2) : 'Pending');
 
   // Build 2-Jury Score Matrix Chips
   let juryChipsHtml = `
     <span class="jury-pill-chip ${j1Eval ? 'highlight' : ''}" title="${j1Eval?.feedback || 'Not scored yet'}">
-      ⚖️ ${hallConfig.juries[0]}: <strong>${j1Eval ? `${j1Eval.total}/100` : 'Pending'}</strong>
+      ⚖️ ${hallConfig.juryNames ? hallConfig.juryNames[hallConfig.juries[0]] : hallConfig.juries[0]}: <strong>${j1Eval ? `${j1Eval.total}/100` : 'Pending'}</strong>
     </span>
     <span class="jury-pill-chip ${j2Eval ? 'highlight' : ''}" title="${j2Eval?.feedback || 'Not scored yet'}">
-      ⚖️ ${hallConfig.juries[1]}: <strong>${j2Eval ? `${j2Eval.total}/100` : 'Pending'}</strong>
+      ⚖️ ${hallConfig.juryNames ? hallConfig.juryNames[hallConfig.juries[1]] : hallConfig.juries[1]}: <strong>${j2Eval ? `${j2Eval.total}/100` : 'Pending'}</strong>
     </span>
   `;
 
@@ -3584,8 +4030,9 @@ function renderTeamPitchDossier(team) {
     <div class="dossier-header-bar">
       <div>
         <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
-          <span class="rule-chip pass" style="font-size: 0.75rem;">${team.id}</span>
+          <span class="rule-chip pass" style="font-size: 0.75rem; font-weight: 800;">Team #${team.teamNumber || team.id}</span>
           <span class="hall-badge" style="font-size: 0.75rem;">📍 ${hallConfig.name}</span>
+          <span class="rule-chip" style="font-size: 0.75rem; background: rgba(59, 130, 246, 0.15); color: #3b82f6;">⏰ Slot: ${team.slot || '10.30 - 11.15am'}</span>
           <span class="ps-category ${team.category || 'Software'}">${team.category || 'Software'} Track</span>
           <span class="rule-chip ${isFemaleCompliant ? 'pass' : 'fail'}" style="font-size: 0.725rem;">
             ${isFemaleCompliant ? `👩 ${femaleCount} Female Member(s) Verified` : '⚠️ No Female Member'}
@@ -3593,95 +4040,54 @@ function renderTeamPitchDossier(team) {
         </div>
         <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin: 0;">${team.name}</h2>
         <div style="font-size: 0.85rem; color: var(--primary-green); font-weight: 600; margin-top: 0.2rem;">
-          🏛️ ${team.department || 'AJK Department'}
+          🏛️ ${team.department || 'AJK Department'} | 👨‍🏫 Mentor: ${team.mentorName || 'Assigned Mentor'} | ⚖️ Internal Jury: ${hallConfig.internalJury}
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Hall Consensus Score</div>
-        <div style="font-size: 1.4rem; font-weight: 900; color: var(--primary-orange);">
-          ${avgScore !== 'Pending' ? `${avgScore} / 100` : 'Pending'}
+        <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Consensus Total</div>
+        <div style="font-size: 1.6rem; font-weight: 900; color: ${typeof avgScore === 'number' && avgScore >= 75 ? 'var(--primary-green)' : 'var(--primary-orange)'};">
+          ${typeof avgScore === 'number' ? `${avgScore} / 100` : avgScore}
         </div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
-          ${juriesScoredCount} / 2 Hall Juries Submitted
-        </div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">${juriesScoredCount}/2 Juries Evaluated</div>
       </div>
     </div>
 
-    <!-- METADATA GRID -->
-    <div class="dossier-meta-grid">
-      <div class="dossier-meta-item">
-        <div class="dossier-meta-label">👨‍🏫 Assigned Faculty Mentor</div>
-        <div class="dossier-meta-val">${mentor.name || 'Assigned Mentor'}</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">${mentor.email || ''}</div>
+    <!-- 2-JURY EVALUATOR STATUS CHIPS -->
+    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border-color);">
+      <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Jury Panel Scores:</span>
+      ${juryChipsHtml}
+    </div>
+
+    <!-- PROBLEM STATEMENT & PROPOSED SOLUTION SECTION -->
+    <div class="dossier-problem-box" style="margin-bottom: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <span class="ps-number" style="font-size: 0.85rem;">[${team.problemStatementId || 'SIH-PS'}]</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Theme: ${team.category || 'Software'}</span>
       </div>
-      <div class="dossier-meta-item">
-        <div class="dossier-meta-label">👥 Team Size & Leader</div>
-        <div class="dossier-meta-val">${team.members ? team.members.length : 6} Members</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">Leader: ${(team.members && team.members[0]) ? team.members[0].name : 'N/A'}</div>
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.6rem;">
+        ${team.psTitle1 || 'Problem Statement Title'}
+      </h3>
+      
+      <div style="background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 0.75rem; border-left: 3px solid var(--primary-green);">
+        <div style="font-size: 0.725rem; font-weight: 800; text-transform: uppercase; color: var(--primary-green); margin-bottom: 0.25rem;">💡 Proposed Solution Abstract:</div>
+        <p style="font-size: 0.85rem; color: var(--text-main); line-height: 1.5; margin: 0;">
+          ${team.solution1 || 'Solution details submitted by student team for SIH 2026.'}
+        </p>
       </div>
-      <div class="dossier-meta-item">
-        <div class="dossier-meta-label">📍 Pitch Venue & Panel</div>
-        <div class="dossier-meta-val">${hallConfig.name}</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">Panel: ${hallConfig.juries[0]} & ${hallConfig.juries[1]}</div>
+
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
+        <span style="font-weight: 700; color: var(--text-muted);">🛠️ Tech Stack:</span>
+        <span style="color: var(--text-main); font-weight: 600;">${team.techStack1 || 'React, Python, Cloud'}</span>
       </div>
     </div>
 
-    <!-- PRIMARY PROBLEM STATEMENT (PS 1) -->
-    <div class="dossier-ps-box">
-      <div class="dossier-ps-title">
-        <span>🎯 Primary Problem Statement [${team.problemStatementId || 'PS'}]</span>
+    <!-- 6-MEMBER ROSTER ACCORDION -->
+    <div>
+      <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">
+        👥 Team Roster (6 Members - Female Representation Verified):
       </div>
-      <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.5rem;">
-        ${team.psTitle1 || 'Solution Design'}
-      </div>
-      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">
-        💡 Submitted Solution Abstract & System Architecture:
-      </div>
-      <div class="dossier-abstract-text">
-        ${team.solution1 || 'Innovative structured solution design addressing problem statement with end-to-end user workflow and system architecture submitted for SIH 2026 Internal Pitching.'}
-      </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-        <span style="font-size: 0.775rem; font-weight: 700; color: var(--text-muted);">🛠️ Tech Stack:</span>
-        <span class="rule-chip pass" style="font-size: 0.75rem;">${team.techStack1 || 'Software / Hardware Stack'}</span>
-      </div>
-    </div>
-
-    <!-- SECONDARY PROBLEM STATEMENT (PS 2) IF PRESENT -->
-    ${(team.psTitle2 && team.psTitle2 !== 'N/A' && team.problemStatement2Id && team.problemStatement2Id !== 'N/A') ? `
-      <div class="dossier-ps-box" style="border-left-color: var(--primary-orange); background: linear-gradient(135deg, rgba(243, 111, 33, 0.08), rgba(18, 24, 38, 0.8));">
-        <div class="dossier-ps-title" style="color: var(--primary-orange);">
-          <span>🎯 Secondary Problem Statement [${team.problemStatement2Id}]</span>
-        </div>
-        <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.5rem;">
-          ${team.psTitle2}
-        </div>
-        <div class="dossier-abstract-text">
-          ${team.solution2 || team.solution1}
-        </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-          <span style="font-size: 0.775rem; font-weight: 700; color: var(--text-muted);">🛠️ Tech Stack:</span>
-          <span class="rule-chip pass" style="font-size: 0.75rem;">${team.techStack2 || team.techStack1}</span>
-        </div>
-      </div>
-    ` : ''}
-
-    <!-- 6-MEMBER TEAM ROSTER ACCORDION -->
-    <details style="margin-top: 1rem; background: var(--bg-input); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);" open>
-      <summary style="font-size: 0.875rem; font-weight: 700; color: var(--text-main); cursor: pointer;">
-        👥 Complete 6-Member Team Roster & Details (Click to collapse/expand)
-      </summary>
-      <div class="dossier-roster-grid">
+      <div class="dossier-members-grid">
         ${membersHtml}
-      </div>
-    </details>
-
-    <!-- 2-JURY SCORE PROGRESSION -->
-    <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
-      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
-        ⚖️ ${hallConfig.name} Evaluation Matrix (${juriesScoredCount} of 2 Juries Submitted)
-      </div>
-      <div class="jury-breakdown-pills">
-        ${juryChipsHtml}
       </div>
     </div>
   `;
@@ -3692,226 +4098,366 @@ function loadTeamForEvaluation(teamId) {
   const team = state.teams.find(t => t.id === teamId);
   if (!team) return;
 
-  renderJuryTeamList();
-  renderTeamPitchDossier(team);
-
   const activeJury = getActiveJuryId();
   const teamHall = team.hall || assignHallToTeam(team);
-  const nameElem = document.getElementById('evalTeamName');
-  const psElem = document.getElementById('evalTeamPs');
-  if (nameElem) nameElem.textContent = `Scoring: ${team.name} (${team.id})`;
-  if (psElem) psElem.textContent = `📍 ${teamHall} | Dept: ${team.department || 'AJK Dept'} | PS: [${team.problemStatementId || 'PS'}] ${team.psTitle1 || 'No Title'}`;
+  const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'] };
 
-  // Check if active jury already evaluated this team
-  const juryEval = team.juryEvaluations && team.juryEvaluations[activeJury];
-  const scores = juryEval || (team.scores || { novelty: 18, architecture: 23, feasibility: 22, impact: 14, presentation: 14, total: 91 });
+  // Render Left Selection Active Item
+  document.querySelectorAll('#juryTeamList .team-selector-item').forEach(item => {
+    item.classList.remove('active');
+  });
 
-  document.getElementById('slideNovelty').value = scores.novelty !== undefined ? scores.novelty : 18;
-  document.getElementById('slideArchitecture').value = scores.architecture !== undefined ? scores.architecture : 23;
-  document.getElementById('slideFeasibility').value = scores.feasibility !== undefined ? scores.feasibility : 22;
-  document.getElementById('slideImpact').value = scores.impact !== undefined ? scores.impact : 14;
-  document.getElementById('slidePresentation').value = scores.presentation !== undefined ? scores.presentation : 14;
-  
-  if (document.getElementById('evalFeedback')) {
-    document.getElementById('evalFeedback').value = (juryEval && juryEval.feedback) || (team.scores && team.scores.feedback) || '';
-  }
+  // Render Pre-Pitch Dossier Card
+  renderTeamPitchDossier(team);
 
-  const consensusElem = document.getElementById('evalConsensusAvg');
-  if (consensusElem) {
-    if (team.scores && team.scores.total) {
-      const hallJuries = HALL_CONFIG[teamHall]?.juries || ['Jury 1', 'Jury 2'];
-      const j1 = team.juryEvaluations && team.juryEvaluations[hallJuries[0]];
-      const j2 = team.juryEvaluations && team.juryEvaluations[hallJuries[1]];
-      const count = (j1 ? 1 : 0) + (j2 ? 1 : 0);
-      consensusElem.textContent = `Hall Avg: ${team.scores.total}/100 (${count}/2 Juries)`;
-    } else {
-      consensusElem.textContent = 'Hall Avg: Pending (0/2 Juries)';
-    }
-  }
+  // Update Rubric Header Info
+  const evalNameElem = document.getElementById('evalTeamName');
+  if (evalNameElem) evalNameElem.textContent = `#${team.teamNumber || ''} ${team.name} (${team.id})`;
+
+  const evalPsElem = document.getElementById('evalTeamPs');
+  if (evalPsElem) evalPsElem.textContent = `[${team.problemStatementId || 'PS'}] ${team.psTitle1 || ''} | Slot: ${team.slot || '10.30 - 11.15am'}`;
+
+  const evalBadgeElem = document.getElementById('evalCurrentJuryBadge');
+  if (evalBadgeElem) evalBadgeElem.textContent = `Active Evaluator: ${activeJury} (${teamHall})`;
+
+  const myScoreLbl = document.getElementById('myJuryNameScoreLbl');
+  if (myScoreLbl) myScoreLbl.textContent = `${activeJury} [${teamHall}]`;
+
+  // Pre-fill existing evaluation score for this active jury if exists
+  const existingJuryEval = (team.juryEvaluations && team.juryEvaluations[activeJury]) || null;
+  const defaults = existingJuryEval || {
+    novelty: 18,
+    architecture: 23,
+    feasibility: 22,
+    impact: 14,
+    presentation: 14,
+    feedback: ''
+  };
+
+  const slideNov = document.getElementById('slideNovelty');
+  const slideArch = document.getElementById('slideArchitecture');
+  const slideFeas = document.getElementById('slideFeasibility');
+  const slideImp = document.getElementById('slideImpact');
+  const slidePres = document.getElementById('slidePresentation');
+  const feedTxt = document.getElementById('evalFeedback');
+
+  if (slideNov) slideNov.value = defaults.novelty;
+  if (slideArch) slideArch.value = defaults.architecture;
+  if (slideFeas) slideFeas.value = defaults.feasibility;
+  if (slideImp) slideImp.value = defaults.impact;
+  if (slidePres) slidePres.value = defaults.presentation;
+  if (feedTxt) feedTxt.value = defaults.feedback || '';
 
   updateRubricTotal();
 }
 
 function updateRubricTotal() {
-  const nov = parseInt(document.getElementById('slideNovelty').value) || 0;
-  const arch = parseInt(document.getElementById('slideArchitecture').value) || 0;
-  const feas = parseInt(document.getElementById('slideFeasibility').value) || 0;
-  const imp = parseInt(document.getElementById('slideImpact').value) || 0;
-  const pres = parseInt(document.getElementById('slidePresentation').value) || 0;
+  const n = parseInt(document.getElementById('slideNovelty')?.value || 0);
+  const a = parseInt(document.getElementById('slideArchitecture')?.value || 0);
+  const f = parseInt(document.getElementById('slideFeasibility')?.value || 0);
+  const i = parseInt(document.getElementById('slideImpact')?.value || 0);
+  const p = parseInt(document.getElementById('slidePresentation')?.value || 0);
 
-  document.getElementById('valNovelty').textContent = nov;
-  document.getElementById('valArchitecture').textContent = arch;
-  document.getElementById('valFeasibility').textContent = feas;
-  document.getElementById('valImpact').textContent = imp;
-  document.getElementById('valPresentation').textContent = pres;
+  const valNov = document.getElementById('valNovelty');
+  const valArch = document.getElementById('valArchitecture');
+  const valFeas = document.getElementById('valFeasibility');
+  const valImp = document.getElementById('valImpact');
+  const valPres = document.getElementById('valPresentation');
 
-  const total = nov + arch + feas + imp + pres;
-  document.getElementById('valTotalScore').textContent = `${total} / 100`;
+  if (valNov) valNov.textContent = n;
+  if (valArch) valArch.textContent = a;
+  if (valFeas) valFeas.textContent = f;
+  if (valImp) valImp.textContent = i;
+  if (valPres) valPres.textContent = p;
 
-  const statusElem = document.getElementById('evalScoreStatus');
-  if (statusElem) {
-    if (total >= 85) {
-      statusElem.textContent = 'Nominated for Top 50';
-      statusElem.className = 'rule-chip pass';
+  const total = n + a + f + i + p;
+  const valTot = document.getElementById('valTotalScore');
+  if (valTot) valTot.textContent = `${total} / 100`;
+
+  const statusChip = document.getElementById('evalScoreStatus');
+  if (statusChip) {
+    if (total >= 75) {
+      statusChip.className = 'rule-chip pass';
+      statusChip.textContent = 'Nominated for Top 50';
+    } else if (total >= 50) {
+      statusChip.className = 'rule-chip pending';
+      statusChip.textContent = 'Shortlist Consideration';
     } else {
-      statusElem.textContent = 'Under Review';
-      statusElem.className = 'rule-chip fail';
+      statusChip.className = 'rule-chip fail';
+      statusChip.textContent = 'Needs Improvement';
     }
   }
 }
 
 function submitJuryEvaluation() {
-  if (!state.selectedTeamForJuryId) return;
-
-  const activeJury = getActiveJuryId();
-  const nov = parseInt(document.getElementById('slideNovelty').value) || 0;
-  const arch = parseInt(document.getElementById('slideArchitecture').value) || 0;
-  const feas = parseInt(document.getElementById('slideFeasibility').value) || 0;
-  const imp = parseInt(document.getElementById('slideImpact').value) || 0;
-  const pres = parseInt(document.getElementById('slidePresentation').value) || 0;
-  const total = nov + arch + feas + imp + pres;
-  const feedback = (document.getElementById('evalFeedback')?.value || '').trim();
-
-  const team = state.teams.find(t => t.id === state.selectedTeamForJuryId);
-  if (!team) return;
-
-  const teamHall = team.hall || assignHallToTeam(team);
-  const hallJuries = HALL_CONFIG[teamHall]?.juries || ['Jury 1', 'Jury 2'];
-
-  // Initialize juryEvaluations dictionary
-  if (!team.juryEvaluations || typeof team.juryEvaluations !== 'object') {
-    team.juryEvaluations = {};
+  const teamId = state.selectedTeamForJuryId;
+  const team = state.teams.find(t => t.id === teamId);
+  if (!team) {
+    showToast('Please select a team from the roster first!', 'warning');
+    return;
   }
 
-  // 1. Record evaluation for active jury
+  const activeJury = getActiveJuryId();
+  const teamHall = team.hall || assignHallToTeam(team);
+  const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'] };
+
+  const novelty = parseInt(document.getElementById('slideNovelty')?.value || 0);
+  const architecture = parseInt(document.getElementById('slideArchitecture')?.value || 0);
+  const feasibility = parseInt(document.getElementById('slideFeasibility')?.value || 0);
+  const impact = parseInt(document.getElementById('slideImpact')?.value || 0);
+  const presentation = parseInt(document.getElementById('slidePresentation')?.value || 0);
+  const feedback = (document.getElementById('evalFeedback')?.value || '').trim();
+  const total = novelty + architecture + feasibility + impact + presentation;
+
+  if (!team.juryEvaluations) team.juryEvaluations = {};
+
   team.juryEvaluations[activeJury] = {
     juryId: activeJury,
     hall: teamHall,
-    novelty: nov,
-    architecture: arch,
-    feasibility: feas,
-    impact: imp,
-    presentation: pres,
-    total: total,
-    feedback: feedback,
-    timestamp: new Date().toISOString()
+    novelty,
+    architecture,
+    feasibility,
+    impact,
+    presentation,
+    total,
+    feedback,
+    evaluatedAt: new Date().toISOString()
   };
 
-  // 2. Recompute Consensus Mean Score across the 2 Hall Juries
-  const j1 = team.juryEvaluations[hallJuries[0]];
-  const j2 = team.juryEvaluations[hallJuries[1]];
-  const evals = [j1, j2].filter(Boolean);
-  const count = evals.length;
-
-  let sumTotal = 0, sumNov = 0, sumArch = 0, sumFeas = 0, sumImp = 0, sumPres = 0;
-  evals.forEach(ev => {
-    sumTotal += ev.total;
-    sumNov += (ev.novelty || 0);
-    sumArch += (ev.architecture || 0);
-    sumFeas += (ev.feasibility || 0);
-    sumImp += (ev.impact || 0);
-    sumPres += (ev.presentation || 0);
-  });
-
-  const avgTotal = count > 0 ? Math.round((sumTotal / count) * 10) / 10 : total;
-
-  team.scores = {
-    novelty: Math.round(sumNov / (count || 1)),
-    architecture: Math.round(sumArch / (count || 1)),
-    feasibility: Math.round(sumFeas / (count || 1)),
-    impact: Math.round(sumImp / (count || 1)),
-    presentation: Math.round(sumPres / (count || 1)),
-    total: avgTotal,
-    evaluationsCount: count,
-    evaluator: `${teamHall} Panel (${count}/2 Juries)`,
-    feedback: feedback || team.scores?.feedback || ''
-  };
-
-  // 3. Save locally
-  saveTeamsToStorage();
-  renderTeamPitchDossier(team);
-  renderHallProgressMatrix();
-
-  // 4. Send asynchronous cloud sync to Google Sheets
-  const googleScriptUrl = window.GOOGLE_APPS_SCRIPT_URL || '';
-  if (googleScriptUrl) {
-    fetch(googleScriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'submitJuryScore',
-        teamId: team.id,
-        teamName: team.name,
-        department: team.department,
-        hall: teamHall,
-        juryId: activeJury,
-        novelty: nov,
-        architecture: arch,
-        feasibility: feas,
-        impact: imp,
-        presentation: pres,
-        total: total,
-        feedback: feedback
-      })
-    }).catch(e => console.warn('Cloud sync note:', e));
+  // Compute Consensus Score (Average of all juries who scored this team)
+  const juryKeys = Object.keys(team.juryEvaluations);
+  if (juryKeys.length > 0) {
+    let sumNov = 0, sumArch = 0, sumFeas = 0, sumImp = 0, sumPres = 0, sumTot = 0;
+    juryKeys.forEach(k => {
+      const je = team.juryEvaluations[k];
+      sumNov += je.novelty;
+      sumArch += je.architecture;
+      sumFeas += je.feasibility;
+      sumImp += je.impact;
+      sumPres += je.presentation;
+      sumTot += je.total;
+    });
+    const cnt = juryKeys.length;
+    team.scores = {
+      novelty: Math.round(sumNov / cnt),
+      architecture: Math.round(sumArch / cnt),
+      feasibility: Math.round(sumFeas / cnt),
+      impact: Math.round(sumImp / cnt),
+      presentation: Math.round(sumPres / cnt),
+      total: Math.round(sumTot / cnt),
+      feedback: team.juryEvaluations[activeJury]?.feedback || ''
+    };
   }
 
-  showToast(`✅ [${activeJury}] Submitted ${total}/100 for "${team.name}" (${teamHall}: ${count}/2 Juries Scored | Avg: ${avgTotal}/100)`, 'success');
+  saveTeamsToStorage();
+  renderJuryTeamList();
+  renderTeamPitchDossier(team);
+  renderHallProgressMatrix();
+  renderLeaderboard();
+  if (state.currentUser && state.currentUser.role === 'organiser') {
+    renderMasterMultiJuryMatrix();
+  }
+
+  // Background Cloud Sync to Google Sheets
+  try {
+    if (window.GOOGLE_APPS_SCRIPT_URL) {
+      fetch(window.GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'submitJuryScore',
+          teamId: team.id,
+          teamName: team.name,
+          department: team.department,
+          hall: teamHall,
+          juryId: activeJury,
+          novelty,
+          architecture,
+          feasibility,
+          impact,
+          presentation,
+          total,
+          feedback
+        })
+      }).then(r => r.json()).then(res => {
+        console.log('Score synced to cloud successfully:', res);
+      }).catch(err => {
+        console.warn('Cloud score sync failed (offline cache retained):', err);
+      });
+    }
+  } catch (err) {
+    console.error('Failed to dispatch score to GAS:', err);
+  }
+
+  showToast(`✅ Score of ${total}/100 saved for ${team.name} by ${activeJury}!`, 'success');
+}
+
+function renderMasterMultiJuryMatrix() {
+  const tbody = document.getElementById('masterJuryMatrixBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const sortedTeams = [...state.teams].sort((a, b) => {
+    const numA = parseInt(a.teamNumber || a.id?.replace(/[^0-9]/g, '') || 999);
+    const numB = parseInt(b.teamNumber || b.id?.replace(/[^0-9]/g, '') || 999);
+    return numA - numB;
+  });
+
+  sortedTeams.forEach((team, idx) => {
+    const teamHall = team.hall || assignHallToTeam(team);
+    const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'], internalJury: 'Jury' };
+    const j1Key = hallConfig.juries[0];
+    const j2Key = hallConfig.juries[1];
+
+    const j1Eval = team.juryEvaluations && team.juryEvaluations[j1Key];
+    const j2Eval = team.juryEvaluations && team.juryEvaluations[j2Key];
+
+    const j1ScoreDisplay = j1Eval ? `<span style="font-weight:700; color:var(--primary-green);">${j1Eval.total}/100</span>` : '<span style="color:var(--text-muted);">Pending</span>';
+    const j2ScoreDisplay = j2Eval ? `<span style="font-weight:700; color:var(--primary-green);">${j2Eval.total}/100</span>` : '<span style="color:var(--text-muted);">Pending</span>';
+
+    const consensusScore = team.scores ? team.scores.total : (j1Eval && j2Eval ? Math.round((j1Eval.total + j2Eval.total)/2) : (j1Eval ? j1Eval.total : (j2Eval ? j2Eval.total : null)));
+
+    let discrepancyBadge = '';
+    if (j1Eval && j2Eval) {
+      const diff = Math.abs(j1Eval.total - j2Eval.total);
+      if (diff >= 15) {
+        discrepancyBadge = `<div style="font-size:0.65rem; color:#ef4444; font-weight:800; margin-top:2px;">⚠️ Diff: ${diff} pts</div>`;
+      }
+    }
+
+    let statusHtml = '<span class="rule-chip fail" style="font-size:0.7rem;">0/2 Scored</span>';
+    if (j1Eval && j2Eval) {
+      statusHtml = consensusScore >= 75 
+        ? '<span class="rule-chip pass" style="font-size:0.7rem;">🏆 Top 50 Nominated</span>' 
+        : '<span class="rule-chip pending" style="font-size:0.7rem;">Evaluated</span>';
+    } else if (j1Eval || j2Eval) {
+      statusHtml = '<span class="rule-chip pending" style="font-size:0.7rem;">⚡ 1/2 Scored</span>';
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:800; color:var(--primary-orange);">${team.teamNumber || (idx + 1)}</td>
+      <td>
+        <span class="hall-badge" style="font-size:0.75rem;">${teamHall}</span>
+        <div style="font-size:0.725rem; color:var(--text-muted); margin-top:2px;">⏰ ${team.slot || '10.30 - 11.15am'}</div>
+      </td>
+      <td>
+        <strong style="color:var(--text-main); font-size:0.9rem;">${team.name}</strong>
+        <div style="font-size:0.725rem; color:var(--text-muted);">${team.id}</div>
+      </td>
+      <td>
+        <div style="font-weight:600; font-size:0.825rem;">${team.department || 'N/A'}</div>
+        <div style="font-size:0.725rem; color:var(--primary-green);">👨‍🏫 ${team.mentorName || 'Mentor'}</div>
+      </td>
+      <td>
+        <span class="ps-number" style="font-size:0.75rem;">[${team.problemStatementId || 'PS'}]</span>
+        <div style="font-size:0.75rem; color:var(--text-muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${team.psTitle1 || ''}</div>
+      </td>
+      <td style="text-align:center;">
+        <div>${j1ScoreDisplay}</div>
+        <div style="font-size:0.65rem; color:var(--text-muted);">${j1Key}</div>
+      </td>
+      <td style="text-align:center;">
+        <div>${j2ScoreDisplay}</div>
+        <div style="font-size:0.65rem; color:var(--text-muted);">${j2Key}</div>
+      </td>
+      <td style="text-align:center;">
+        <span style="font-size:1.1rem; font-weight:900; color:${consensusScore !== null ? (consensusScore >= 75 ? '#10b981' : consensusScore >= 50 ? '#f59e0b' : '#ef4444') : 'var(--text-muted)'};">
+          ${consensusScore !== null ? `${consensusScore} / 100` : 'Pending'}
+        </span>
+        ${discrepancyBadge}
+      </td>
+      <td style="text-align:center;">
+        ${statusHtml}
+      </td>
+      <td style="text-align:center;">
+        <button class="btn btn-primary btn-sm" style="font-size:0.75rem; padding:3px 8px;" onclick="loadTeamForEvaluation('${team.id}'); window.scrollTo({top: 500, behavior: 'smooth'});">
+          📝 Evaluate
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 function exportMultiJuryMatrixExcel() {
   const headers = [
-    'Team ID', 'Team Name', 'Department', 'Track', 'Pitch Venue / Hall', 'Primary PS Code', 'Primary PS Title',
-    'Hall Jury 1 Score', 'Hall Jury 2 Score',
-    'Consensus Average (100)', 'Hall Evaluation Status', 'Top 50 Nomination', 'Jury 1 Feedback', 'Jury 2 Feedback'
+    'Team Number', 'Hall', 'Pitch Slot', 'Team ID', 'Team Name', 'Department',
+    'Assigned Mentor', 'Internal Jury', 'PS Code', 'PS Title', 'Entry Track',
+    'Team Leader', 'Leader Email', 'Female Members Count',
+    'Jury 1 ID', 'Jury 1 Score (/100)', 'Jury 1 Feedback',
+    'Jury 2 ID', 'Jury 2 Score (/100)', 'Jury 2 Feedback',
+    'Consensus Average Total (/100)', 'Shortlist Recommendation Status'
   ];
 
-  const rows = state.teams.map(t => {
-    const teamHall = t.hall || assignHallToTeam(t);
-    const hallJuries = HALL_CONFIG[teamHall]?.juries || ['Jury 1', 'Jury 2'];
-    const j = t.juryEvaluations || {};
-    
-    const j1Score = j[hallJuries[0]] ? j[hallJuries[0]].total : '';
-    const j2Score = j[hallJuries[1]] ? j[hallJuries[1]].total : '';
-    const j1Feedback = j[hallJuries[0]] ? j[hallJuries[0]].feedback : '';
-    const j2Feedback = j[hallJuries[1]] ? j[hallJuries[1]].feedback : '';
+  const rows = [];
+  rows.push(headers.map(h => `"${h}"`).join(','));
 
-    const avg = t.scores ? t.scores.total : '';
-    const count = (j1Score !== '' ? 1 : 0) + (j2Score !== '' ? 1 : 0);
-    const status = count === 2 ? '2/2 Complete' : (count === 1 ? '1/2 Partial' : '0/2 Pending');
-    const nomination = (avg !== '' && avg >= 85) ? 'Top 50 Nominated' : (avg !== '' ? 'Under Review' : 'Pending');
-
-    return [
-      `"${t.id}"`,
-      `"${(t.name || '').replace(/"/g, '""')}"`,
-      `"${(t.department || '').replace(/"/g, '""')}"`,
-      `"${t.category || 'Software'}"`,
-      `"${teamHall}"`,
-      `"${t.problemStatementId || ''}"`,
-      `"${(t.psTitle1 || '').replace(/"/g, '""')}"`,
-      j1Score, j2Score,
-      avg, `"${status}"`, `"${nomination}"`,
-      `"${(j1Feedback || '').replace(/"/g, '""')}"`,
-      `"${(j2Feedback || '').replace(/"/g, '""')}"`
-    ].join(',');
+  const sortedTeams = [...state.teams].sort((a, b) => {
+    const numA = parseInt(a.teamNumber || a.id?.replace(/[^0-9]/g, '') || 999);
+    const numB = parseInt(b.teamNumber || b.id?.replace(/[^0-9]/g, '') || 999);
+    return numA - numB;
   });
 
-  const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows].join('\n');
+  sortedTeams.forEach((team, idx) => {
+    const teamHall = team.hall || assignHallToTeam(team);
+    const hallConfig = HALL_CONFIG[teamHall] || { name: teamHall, juries: ['Jury 1', 'Jury 2'], internalJury: 'Jury' };
+    const j1Key = hallConfig.juries[0];
+    const j2Key = hallConfig.juries[1];
+
+    const j1Eval = team.juryEvaluations && team.juryEvaluations[j1Key];
+    const j2Eval = team.juryEvaluations && team.juryEvaluations[j2Key];
+    const consensusScore = team.scores ? team.scores.total : (j1Eval && j2Eval ? Math.round((j1Eval.total + j2Eval.total)/2) : (j1Eval ? j1Eval.total : (j2Eval ? j2Eval.total : 'Pending')));
+
+    const femaleCount = team.members ? team.members.filter(m => m.gender === 'Female').length : 0;
+    const leader = (team.members && team.members[0]) ? team.members[0] : {};
+
+    let status = 'Pending Evaluation';
+    if (j1Eval && j2Eval) {
+      status = consensusScore >= 75 ? 'Top 50 Shortlisted' : 'Evaluated - Alternate';
+    } else if (j1Eval || j2Eval) {
+      status = 'Partially Evaluated (1/2 Juries)';
+    }
+
+    const rowData = [
+      team.teamNumber || (idx + 1),
+      teamHall,
+      team.slot || '10.30 - 11.15am',
+      team.id || '',
+      team.name || '',
+      team.department || '',
+      team.mentorName || 'Assigned Mentor',
+      hallConfig.internalJury || '',
+      team.problemStatementId || '',
+      team.psTitle1 || '',
+      team.category || 'Software',
+      leader.name || '',
+      leader.email || '',
+      femaleCount,
+      j1Key,
+      j1Eval ? j1Eval.total : 'N/A',
+      j1Eval ? (j1Eval.feedback || '').replace(/"/g, '""') : '',
+      j2Key,
+      j2Eval ? j2Eval.total : 'N/A',
+      j2Eval ? (j2Eval.feedback || '').replace(/"/g, '""') : '',
+      consensusScore,
+      status
+    ];
+
+    rows.push(rowData.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+  });
+
+  const csvContent = 'data:text/csv;charset=utf-8,\ufeff' + rows.join('\r\n');
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', `SIH_2026_6_Hall_Jury_Matrix_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute('download', `SIH_2026_Multi_Jury_Evaluation_Matrix_Report.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 
-  showToast('📊 6-Hall Multi-Jury Score Matrix exported successfully!', 'success');
+  showToast('📊 Exported Multi-Jury Score Matrix for all 76 Teams successfully!', 'success');
 }
-
-// --------------------------------------------------------------------------
-// LEADERBOARD & CERTIFICATE GENERATOR (PROTECTED)
-// --------------------------------------------------------------------------
 
 function filterLeaderboard(track) {
   state.leaderboardFilter = track;
@@ -4273,25 +4819,6 @@ function closeModal(modalId) {
 function openStaffAuthModal() {
   const modal = document.getElementById('staffAuthModal');
   if (modal) modal.classList.add('active');
-}
-
-function verifyStaffPasscode() {
-  const code = (document.getElementById('staffPasscode')?.value || '').trim().toLowerCase();
-  const validPasscodes = ['ajkaiif2026', 'admin', '1234', 'sih2026', 'ajk2026', 'jury'];
-  if (validPasscodes.includes(code)) {
-    state.isStaffAuthenticated = true;
-    closeModal('staffAuthModal');
-    
-    // Show protected tabs and buttons
-    document.querySelectorAll('.staff-only-tab, .staff-only-btn').forEach(el => {
-      el.style.display = 'inline-flex';
-    });
-    
-    showToast('🔓 Organiser & Jury Access Unlocked!', 'success');
-    switchTab('jury');
-  } else {
-    showToast('❌ Invalid Passcode. Access Denied.', 'error');
-  }
 }
 
 function showToast(message, type = 'info') {

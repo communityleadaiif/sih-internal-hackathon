@@ -49,7 +49,14 @@
         </div>
       </div>
 
-      <div class="header-controls">
+      <div class="header-controls" style="display: flex; align-items: center; gap: 0.6rem;">
+        <div id="headerAuthBadge" style="display: none; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.35rem 0.75rem; border-radius: var(--radius-md); font-size: 0.8rem; box-shadow: var(--shadow-sm);">
+          <span id="headerAuthText" style="font-weight: 700; color: var(--primary-orange);">⚖️ Jury 1</span>
+          <button class="btn btn-outline btn-sm" onclick="logoutUser()" style="padding: 2px 8px; font-size: 0.75rem; border-color: rgba(239, 68, 68, 0.4); color: #ef4444;" title="Logout">🚪 Logout</button>
+        </div>
+        <button class="btn btn-outline btn-sm" id="headerLoginBtn" onclick="openStaffAuthModal()" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700;">
+          🔒 Jury / Organiser Login
+        </button>
         <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light/Dark Theme" style="display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; font-size: 0.8rem; font-weight: 700; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); cursor: pointer;">
           <span id="themeIcon">☀️</span> <span id="themeLabel">Mode: Light</span>
         </button>
@@ -578,30 +585,33 @@
           <span style="font-size: 1.5rem;">⚖️</span>
           <div>
             <div style="font-size: 0.725rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700;">Active Evaluator & Pitch Venue</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem;">
-              <span style="font-weight: 800; font-size: 1.05rem; color: var(--primary-orange);" id="activeJuryTitle">Jury Member 01</span>
-              <span class="hall-badge" id="activeJuryHallTag">📍 Hall 1 / Panel A</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem; flex-wrap: wrap;">
+              <span style="font-weight: 800; font-size: 1.05rem; color: var(--primary-orange);" id="activeJuryTitle">Dr. Aneesh Kumar (Jury 1)</span>
+              <span class="hall-badge" id="activeJuryHallTag">📍 Hall A (Third Floor)</span>
             </div>
           </div>
         </div>
         <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
-          <label for="juryProfileSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">Switch Evaluator Profile:</label>
-          <select id="juryProfileSelect" class="form-control" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.875rem; font-weight: 700; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-highlight);" onchange="changeActiveJuryProfile(this.value)">
-            <option value="Jury 1">⚖️ Jury 01 (Hall 1 / Panel A)</option>
-            <option value="Jury 2">⚖️ Jury 02 (Hall 1 / Panel A)</option>
-            <option value="Jury 3">⚖️ Jury 03 (Hall 2 / Panel B)</option>
-            <option value="Jury 4">⚖️ Jury 04 (Hall 2 / Panel B)</option>
-            <option value="Jury 5">⚖️ Jury 05 (Hall 3 / Panel C)</option>
-            <option value="Jury 6">⚖️ Jury 06 (Hall 3 / Panel C)</option>
-            <option value="Jury 7">⚖️ Jury 07 (Hall 4 / Panel D)</option>
-            <option value="Jury 8">⚖️ Jury 08 (Hall 4 / Panel D)</option>
-            <option value="Jury 9">⚖️ Jury 09 (Hall 5 / Panel E)</option>
-            <option value="Jury 10">⚖️ Jury 10 (Hall 5 / Panel E)</option>
-            <option value="Jury 11">⚖️ Jury 11 (Hall 6 / Panel F)</option>
-            <option value="Jury 12">⚖️ Jury 12 (Hall 6 / Panel F)</option>
-            <option value="Organiser">🏛️ Organiser Master Command Center</option>
-          </select>
+          <div id="juryProfileSwitcherWrapper" style="display: flex; align-items: center; gap: 0.5rem;">
+            <label for="juryProfileSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">Switch Evaluator:</label>
+            <select id="juryProfileSelect" class="form-control" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.875rem; font-weight: 700; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-highlight);" onchange="changeActiveJuryProfile(this.value)">
+              <option value="Jury 1">⚖️ Jury 01: Dr. Aneesh Kumar (Hall A)</option>
+              <option value="Jury 2">⚖️ Jury 02: Hall A Co-Jury (Hall A)</option>
+              <option value="Jury 3">⚖️ Jury 03: Dr. Vineetha (Hall B)</option>
+              <option value="Jury 4">⚖️ Jury 04: Hall B Co-Jury (Hall B)</option>
+              <option value="Jury 5">⚖️ Jury 05: Dr. John Grasias (Hall C)</option>
+              <option value="Jury 6">⚖️ Jury 06: Hall C Co-Jury (Hall C)</option>
+              <option value="Jury 7">⚖️ Jury 07: Mrs. Sariga (Hall D)</option>
+              <option value="Jury 8">⚖️ Jury 08: Hall D Co-Jury (Hall D)</option>
+              <option value="Jury 9">⚖️ Jury 09: Mr. Sachin (Hall E)</option>
+              <option value="Jury 10">⚖️ Jury 10: Hall E Co-Jury (Hall E)</option>
+              <option value="Jury 11">⚖️ Jury 11: Dr. Bharathi (Hall F)</option>
+              <option value="Jury 12">⚖️ Jury 12: Hall F Co-Jury (Hall F)</option>
+              <option value="Organiser">🏛️ Organiser Master Command Center</option>
+            </select>
+          </div>
           <button class="btn btn-secondary btn-sm" onclick="exportMultiJuryMatrixExcel()" title="Export all 6-Hall Multi-Jury Score Matrix as CSV/Excel">📊 Export Multi-Jury Matrix</button>
+          <button class="btn btn-outline btn-sm" onclick="logoutUser()" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">🚪 Logout</button>
         </div>
       </div>
 
@@ -622,12 +632,12 @@
           <div class="hall-filter-tabs" id="hallFilterTabs">
             <button class="hall-filter-btn active" id="hallFilterMyHall" onclick="setHallFilter('my')">🏢 My Hall</button>
             <button class="hall-filter-btn" id="hallFilterAll" onclick="setHallFilter('all')">All Halls</button>
-            <button class="hall-filter-btn" id="hallFilterHall1" onclick="setHallFilter('Hall 1')">H1</button>
-            <button class="hall-filter-btn" id="hallFilterHall2" onclick="setHallFilter('Hall 2')">H2</button>
-            <button class="hall-filter-btn" id="hallFilterHall3" onclick="setHallFilter('Hall 3')">H3</button>
-            <button class="hall-filter-btn" id="hallFilterHall4" onclick="setHallFilter('Hall 4')">H4</button>
-            <button class="hall-filter-btn" id="hallFilterHall5" onclick="setHallFilter('Hall 5')">H5</button>
-            <button class="hall-filter-btn" id="hallFilterHall6" onclick="setHallFilter('Hall 6')">H6</button>
+            <button class="hall-filter-btn" id="hallFilterHallA" onclick="setHallFilter('Hall A')">Hall A</button>
+            <button class="hall-filter-btn" id="hallFilterHallB" onclick="setHallFilter('Hall B')">Hall B</button>
+            <button class="hall-filter-btn" id="hallFilterHallC" onclick="setHallFilter('Hall C')">Hall C</button>
+            <button class="hall-filter-btn" id="hallFilterHallD" onclick="setHallFilter('Hall D')">Hall D</button>
+            <button class="hall-filter-btn" id="hallFilterHallE" onclick="setHallFilter('Hall E')">Hall E</button>
+            <button class="hall-filter-btn" id="hallFilterHallF" onclick="setHallFilter('Hall F')">Hall F</button>
           </div>
 
           <div style="margin-bottom: 0.75rem;">
@@ -727,6 +737,42 @@
               <button class="btn btn-primary" onclick="submitJuryEvaluation()" style="font-size: 1rem; padding: 0.85rem 1.5rem; justify-content: center;">💾 Submit Jury Score & Sync to Cloud</button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- ORGANISER MASTER MULTI-JURY SCORE MATRIX (Visible for Organiser Master View) -->
+      <div id="organiserMasterMatrixSection" style="display: none; margin-top: 2.5rem; border-top: 2px solid var(--border-color); padding-top: 1.5rem;">
+        <div class="section-header">
+          <div class="section-title">
+            <h2>📊 Organiser Master Multi-Jury Score Matrix</h2>
+            <p>Master breakdown of all 76 Teams across 6 Halls with individual Jury 1 & Jury 2 marks, consensus totals, and feedback.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" onclick="exportMultiJuryMatrixExcel()">📥 Export Matrix (.xls)</button>
+            <button class="btn btn-secondary btn-sm" onclick="renderMasterMultiJuryMatrix()">🔄 Refresh Matrix</button>
+          </div>
+        </div>
+
+        <div class="leaderboard-table-wrapper" style="margin-top: 1rem; overflow-x: auto;">
+          <table class="leaderboard-table" id="masterJuryMatrixTable">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Hall & Slot</th>
+                <th>Team Name & ID</th>
+                <th>Department & Mentor</th>
+                <th>Problem Statement</th>
+                <th style="text-align: center;">Jury 1 Score</th>
+                <th style="text-align: center;">Jury 2 Score</th>
+                <th style="text-align: center;">Consensus Total (/100)</th>
+                <th style="text-align: center;">Shortlist Status</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="masterJuryMatrixBody">
+              <!-- Rendered by renderMasterMultiJuryMatrix() in app.js -->
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -846,28 +892,113 @@
     </div>
   </footer>
 
-  <!-- MODAL 0: PROTECTED STAFF & JURY AUTHENTICATION MODAL -->
+  <!-- MODAL 0: PROTECTED STAFF & 12-JURY AUTHENTICATION MODAL -->
   <div class="modal-backdrop" id="staffAuthModal">
-    <div class="modal-card" style="max-width: 450px;">
+    <div class="modal-card" style="max-width: 620px; max-height: 92vh; overflow-y: auto;">
       <button class="modal-close-btn" onclick="closeModal('staffAuthModal')">✕</button>
       <div style="text-align: center; margin-bottom: 1.25rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
-        <h3 style="font-size: 1.3rem;">Organiser & Jury Portal Access</h3>
-        <p class="text-muted" style="font-size: 0.825rem; margin-top: 0.3rem;">
-          Enter the access passcode to unlock Organiser Admin Tools, Bulk Import, Jury Scoring, & Leaderboard.
+        <div style="font-size: 2.25rem; margin-bottom: 0.35rem;">🔐</div>
+        <h3 style="font-size: 1.35rem; font-weight: 800;">Jury & Organiser Portal Login</h3>
+        <p class="text-muted" style="font-size: 0.825rem; margin-top: 0.25rem;">
+          Each jury member and organiser has a separate login. Enter your assigned Login ID & Passcode to sign in.
         </p>
       </div>
 
-      <form onsubmit="event.preventDefault(); verifyStaffPasscode();">
-        <div class="form-group" style="margin-bottom: 1.25rem;">
-          <label for="staffPasscode">Access Passcode *</label>
-          <input type="password" id="staffPasscode" class="form-control" placeholder="Enter Organiser/Jury passcode..." autofocus>
+      <form onsubmit="event.preventDefault(); verifyStaffLogin();" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="staffUserId" style="font-size: 0.8rem; font-weight: 700;">Login ID / Username *</label>
+            <input type="text" id="staffUserId" class="form-control" placeholder="e.g. jury1, jury2, or organiser" required autofocus autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="staffPasscode" style="font-size: 0.8rem; font-weight: 700;">Passcode / Password *</label>
+            <input type="password" id="staffPasscode" class="form-control" placeholder="Enter your secret password" required autocomplete="current-password">
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          🔓 Unlock Organiser Portal
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-weight: 800; font-size: 0.95rem;">
+          🔓 Sign In with Credentials
         </button>
       </form>
+
+      <!-- ACCOUNTS & CREDENTIALS DIRECTORY -->
+      <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">📋 Quick Select Account & Credentials Reference:</span>
+          <span style="font-size: 0.7rem; color: var(--primary-orange); font-weight: 700;">Click card to auto-fill ID</span>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <!-- Organiser Master Card -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('organiser')" style="grid-column: span 2; background: rgba(0, 168, 89, 0.08); border: 1px solid var(--primary-green); padding: 0.65rem 0.85rem; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 800; font-size: 0.875rem; color: var(--text-main);">🏛️ Organiser Command Center</div>
+              <div style="font-size: 0.725rem; color: var(--text-muted);">All 6 Halls | Pass: <code>Organiser@2026</code></div>
+            </div>
+            <span class="hall-badge" style="font-size: 0.7rem; font-weight: 800;">ID: organiser</span>
+          </div>
+
+          <!-- Hall A Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury1')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🤖 Hall A: Dr. Aneesh Kumar</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury1</strong> | Pass: <code>Aneesh@HallA</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury2')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🤖 Hall A: Co-Jury (Panel A)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury2</strong> | Pass: <code>CoJuryA#2026</code></div>
+          </div>
+
+          <!-- Hall B Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury3')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">💻 Hall B: Dr. Vineetha</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury3</strong> | Pass: <code>Vineetha@HallB</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury4')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">💻 Hall B: Co-Jury (Panel B)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury4</strong> | Pass: <code>CoJuryB#2026</code></div>
+          </div>
+
+          <!-- Hall C Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury5')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🔬 Hall C: Dr. John Grasias</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury5</strong> | Pass: <code>John@HallC</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury6')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🔬 Hall C: Co-Jury (Panel C)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury6</strong> | Pass: <code>CoJuryC#2026</code></div>
+          </div>
+
+          <!-- Hall D Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury7')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">📊 Hall D: Mrs. Sariga</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury7</strong> | Pass: <code>Sariga@HallD</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury8')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">📊 Hall D: Co-Jury (Panel D)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury8</strong> | Pass: <code>CoJuryD#2026</code></div>
+          </div>
+
+          <!-- Hall E Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury9')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">✈️ Hall E: Mr. Sachin</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury9</strong> | Pass: <code>Sachin@HallE</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury10')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">✈️ Hall E: Co-Jury (Panel E)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury10</strong> | Pass: <code>CoJuryE#2026</code></div>
+          </div>
+
+          <!-- Hall F Juries -->
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury11')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🎨 Hall F: Dr. Bharathi</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury11</strong> | Pass: <code>Bharathi@HallF</code></div>
+          </div>
+          <div class="auth-quick-card" onclick="selectAuthAccount('jury12')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
+            <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🎨 Hall F: Co-Jury (Panel F)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury12</strong> | Pass: <code>CoJuryF#2026</code></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
