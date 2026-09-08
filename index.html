@@ -921,11 +921,11 @@
         </button>
       </form>
 
-      <!-- ACCOUNTS & CREDENTIALS DIRECTORY -->
+      <!-- ACCOUNTS & JURY SELECTION DIRECTORY (PASSWORDS HIDDEN) -->
       <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-          <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">📋 Quick Select Account & Credentials Reference:</span>
-          <span style="font-size: 0.7rem; color: var(--primary-orange); font-weight: 700;">Click card to auto-fill ID</span>
+          <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">📋 Quick Select Account Role:</span>
+          <span style="font-size: 0.7rem; color: var(--primary-green); font-weight: 700;">🔒 Passwords are Confidential</span>
         </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
@@ -933,7 +933,7 @@
           <div class="auth-quick-card" onclick="selectAuthAccount('organiser')" style="grid-column: span 2; background: rgba(0, 168, 89, 0.08); border: 1px solid var(--primary-green); padding: 0.65rem 0.85rem; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-weight: 800; font-size: 0.875rem; color: var(--text-main);">🏛️ Organiser Command Center</div>
-              <div style="font-size: 0.725rem; color: var(--text-muted);">All 6 Halls | Pass: <code>Organiser@2026</code></div>
+              <div style="font-size: 0.725rem; color: var(--text-muted);">Super Admin (All 6 Halls & Matrix)</div>
             </div>
             <span class="hall-badge" style="font-size: 0.7rem; font-weight: 800;">ID: organiser</span>
           </div>
@@ -941,64 +941,66 @@
           <!-- Hall A Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury1')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🤖 Hall A: Dr. Aneesh Kumar</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury1</strong> | Pass: <code>Aneesh@HallA</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury1</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury2')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🤖 Hall A: Co-Jury (Panel A)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury2</strong> | Pass: <code>CoJuryA#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury2</strong></div>
           </div>
 
           <!-- Hall B Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury3')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">💻 Hall B: Dr. Vineetha</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury3</strong> | Pass: <code>Vineetha@HallB</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury3</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury4')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">💻 Hall B: Co-Jury (Panel B)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury4</strong> | Pass: <code>CoJuryB#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury4</strong></div>
           </div>
 
           <!-- Hall C Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury5')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🔬 Hall C: Dr. John Grasias</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury5</strong> | Pass: <code>John@HallC</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury5</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury6')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🔬 Hall C: Co-Jury (Panel C)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury6</strong> | Pass: <code>CoJuryC#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury6</strong></div>
           </div>
 
           <!-- Hall D Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury7')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">📊 Hall D: Mrs. Sariga</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury7</strong> | Pass: <code>Sariga@HallD</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury7</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury8')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">📊 Hall D: Co-Jury (Panel D)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury8</strong> | Pass: <code>CoJuryD#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury8</strong></div>
           </div>
 
           <!-- Hall E Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury9')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">✈️ Hall E: Mr. Sachin</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury9</strong> | Pass: <code>Sachin@HallE</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury9</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury10')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">✈️ Hall E: Co-Jury (Panel E)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury10</strong> | Pass: <code>CoJuryE#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury10</strong></div>
           </div>
 
           <!-- Hall F Juries -->
           <div class="auth-quick-card" onclick="selectAuthAccount('jury11')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🎨 Hall F: Dr. Bharathi</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury11</strong> | Pass: <code>Bharathi@HallF</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury11</strong></div>
           </div>
           <div class="auth-quick-card" onclick="selectAuthAccount('jury12')" style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: var(--radius-md); cursor: pointer;">
             <div style="font-weight: 700; font-size: 0.825rem; color: var(--text-main);">🎨 Hall F: Co-Jury (Panel F)</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">ID: <strong>jury12</strong> | Pass: <code>CoJuryF#2026</code></div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Login ID: <strong>jury12</strong></div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
     </div>
   </div>
 

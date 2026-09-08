@@ -925,16 +925,18 @@ function openStaffAuthModal() {
 }
 
 function selectAuthAccount(userId) {
-  const uInput = document.getElementById('staffUserId');
-  const pInput = document.getElementById('staffPasscode');
-  if (uInput) uInput.value = userId;
-  if (pInput) {
-    pInput.value = '';
-    pInput.focus();
+  const userInput = document.getElementById('staffUserId');
+  const passInput = document.getElementById('staffPasscode');
+  if (userInput) {
+    userInput.value = userId;
+  }
+  if (passInput) {
+    passInput.value = '';
+    passInput.focus();
   }
   const acc = AUTH_ACCOUNTS[userId.toLowerCase()];
   if (acc) {
-    showToast(`Selected ${acc.name}. Please enter your passcode to log in.`, 'info');
+    showToast(`Selected ${acc.name} (${acc.role === 'organiser' ? 'Organiser' : acc.hall}). Please enter your password.`, 'info');
   }
 }
 
@@ -3008,6 +3010,40 @@ const KNOWN_TEAM_REGISTRY = {
   }
 };
 
+// GLOBAL GENDER RECOGNITION & INFERENCE HELPERS
+const FEMALE_NAMES_REGISTRY = [
+  "aqila", "sreelakshmi", "sruthi", "ardra", "sneha", "krishna", "akshaya", "akshitha", 
+  "adhwaitha", "priyadharshini", "raveena", "akshima", "theertha", "athira", "sandhya", "payal", 
+  "sresha", "hency", "aswathy", "devika", "niya", "madhumithra", "amritha", "stephy", "avani", 
+  "ananya", "nivya", "nimisha", "pooja", "nanditha", "thanmaya", "krishnapriya", "anusree", 
+  "nivedya", "anusha", "aleena", "adhirsha", "manjima", "thasni", "jesna", "shifa", "sreenandini", 
+  "anagha", "raniya", "jemima", "safeena", "thulasi", "nethara", "yamika", "sreethma", "abhinandana", 
+  "priya", "anitha", "kavya", "divya", "archana", "haritha", "geetha", "deepa", "lakshmi", 
+  "ranjitha", "ranjana", "fasna", "risa", "shaba", "nejila", "sinisha", "ridhika", "radhika", 
+  "jyothirmai", "jyothi", "srimathi", "mathi", "sweety", "shalo", "mohini", "vineetha", "roshini", 
+  "ashmi", "biniya", "afsana", "anjitha", "vinaya", "nivannya", "diya", "hibha", "sherin", "yasmin", 
+  "chandrapraba", "joshika", "mohana", "harshini", "ayisha", "ayesha", "fathima", "hasna", "abinaya", 
+  "abhinaya", "aparna", "sariga", "varsha", "shabika", "shahana", "afra", "jenisha", "moushika"
+];
+
+function detectFemale(nameStr) {
+  if (!nameStr) return false;
+  const clean = String(nameStr).toLowerCase().replace(/[^a-z]/g, ' ').trim();
+  const tokens = clean.split(/\s+/);
+  for (let k = 0; k < tokens.length; k++) {
+    const tok = tokens[k];
+    for (let fIdx = 0; fIdx < FEMALE_NAMES_REGISTRY.length; fIdx++) {
+      const fn = FEMALE_NAMES_REGISTRY[fIdx];
+      if (tok === fn || tok.startsWith(fn) || fn.includes(tok)) return true;
+    }
+  }
+  return false;
+}
+
+function inferGender(nameStr) {
+  return detectFemale(nameStr) ? 'Female' : 'Male';
+}
+
 function enrichTeamRecord(team) {
   if (!team) return team;
   const rawName = (team.name ? String(team.name) : '').trim();
@@ -3099,171 +3135,214 @@ function enrichTeamRecord(team) {
 
 
 function openTeamDetailModal(teamId) {
-  let team = state.teams.find(t => t.id === teamId);
-  if (!team) return;
-  
-  // Ensure rich enrichment
-  team = enrichTeamRecord(team);
-
-  const mentor = state.mentors.find(m => m.id === team.mentorId) || 
-                 (team.mentorName ? { name: team.mentorName, designation: 'Faculty Mentor' } : null);
-  const modalContent = document.getElementById('teamDetailContent');
-  if (!modalContent) return;
-
-  const femaleCount = (team.members || []).filter(m => m.gender === 'Female').length;
-  const isFemaleCompliant = femaleCount >= 1;
-
-  let memberRows = (team.members || []).map((m, idx) => {
-    const isLeader = m.role === 'Team Leader' || idx === 0;
-    const initial = (m.name ? m.name.charAt(0).toUpperCase() : (idx + 1));
-    const isFemale = m.gender === 'Female';
-    const genderChip = isFemale 
-      ? `<span class="gender-chip-female">👩 Female</span>`
-      : `<span class="gender-chip-male">👨 Male</span>`;
+  try {
+    if (!teamId) return;
+    const cleanId = String(teamId).trim();
     
-    return `
-      <tr>
-        <td style="font-weight: 700; color: var(--text-muted);">${idx + 1}</td>
-        <td style="font-weight: 600;">
-          <span class="member-avatar-badge">${initial}</span>
-          ${m.name || ('Member ' + (idx + 1))}
-          ${isLeader ? '<span style="font-size: 0.75rem; background: rgba(243, 111, 33, 0.15); color: var(--primary-orange); padding: 2px 6px; border-radius: 6px; margin-left: 4px; font-weight: 700;">👑 Leader</span>' : ''}
-        </td>
-        <td>${genderChip}</td>
-        <td><code style="background: var(--bg-input); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; border: 1px solid var(--border-color);">${m.rollNo || 'VERIFIED'}</code></td>
-        <td>${m.dept || team.department || 'AJK College'} <span style="font-size: 0.75rem; color: var(--text-muted);">(${m.year || '1st Year'})</span></td>
-        <td><a href="mailto:${m.email || ''}" style="color: var(--primary-green); text-decoration: none; font-size: 0.8rem;">${m.email || '—'}</a></td>
-      </tr>
-    `;
-  }).join('');
+    // Multi-fallback team search
+    let team = state.teams.find(t => 
+      t.id === cleanId || 
+      t.team_id === cleanId || 
+      String(t.teamNumber) === cleanId ||
+      (t.id && t.id.toLowerCase() === cleanId.toLowerCase()) ||
+      (t.name && t.name.toLowerCase() === cleanId.toLowerCase()) ||
+      (t.id && cleanId.startsWith(t.id))
+    );
 
-  const isIdea2Modal = team.id.includes('-B') || (team.name && team.name.includes('Idea 2'));
-  const isIdea1Modal = team.id.includes('-A') || (team.name && team.name.includes('Idea 1'));
-  const modalPsHeader = isIdea2Modal ? '💡 Chosen Problem Statement (Idea 2)' : isIdea1Modal ? '💡 Chosen Problem Statement (Idea 1)' : '💡 Chosen Problem Statement';
-  const modalPsColor = isIdea2Modal ? 'var(--primary-orange)' : 'var(--primary-green)';
+    if (!team && window.INITIAL_DATA && window.INITIAL_DATA.teams) {
+      team = window.INITIAL_DATA.teams.find(t => 
+        t.id === cleanId || 
+        t.team_id === cleanId || 
+        String(t.teamNumber) === cleanId ||
+        (t.id && t.id.toLowerCase() === cleanId.toLowerCase()) ||
+        (t.name && t.name.toLowerCase() === cleanId.toLowerCase())
+      );
+    }
 
-  const techStackList = (team.techStack1 || 'Python, React, Node.js, Cloud APIs')
-    .split(/[,/]+/)
-    .map(s => s.trim())
-    .filter(Boolean);
+    if (!team) {
+      console.warn('Team not found for ID:', teamId);
+      showToast('Team details currently unavailable for ID: ' + cleanId, 'warning');
+      return;
+    }
+    
+    // Ensure rich enrichment safely
+    try {
+      if (typeof enrichTeamRecord === 'function') {
+        team = enrichTeamRecord(team);
+      }
+    } catch (err) {
+      console.warn('enrichTeamRecord warning:', err);
+    }
 
-  const techPillsHtml = techStackList.map(tech => `<span class="tech-pill">⚡ ${tech}</span>`).join('');
+    const mentor = (state.mentors && state.mentors.find(m => m.id === team.mentorId)) || 
+                   (team.mentorName ? { name: team.mentorName, designation: 'Faculty Mentor' } : null);
+    
+    const modalContent = document.getElementById('teamDetailContent');
+    const modalElem = document.getElementById('teamDetailModal');
+    if (!modalContent || !modalElem) return;
 
-  modalContent.innerHTML = `
-    <div class="detail-modal-header">
-      <div>
-        <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-          🏆 ${team.name}
-        </h2>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.35rem;">
-          <span class="ps-code" style="font-size: 0.75rem; padding: 2px 8px;">${team.id}</span>
-          <span class="ps-category ${team.category}" style="font-size: 0.75rem; padding: 2px 8px;">${team.category} Track</span>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">🏛️ ${team.department || 'AJK College of Arts & Science'}</span>
-        </div>
-      </div>
-      <div style="text-align: right;">
-        <span class="rule-chip ${isFemaleCompliant ? 'pass' : 'fail'}" style="font-size: 0.75rem;">
-          ${isFemaleCompliant ? 'SIH Rules Verified ✅' : 'Rule Check Needed ⚠️'}
-        </span>
-      </div>
-    </div>
+    const membersList = Array.isArray(team.members) ? team.members : [];
+    const femaleCount = membersList.filter(m => m && (m.gender === 'Female' || detectFemale(m.name))).length;
+    const isFemaleCompliant = femaleCount >= 1;
 
-    <div class="team-compliance-banner">
-      <div>
-        <strong>👥 Team Composition:</strong> Exactly 6 Members Confirmed (${(team.members || []).length}/6)
-      </div>
-      <div>
-        <strong>👩 Female Representation:</strong> 
-        <span style="font-weight: 700; color: ${isFemaleCompliant ? 'var(--primary-green)' : '#ef4444'};">
-          ${femaleCount} Female Member${femaleCount !== 1 ? 's' : ''} Included ${isFemaleCompliant ? '✅ (Rule Passed)' : '⚠️ (Min 1 Req.)'}
-        </span>
-      </div>
-    </div>
-
-    <!-- PROBLEM STATEMENT & ABSTRACT CARD -->
-    <div class="detail-card-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <h4 style="color: ${modalPsColor}; margin: 0; font-size: 0.95rem;">${modalPsHeader}</h4>
-        <span class="ps-code" style="font-size: 0.75rem;">${team.problemStatementId || 'PS'}</span>
-      </div>
-      <p style="font-weight: 700; font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem;">
-        ${team.psTitle1 || 'Smart Hackathon Problem Statement'}
-      </p>
+    let memberRows = membersList.map((m, idx) => {
+      if (!m) return '';
+      const isLeader = m.role === 'Team Leader' || idx === 0;
+      const initial = (m.name ? String(m.name).charAt(0).toUpperCase() : (idx + 1));
+      const isFemale = m.gender === 'Female' || detectFemale(m.name);
+      const genderChip = isFemale 
+        ? `<span class="gender-chip-female">👩 Female</span>`
+        : `<span class="gender-chip-male">👨 Male</span>`;
       
-      <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
-        <strong style="font-size: 0.85rem; color: var(--text-main);">Proposed Solution & Innovation Abstract:</strong>
-        <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.5;">
-          ${team.solution1 || 'Proposed comprehensive solution abstract submitted for SIH 2026 Internal Pitching.'}
-        </p>
-      </div>
+      return `
+        <tr>
+          <td style="font-weight: 700; color: var(--text-muted);">${idx + 1}</td>
+          <td style="font-weight: 600;">
+            <span class="member-avatar-badge">${initial}</span>
+            ${m.name || ('Member ' + (idx + 1))}
+            ${isLeader ? '<span style="font-size: 0.75rem; background: rgba(243, 111, 33, 0.15); color: var(--primary-orange); padding: 2px 6px; border-radius: 6px; margin-left: 4px; font-weight: 700;">👑 Leader</span>' : ''}
+          </td>
+          <td>${genderChip}</td>
+          <td><code style="background: var(--bg-input); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; border: 1px solid var(--border-color);">${m.rollNo || 'VERIFIED'}</code></td>
+          <td>${m.dept || team.department || 'AJK College'} <span style="font-size: 0.75rem; color: var(--text-muted);">(${m.year || '1st Year'})</span></td>
+          <td><a href="mailto:${m.email || ''}" style="color: var(--primary-green); text-decoration: none; font-size: 0.8rem;">${m.email || '—'}</a></td>
+        </tr>
+      `;
+    }).join('');
 
-      <div style="margin-top: 0.75rem;">
-        <strong style="font-size: 0.85rem; color: var(--text-main);">Implemented / Suggested Tech Stack:</strong>
-        <div class="tech-tag-group">
-          ${techPillsHtml}
+    const isIdea2Modal = (team.id && String(team.id).includes('-B')) || (team.name && String(team.name).includes('Idea 2'));
+    const isIdea1Modal = (team.id && String(team.id).includes('-A')) || (team.name && String(team.name).includes('Idea 1'));
+    const modalPsHeader = isIdea2Modal ? '💡 Chosen Problem Statement (Idea 2)' : isIdea1Modal ? '💡 Chosen Problem Statement (Idea 1)' : '💡 Chosen Problem Statement';
+    const modalPsColor = isIdea2Modal ? 'var(--primary-orange)' : 'var(--primary-green)';
+
+    const techStackList = (team.techStack1 || team.techStack || 'Python, React, Node.js, Cloud APIs')
+      .split(/[,/]+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const techPillsHtml = techStackList.map(tech => `<span class="tech-pill">⚡ ${tech}</span>`).join('');
+
+    modalContent.innerHTML = `
+      <div class="detail-modal-header">
+        <div>
+          <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            🏆 ${team.name}
+          </h2>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.35rem;">
+            <span class="ps-code" style="font-size: 0.75rem; padding: 2px 8px;">${team.id}</span>
+            <span class="hall-badge" style="font-size: 0.75rem; padding: 2px 8px;">📍 ${team.hall || 'Hall A'}</span>
+            <span style="font-size: 0.75rem; color: var(--primary-orange); font-weight: 700;">⏰ ${team.slot || '10.30 - 11.15am'}</span>
+            <span class="ps-category ${team.category || 'Software'}" style="font-size: 0.75rem; padding: 2px 8px;">${team.category || 'Software'} Track</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">🏛️ ${team.department || 'AJK College of Arts & Science'}</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span class="rule-chip ${isFemaleCompliant ? 'pass' : 'fail'}" style="font-size: 0.75rem;">
+            ${isFemaleCompliant ? 'SIH Rules Verified ✅' : 'Rule Check Needed ⚠️'}
+          </span>
         </div>
       </div>
-    </div>
 
-    <!-- TEAM ROSTER TABLE -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-      <h4 style="font-size: 1rem; margin: 0;">👥 Team Roster (Official 6-Member List)</h4>
-      <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')" style="font-size: 0.75rem; padding: 4px 10px;">
-        ✏️ Edit / Update Roster
-      </button>
-    </div>
+      <div class="team-compliance-banner">
+        <div>
+          <strong>👥 Team Composition:</strong> Exactly 6 Members Confirmed (${membersList.length}/6)
+        </div>
+        <div>
+          <strong>👩 Female Representation:</strong> 
+          <span style="font-weight: 700; color: ${isFemaleCompliant ? 'var(--primary-green)' : '#ef4444'};">
+            ${femaleCount} Female Member${femaleCount !== 1 ? 's' : ''} Included ${isFemaleCompliant ? '✅ (Rule Passed)' : '⚠️ (Min 1 Req.)'}
+          </span>
+        </div>
+      </div>
 
-    <div style="overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-      <table class="roster-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Student Name</th>
-            <th>Gender</th>
-            <th>Roll No</th>
-            <th>Department / Year</th>
-            <th>Institutional Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${memberRows}
-        </tbody>
-      </table>
-    </div>
-
-    <!-- MENTOR CARD -->
-    <div class="detail-card-box" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <div>
-        <h4 style="font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--primary-orange);">👨‍🏫 Assigned Faculty Mentor</h4>
-        <p style="font-weight: 700; font-size: 0.95rem; margin: 0;">
-          ${team.mentorName || (mentor ? mentor.name : 'Mr. V. Muthusaravanan')}
+      <!-- PROBLEM STATEMENT & ABSTRACT CARD -->
+      <div class="detail-card-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h4 style="color: ${modalPsColor}; margin: 0; font-size: 0.95rem;">${modalPsHeader}</h4>
+          <span class="ps-code" style="font-size: 0.75rem;">${team.problemStatementId || 'PS'}</span>
+        </div>
+        <p style="font-weight: 700; font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem;">
+          ${team.psTitle1 || 'Smart Hackathon Problem Statement'}
         </p>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">
-          ${mentor && mentor.designation ? mentor.designation + ' | ' : ''}${team.department || 'AJK College of Arts & Science'}
-        </span>
-      </div>
-      <div>
-        <a href="mailto:${mentor && mentor.email ? mentor.email : 'communitylead@aiif.in'}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;">
-          📧 Contact Mentor
-        </a>
-      </div>
-    </div>
+        
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size: 0.85rem; color: var(--text-main);">Proposed Solution & Innovation Abstract:</strong>
+          <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.5;">
+            ${team.solution1 || 'Proposed comprehensive solution abstract submitted for SIH 2026 Internal Pitching.'}
+          </p>
+        </div>
 
-    <!-- FOOTER ACTIONS -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-      <div style="display: flex; gap: 0.5rem;">
-        <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')">
-          ✏️ Edit Details
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="printTeamSlip('${team.id}')">
-          🖨️ Print Slip
+        <div style="margin-top: 0.75rem;">
+          <strong style="font-size: 0.85rem; color: var(--text-main);">Implemented / Suggested Tech Stack:</strong>
+          <div class="tech-tag-group">
+            ${techPillsHtml}
+          </div>
+        </div>
+      </div>
+
+      <!-- TEAM ROSTER TABLE -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <h4 style="font-size: 1rem; margin: 0;">👥 Team Roster (Official 6-Member List)</h4>
+        <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')" style="font-size: 0.75rem; padding: 4px 10px;">
+          ✏️ Edit / Update Roster
         </button>
       </div>
-      <button class="btn btn-primary" onclick="closeModal('teamDetailModal')">Close Details</button>
-    </div>
-  `;
 
-  document.getElementById('teamDetailModal').classList.add('active');
+      <div style="overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Gender</th>
+              <th>Roll No</th>
+              <th>Department / Year</th>
+              <th>Institutional Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${memberRows}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MENTOR CARD -->
+      <div class="detail-card-box" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h4 style="font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--primary-orange);">👨‍🏫 Assigned Faculty Mentor</h4>
+          <p style="font-weight: 700; font-size: 0.95rem; margin: 0;">
+            ${team.mentorName || (mentor ? mentor.name : 'Faculty Mentor')}
+          </p>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">
+            ${mentor && mentor.designation ? mentor.designation + ' | ' : ''}${team.department || 'AJK College of Arts & Science'}
+          </span>
+        </div>
+        <div>
+          <a href="mailto:${mentor && mentor.email ? mentor.email : 'communitylead@aiif.in'}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;">
+            ✉️ Contact Mentor
+          </a>
+        </div>
+      </div>
+
+      <!-- FOOTER ACTIONS -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" onclick="openEditTeamModal('${team.id}')">
+            ✏️ Edit Details
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="printTeamSlip('${team.id}')">
+            🖨️ Print Slip
+          </button>
+        </div>
+        <button class="btn btn-primary" onclick="closeModal('teamDetailModal')">Close Details</button>
+      </div>
+    `;
+
+    modalElem.classList.add('active');
+  } catch (globalModalErr) {
+    console.error('Error opening team detail modal:', globalModalErr);
+    showToast('Failed to open team details: ' + globalModalErr.message, 'error');
+  }
 }
 
 function openEditTeamModal(teamId) {
