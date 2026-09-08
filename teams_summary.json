@@ -32,9 +32,59 @@
         "name": "SREYAS KALLAZHI",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "24UGAL051",
+        "email": "sreyaskallazhi2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "AQILA SABIR",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGAL015",
+        "email": "aqilasabir2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "SREELAKSHMI S",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGAL038",
+        "email": "sreelakshmis2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "SUNIL KISHOR S K",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGAL016",
+        "email": "sunilkishorsk2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "VAISHNAV KR",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGAL055",
+        "email": "vaishnavkr2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "RAHULKRISHNA U",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "24UGAL651",
+        "email": "rahulkrishnau2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "AI-Based Automated Urban Parcel Mapping and Cadastral Feature Extraction System using Drone Imagery leveraging deep learning segmentation.",
+    "techStack1": "Python, OpenCV, PyTorch, GIS Mapping, LoRaWAN"
   },
   {
     "teamNumber": 2,
@@ -69,9 +119,59 @@
         "name": "SRUTHI B",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "24UGAL053",
+        "email": "sruthib2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "ADITH K",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "24UGAL005",
+        "email": "adithk2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "ARDRA O",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGAL017",
+        "email": "ardrao2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "SHANAVAS",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGAL047",
+        "email": "shanavas2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "SNEHA R",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "24UGAL050",
+        "email": "snehar2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "MOHAMED MUHSIN MV",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGAL035",
+        "email": "muhsinmv2425@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains using Machine Learning and Live Railway Telemetry.",
+    "techStack1": "Python, ML Telemetry, FastAPI, React Native"
   },
   {
     "teamNumber": 3,
@@ -106,9 +206,59 @@
         "name": "A.FATHIMA RIZWANA",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "5738",
+        "email": "afathimarizwana2026@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5702",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5703",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5704",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5705",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5706",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for AI-Powered Email Threat Detection, GeoLocation & Forensic Intelligence Platform.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 4,
@@ -143,9 +293,59 @@
         "name": "A.FATHIMA RIZWANA",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "5738",
+        "email": "afathimarizwana2026@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5702",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5703",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5704",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5705",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5706",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing AI-Powered Email Threat Detection, GeoLocation & Forensic Intelligence Platform with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 5,
@@ -179,10 +379,60 @@
       {
         "name": "Abhijith C",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGAR001",
+        "email": "abhijithc2425@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "BCA Augmented Reality & Virtual Reality"
+        "rollNo": "24UGAR002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGAR003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGAR004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGAR005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGAR006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Develop a web-based interactive 3D visualization platform that integrates numerical ocean model outputs and in-situ observations. with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 6,
@@ -217,9 +467,59 @@
         "name": "Abhinav ks",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA"
+        "rollNo": "25UGCA057",
+        "email": "abhinavksbca2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abhinandh",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGCA003",
+        "email": "abhinandh2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abhi",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGCA001",
+        "email": "abhi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adhi",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGCA005",
+        "email": "adhi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Jobi",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA023",
+        "email": "jobi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya R",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGCA010",
+        "email": "ananya2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Low-latency distributed microservices orchestrator with robotic process automation for streamlining multi-step enterprise workflows.",
+    "techStack1": "Node.js, Redis, Docker, React, Express"
   },
   {
     "teamNumber": 7,
@@ -254,9 +554,59 @@
         "name": "Abhinav ks",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA"
+        "rollNo": "25UGCA057",
+        "email": "abhinavksbca2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abhinandh",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGCA003",
+        "email": "abhinandh2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abhi",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGCA001",
+        "email": "abhi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adhi",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGCA005",
+        "email": "adhi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Jobi",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA023",
+        "email": "jobi2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya R",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGCA010",
+        "email": "ananya2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Computer-vision OCR document parser validating administrative forms and student credentials against official registers.",
+    "techStack1": "Tesseract OCR, Python, FastAPI, MongoDB"
   },
   {
     "teamNumber": 8,
@@ -291,9 +641,59 @@
         "name": "Abhinav s",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Computer Science with Data Analytics"
+        "rollNo": "25UGDA003",
+        "email": "abhinavs2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aasil",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGDA004",
+        "email": "aasil2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Brinda u",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGDA005",
+        "email": "brindau2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ashna",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGDA006",
+        "email": "ashna2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Kirosh tk",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGDA007",
+        "email": "kiroshtk2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nivedh s",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGDA008",
+        "email": "nivedhs2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "AI-driven portal for Academia-Industry collaboration facilitating skill gap mapping, verified internship matching, and automated campus placement workflows.",
+    "techStack1": "Python, FastAPI, Next.js, PostgreSQL, Machine Learning Recommender"
   },
   {
     "teamNumber": 9,
@@ -328,9 +728,59 @@
         "name": "Abhishek Shaji",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Artificial Intelligence & Machine Learning"
+        "rollNo": "25UGAI003",
+        "email": "abhishekshaji2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswathy Akash",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGAI009",
+        "email": "aswathyakash2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Devika Das M",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGAI014",
+        "email": "devikadasm2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Niya P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGAI029",
+        "email": "niyap2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Roopesh T",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGAI036",
+        "email": "roopesht2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Athul P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGAI010",
+        "email": "athulp2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Thermal anomaly detection algorithm combining infrared satellite channels and localized weather telemetry for rapid industrial fire alerts.",
+    "techStack1": "Python, OpenCV, Satellite Imaging, FastAPI"
   },
   {
     "teamNumber": 10,
@@ -365,9 +815,59 @@
         "name": "Abhishek Shaji",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Artificial Intelligence & Machine Learning"
+        "rollNo": "25UGAI003",
+        "email": "abhishekshaji2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswathy Akash",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGAI009",
+        "email": "aswathyakash2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Devika Das M",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGAI014",
+        "email": "devikadasm2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Niya P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGAI029",
+        "email": "niyap2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Roopesh T",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGAI036",
+        "email": "roopesht2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Athul P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGAI010",
+        "email": "athulp2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "AI-Enabled Learning Platform for Skill-Gap Analysis & Auto-MCQ Generation based on curriculum taxonomy.",
+    "techStack1": "React, Python, LangChain, PostgreSQL"
   },
   {
     "teamNumber": 11,
@@ -402,9 +902,59 @@
         "name": "Abinaya S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Forensic Science"
+        "rollNo": "25UGFS003",
+        "email": "sabinaya2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGFS002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGFS003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGFS004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGFS005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGFS006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Student Innovation.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 12,
@@ -439,9 +989,59 @@
         "name": "Abinaya S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Forensic Science"
+        "rollNo": "25UGFS003",
+        "email": "sabinaya2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGFS002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGFS003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGFS004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGFS005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGFS006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Student Innovation with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 13,
@@ -476,9 +1076,59 @@
         "name": "AFRA I",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.COM CA"
+        "rollNo": "25UGPA001",
+        "email": "afrai2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Sabarimanikandan S",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGPA002",
+        "email": "sabarimanikandans2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "MUHSINA R",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGPA003",
+        "email": "muhsinar2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "yuraj kumar",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGPA004",
+        "email": "yurajkumar2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "amrutham  s",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "25UGPA005",
+        "email": "amruthams2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Niranjana G",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGPA006",
+        "email": "niranjanag2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Integrated disaster risk mitigation hardware console combining seismic/flood warning sensors with emergency supply chain management tools.",
+    "techStack1": "IoT Flood/Vibration Sensors, GSM SOS Relay, Python Dashboard, Cloud Alerts"
   },
   {
     "teamNumber": 14,
@@ -512,10 +1162,60 @@
       {
         "name": "Ahamed roshan.A",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGDA013",
+        "email": "ahamedroshan14@gmail.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Computer Science with Data Analytics"
+        "rollNo": "24UGDA002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGDA003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGDA004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGDA005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGDA006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Computer Science with Data Analytics",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Portal for Academia - Industry collaboration for Skill Mapping, Internships and Placement.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 15,
@@ -550,9 +1250,59 @@
         "name": "Ajith Tm",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA"
+        "rollNo": "24UGCA007",
+        "email": "ajithtm2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sneha N",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGCA051",
+        "email": "snehan2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Aneesh S",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCA011",
+        "email": "aneeshs2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sreekanth P",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGCA049",
+        "email": "sreekanthp2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Arjun S",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCA014",
+        "email": "arjuns2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Nikhil T K",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCA036",
+        "email": "nikhiltk2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Cryptographically verified digital land registry utilizing OCR translation and blockchain timestamping to eliminate duplicate deed fraud.",
+    "techStack1": "Solidity, Hyperledger, Python OCR, React, Node.js"
   },
   {
     "teamNumber": 16,
@@ -587,9 +1337,59 @@
         "name": "Akshaya Rajesh",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "5602",
+        "email": "akshayarajesh2627@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5602",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5603",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5604",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5605",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5606",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Attacks and prevention of voice cloning impersonating attacks.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 17,
@@ -624,9 +1424,59 @@
         "name": "Akshaya Rajesh",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "5602",
+        "email": "akshayarajesh2627@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5602",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5603",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5604",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5605",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5606",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Attacks and prevention of voice cloning impersonating attacks with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 18,
@@ -661,9 +1511,59 @@
         "name": "Amal Thomas",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "25PGCY002",
+        "email": "amalthomas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25PGCY002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25PGCY003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25PGCY004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25PGCY005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25PGCY006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Secure Digital Document Management System for Legal and Investigation Documents.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 19,
@@ -698,9 +1598,59 @@
         "name": "Amal Thomas",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "25PGCY002",
+        "email": "amalthomas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25PGCY002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25PGCY003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25PGCY004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25PGCY005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25PGCY006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Secure Digital Document Management System for Legal and Investigation Documents with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 20,
@@ -735,9 +1685,59 @@
         "name": "Amrutha Manoj",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "25UGAL009",
+        "email": "amruthamanoj2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGAL002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGAL003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGAL004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGAL005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGAL006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Honey Chain: A block chain-based system for honey traceability and smart beekeeping management..",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 21,
@@ -772,9 +1772,59 @@
         "name": "Anusree S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA075",
+        "email": "anusrees2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nivedya S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA034",
+        "email": "nivedyas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Akshaya S",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGCA011",
+        "email": "akshayas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Anusha K",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGCA013",
+        "email": "anushak2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aleena R",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "25UGCA008",
+        "email": "aleenar2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adhirsha B",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGCA006",
+        "email": "adhirshab2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Offline mesh communication network mapping safe escape paths and real-time shelter capacity during severe flooding and landslides.",
+    "techStack1": "ESP32 LoRa Mesh, Android Offline Maps, SQLite"
   },
   {
     "teamNumber": 22,
@@ -809,9 +1859,59 @@
         "name": "Anusree S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA075",
+        "email": "anusrees2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nivedya S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA034",
+        "email": "nivedyas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Akshaya S",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGCA011",
+        "email": "akshayas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Anusha K",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGCA013",
+        "email": "anushak2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aleena R",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "25UGCA008",
+        "email": "aleenar2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adhirsha B",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGCA006",
+        "email": "adhirshab2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Smart IoT power metering and occupancy-based appliance switching kit drastically curtailing standby electrical wastage across campus buildings.",
+    "techStack1": "NodeMCU, Current Sensors, MQTT, InfluxDB, Grafana"
   },
   {
     "teamNumber": 23,
@@ -846,9 +1946,59 @@
         "name": "ARISH M",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Digital & Cyber Forensic Science"
+        "rollNo": "24UGDC002",
+        "email": "arishm2425@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGDC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGDC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGDC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGDC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGDC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Block chain & Cyber Security.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 24,
@@ -883,9 +2033,59 @@
         "name": "ARISH M",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Digital & Cyber Forensic Science"
+        "rollNo": "24UGDC002",
+        "email": "arishm2425@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGDC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGDC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGDC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGDC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGDC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Block chain & Cyber Security with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 25,
@@ -920,9 +2120,59 @@
         "name": "Arun N",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Artificial Intelligence & Machine Learning"
+        "rollNo": "24UGAI012",
+        "email": "arunn2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sandhya Sivan",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGAI040",
+        "email": "sandhyasivan2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Payal Bimal",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGAI033",
+        "email": "payalbimal2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "ARJUN KG",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGAI011",
+        "email": "arjunkg2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sresha S",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "24UGAI049",
+        "email": "sreshas2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "HENCY G",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "24UGAI021",
+        "email": "hencyg2425@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Deep convolutional recurrent network processing multi-spectral satellite imagery for early cyclone eye detection, track forecasting, and intensity estimation.",
+    "techStack1": "Python, TensorFlow, PyTorch, Satellite Telemetry, FastAPI"
   },
   {
     "teamNumber": 26,
@@ -956,10 +2206,60 @@
       {
         "name": "Ashfaq Ashraf",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "25UGAI012",
+        "email": "ashfaqashraf2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Artificial Intelligence & Machine Learning"
+        "rollNo": "25UGAI002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGAI003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGAI004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGAI005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGAI006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Artificial Intelligence & Machine Learning",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Development of a Multi-Vendor DVR/NVR Forensic Analysis Tool for Standardized Acquisition, Recovery, and Analysis of Surveillance Evidence.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 27,
@@ -994,9 +2294,59 @@
         "name": "Athira.S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BBA CA"
+        "rollNo": "25UGBC019",
+        "email": "athiras2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Sandeep",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGBC020",
+        "email": "sandeep2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Amith Prakash J",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGBC021",
+        "email": "amithprakash2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ramjith babu",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGBC022",
+        "email": "ramjithbabu2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rayan al riham pr",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGBC023",
+        "email": "rayanalriham2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Basil Zaman",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGBC024",
+        "email": "basilzaman2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Hardware sensor telemetry and automated survey tracking system designed for remote field data acquisition and community needs assessment.",
+    "techStack1": "ESP32 Microcontroller, LoRaWAN, Flutter App, Firebase Analytics"
   },
   {
     "teamNumber": 28,
@@ -1031,9 +2381,59 @@
         "name": "Ayisha fasna M",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Augmented Reality & Virtual Reality"
+        "rollNo": "24UGAR005",
+        "email": "ayishafasnam2425@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGAR002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGAR003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGAR004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGAR005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGAR006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Augmented Reality & Virtual Reality",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for AR-Based Vocational Training Simulator for Industrial Safety in Jharkhand's Mining & Manufacturing Sector.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 29,
@@ -1067,10 +2467,60 @@
       {
         "name": "Aysha parveen",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGCD010",
+        "email": "ayshaparveen2425@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Costume Design & Fashion"
+        "rollNo": "24UGCD002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCD003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGCD004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCD005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCD006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Survey/resurvey of rural agricultural land in India.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 30,
@@ -1105,9 +2555,59 @@
         "name": "Deepak Dev S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Visual Communication & Electronics Media"
+        "rollNo": "24UGVC007",
+        "email": "deepakdevs2425@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGVC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGVC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGVC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGVC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGVC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Cooperative Gig Services Platform for Household & Community Services.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 31,
@@ -1142,9 +2642,59 @@
         "name": "Dharshan R",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BBA CA"
+        "rollNo": "25UGBC023",
+        "email": "rdharshan2526@ajkcs.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Bharath S",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGBC024",
+        "email": "bharaths2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nivedihitha M",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGBC025",
+        "email": "nivedihitham2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abishiek B",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGBC026",
+        "email": "abishiekb2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Mohammed Ismail S",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGBC027",
+        "email": "mohammedismails2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Jumail K",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGBC028",
+        "email": "jumailk2526@ajkcas.com",
+        "dept": "BBA CA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Smart IoT water purification and real-time contaminant monitoring unit for rural and mining-affected groundwater sources.",
+    "techStack1": "TDS/Turbidity Sensors, Raspberry Pi / Arduino, MQTT, React Web Dashboard"
   },
   {
     "teamNumber": 32,
@@ -1179,9 +2729,59 @@
         "name": "Divya Sri T",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "M.Sc Cyber Security"
+        "rollNo": "25UGC032",
+        "email": "divyasrit2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "M.Sc Cyber Security",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Problem Statement SIH26184.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 33,
@@ -1216,9 +2816,59 @@
         "name": "Harisath Anandha kumar",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Catering Science & Hotel Management"
+        "rollNo": "25UGHM018",
+        "email": "harisathanandhakumar2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGHM002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGHM003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGHM004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGHM005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGHM006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Catering Science & Hotel Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Solar powered smart mini cold refrigerator to storege system for fresh vegetable in North eastern area.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 34,
@@ -1253,9 +2903,59 @@
         "name": "Jenisha Sen",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "25UGC034",
+        "email": "jenishasen2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Problem Statement SIH26061.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 35,
@@ -1290,9 +2990,59 @@
         "name": "Johen S John",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "25UGAL024",
+        "email": "johensjohn2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGAL002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGAL003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGAL004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGAL005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGAL006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for To develop an Artificial Intelligence (AI) / Machine Learning (ML) based system for identification, classification, and prediction of different tropical cyclone patterns using multi-source satellite data..",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 36,
@@ -1327,9 +3077,59 @@
         "name": "Joshika s m",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Digital & Cyber Forensic Science"
+        "rollNo": "26UGDC001",
+        "email": "joshikasm2627@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "26UGDC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "26UGDC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "26UGDC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "26UGDC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "26UGDC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Al-Based Fake Identity & Document Screening System.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 37,
@@ -1364,9 +3164,59 @@
         "name": "Joshika s m",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Digital & Cyber Forensic Science"
+        "rollNo": "26UGDC001",
+        "email": "joshikasm2627@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "26UGDC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "26UGDC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "26UGDC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "26UGDC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "26UGDC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Digital & Cyber Forensic Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Al-Based Fake Identity & Document Screening System with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 38,
@@ -1400,10 +3250,60 @@
       {
         "name": "K.K.Soorya",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGCA077",
+        "email": "kksoorya2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Bhavadas.B",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "24UGCA020",
+        "email": "bhavadasb2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sreenandini.P.M",
+        "role": "Member 3",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "24UGCA052",
+        "email": "sreenandinipm2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Muhammed Fanoos.M.A",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGCA029",
+        "email": "muhammedfanoosma2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sreesanth.R",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCA053",
+        "email": "sreesanthr2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Anagha Krishnan.C",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "24UGCA013",
+        "email": "anaghakrishnanc2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Intelligent code compilation, vulnerability scanning, and automated rubric grading pipeline tailored for university computer labs and hackathons.",
+    "techStack1": "Docker, Python, FastAPI, WebSockets, Monaco Editor"
   },
   {
     "teamNumber": 39,
@@ -1438,9 +3338,59 @@
         "name": "Krishna Theertha S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Computer Science"
+        "rollNo": "25UGCS018",
+        "email": "krishnatheerthas2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin P",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGCS005",
+        "email": "aswinp2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Akshaya u",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGCS002",
+        "email": "akshayau2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adhwaitha M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGCS001",
+        "email": "adhwaitham2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Sanfar S",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCS029",
+        "email": "sanfars2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Sivaprakash R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGCS032",
+        "email": "sivaprakashr2526@ajkcas.com",
+        "dept": "B.Sc Computer Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Digital Platform for Efficient Agricultural Procurement, Mandi Slot Booking and Queue Management.",
+    "techStack1": "React Native, Node.js, PostgreSQL, SMS Gateway"
   },
   {
     "teamNumber": 40,
@@ -1475,9 +3425,59 @@
         "name": "Krishnapriya. K. U",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "MBA"
+        "rollNo": "5503",
+        "email": "krishnapriyakv2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswaon j",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "5512",
+        "email": "aswaonj2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Abhilash R",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5520",
+        "email": "abhilashr2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Sheik abdul kadhar",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "5528",
+        "email": "sheikabdulkadhar2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Adith K",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5534",
+        "email": "adithk2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin A",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5540",
+        "email": "aswina2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Crisis supply chain allocation dashboard coordinating volunteer deployment, relief material inventory, and emergency shelter bed capacity during regional disasters.",
+    "techStack1": "React, Node.js, Leaflet GIS, Supabase"
   },
   {
     "teamNumber": 41,
@@ -1512,9 +3512,59 @@
         "name": "Lifa fathima F",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Cybersecurity with Data Science"
+        "rollNo": "6218",
+        "email": "lifafathimaf2627@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "6202",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "6203",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "6204",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "6205",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "6206",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Solar powered smart mini cold storage system for fresh vegetables in North eastern region ( NER).",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 42,
@@ -1549,9 +3599,59 @@
         "name": "MADHUMITHRA K",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA026",
+        "email": "madhumithrak2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "AMRITHA R",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA008",
+        "email": "amrithar2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "STEPHY K",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGCA054",
+        "email": "stephyk2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "MOHAMMAD SHAZIN",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGCA031",
+        "email": "mohammadshazin2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "ATHUL O",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA017",
+        "email": "athulo2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "NAVEEN N",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGCA034",
+        "email": "naveenn2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Integrated talent exchange and skill verification platform connecting university student portfolios directly with enterprise internship pipelines.",
+    "techStack1": "React, Express, PostgreSQL, TailwindCSS"
   },
   {
     "teamNumber": 43,
@@ -1586,9 +3686,59 @@
         "name": "MADHUMITHRA K",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA026",
+        "email": "madhumithrak2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "AMRITHA R",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA008",
+        "email": "amrithar2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "STEPHY K",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGCA054",
+        "email": "stephyk2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "MOHAMMAD SHAZIN",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGCA031",
+        "email": "mohammadshazin2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "ATHUL O",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA017",
+        "email": "athulo2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "NAVEEN N",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGCA034",
+        "email": "naveenn2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Longitudinal employment telemetry and analytics engine tracking graduate placement trajectories and quantifying institutional training ROI.",
+    "techStack1": "Python, Streamlit, PostgreSQL, Chart.js"
   },
   {
     "teamNumber": 44,
@@ -1623,9 +3773,59 @@
         "name": "Manjima Muralidharan",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "MBA"
+        "rollNo": "6271",
+        "email": "manjimamuralidharanm2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Thasni Rahiman",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "6275",
+        "email": "thasnirahiman2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Jesna K",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "6280",
+        "email": "jesnak2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Shifa K",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "6285",
+        "email": "shifak2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Pooja Krishna",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "6290",
+        "email": "poojakrishna2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Anurag P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "6295",
+        "email": "anuragp2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Hyperlocal eco-tourism experiential marketplace integrating verified home-stays, indigenous artisan craft booking, and dynamic off-peak pricing models.",
+    "techStack1": "React, Node.js, Stripe Gateway, MongoDB, AWS"
   },
   {
     "teamNumber": 45,
@@ -1659,10 +3859,60 @@
       {
         "name": "Mishab M",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "25UGCA027",
+        "email": "mishabm2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Muhammed Ranshif M",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "25UGCA030",
+        "email": "muhammedranshifm2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Afridh A",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGCA009",
+        "email": "afridha2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Niju T R",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "25UGCA035",
+        "email": "nijutr2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Shon S",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA047",
+        "email": "shons2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Thanmaya Rajesh",
+        "role": "Member 6",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA055",
+        "email": "thanmayarajesh2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Early warning hydrological prediction mesh aggregating uphill ultrasonic stream gauges, soil moisture sensors, and radar rainfall feeds to trigger sirens before flash floods.",
+    "techStack1": "LoRaWAN, ESP32, Python ML, GeoServer, React"
   },
   {
     "teamNumber": 46,
@@ -1696,10 +3946,60 @@
       {
         "name": "Muhammed Irfan kv",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "6095",
+        "email": "muhammedirfan@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Muhammed afreed an",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "6098",
+        "email": "muhammedafreedan2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Amritha.p",
+        "role": "Member 3",
         "gender": "Female",
-        "dept": "MBA"
+        "rollNo": "6102",
+        "email": "amrithap2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Libin pb",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "6115",
+        "email": "libinpb2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Praveen Krishna. U",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "6124",
+        "email": "praveenkrishnau2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vimal. G",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "6130",
+        "email": "vimalg2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "IoT-enabled smart physical learning toys and gamified tactile modules designed to foster early cognitive skills, problem-solving, and STEM fundamentals with adaptive embedded feedback.",
+    "techStack1": "ESP32, Capacitive Touch Sensors, Embedded C, BLE Telemetry, Flutter"
   },
   {
     "teamNumber": 47,
@@ -1733,10 +4033,60 @@
       {
         "name": "Muhammed Irfan kv",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "6095",
+        "email": "muhammedirfan@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Muhammed afreed an",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "6098",
+        "email": "muhammedafreedan2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Amritha.p",
+        "role": "Member 3",
         "gender": "Female",
-        "dept": "MBA"
+        "rollNo": "6102",
+        "email": "amrithap2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Libin pb",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "6115",
+        "email": "libinpb2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Praveen Krishna. U",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "6124",
+        "email": "praveenkrishnau2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vimal. G",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "6130",
+        "email": "vimalg2627@ajkcas.com",
+        "dept": "MBA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Smart biometric athletic telemetry system integrating real-time motion sensors, heart-rate tracking, and gait cadence analysis for sports performance optimization.",
+    "techStack1": "IMU 9-DOF Sensors, NodeMCU, Edge ML, BLE, React Native Dashboard"
   },
   {
     "teamNumber": 48,
@@ -1770,10 +4120,60 @@
       {
         "name": "N Maheshwari",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "5611",
+        "email": "nmaheshwari2627@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "BBA Aviation with Hospitality Management"
+        "rollNo": "5602",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5603",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5604",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5605",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5606",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation with Hospitality Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Student Innovation-A solution/idea that can boost the current situation of the tourism industries including hotels, travel and others.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 49,
@@ -1808,9 +4208,59 @@
         "name": "Nanditha j Chandran",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA095",
+        "email": "nandithajchandran2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGCA003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGCA004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGCA006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Safe and Efficient operation of mine vehicles in fog and Low visibility conditions in open cast iron ore mines.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 50,
@@ -1845,9 +4295,59 @@
         "name": "Nanditha j Chandran",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "25UGCA095",
+        "email": "nandithajchandran2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGCA002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGCA003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGCA004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGCA005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGCA006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Safe and Efficient operation of mine vehicles in fog and Low visibility conditions in open cast iron ore mines with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 51,
@@ -1882,9 +4382,59 @@
         "name": "NIMISHA RAMESH R",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "5535",
+        "email": "nimisharameshr2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5502",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5503",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5504",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5505",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5506",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for WeatherGPT: Conversational AI for Weather Forecasting, Alerts, and Climate Information.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 52,
@@ -1919,9 +4469,59 @@
         "name": "POOJA KRISHNA C T",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "24UGCA042",
+        "email": "poojakrishnact2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "KAMALESH P",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "24UGCA024",
+        "email": "kamaleshp2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "MUHAMMED SAWAD M",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCA032",
+        "email": "muhammedsawadm2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "AMAL K",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGCA010",
+        "email": "amalk2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "ZIYAAL AHAMMED Z H",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCA059",
+        "email": "ziyaalahammedzh2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "ANFAS P UMMER",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCA012",
+        "email": "anfaspummer2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Real-time municipal fleet optimization and transit routing algorithm mitigating urban traffic choke points and dynamically redistributing logistics vehicles.",
+    "techStack1": "React Native, Python, Google Maps Directions API, PostgreSQL"
   },
   {
     "teamNumber": 53,
@@ -1955,10 +4555,60 @@
       {
         "name": "Prajesh K",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0164",
+        "email": "prajeshk2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "BBA Aviation Management"
+        "rollNo": "AJKTEMP0102",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0103",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "AJKTEMP0104",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0105",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0106",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Development of an Intelligent Freight Forecasting 0/500 Transpc & Logist Model for Optimized Vesse/ Chartering and bulk cargo Procurement from overseas 7 to East Coast of Steel India / smart automation.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 54,
@@ -1992,10 +4642,60 @@
       {
         "name": "Prajesh K",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0164",
+        "email": "prajeshk2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "BBA Aviation Management"
+        "rollNo": "AJKTEMP0102",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0103",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "AJKTEMP0104",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0105",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "AJKTEMP0106",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Development of an Intelligent Freight Forecasting 0/500 Transpc & Logist Model for Optimized Vesse/ Chartering and bulk cargo Procurement from overseas 7 to East Coast of Steel India / smart automation with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 55,
@@ -2030,9 +4730,59 @@
         "name": "Praveen K P",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA"
+        "rollNo": "24UGCA083",
+        "email": "praveenkpsuresh@gmail.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Vaishnav G",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "24UGCA056",
+        "email": "vaishnavg2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sreethma P",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGCA054",
+        "email": "sreethmap2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Abhinandana P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGCA002",
+        "email": "abhinandanap2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Abhinav K",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCA005",
+        "email": "abhinavk2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sreejith R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCA050",
+        "email": "sreejithr2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Adaptive multi-sensory cognitive exercises, familiar voice memory recall prompts, and remote caregiver alert telemetry designed to slow memory degradation in dementia patients.",
+    "techStack1": "Flutter, TensorFlow Lite, WebRTC, Node.js, Firebase"
   },
   {
     "teamNumber": 56,
@@ -2067,9 +4817,59 @@
         "name": "R Ajith",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BBA Aviation Management"
+        "rollNo": "5951",
+        "email": "ajiths2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5902",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5903",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5904",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5905",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5906",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Development of a Real-time Airfare Price Index for India through Automated Web Scraping of Airline and Online Travel Aggregator Portals for Augmentation of the Consumer Price Index (CPI)..",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 57,
@@ -2104,9 +4904,59 @@
         "name": "Rihan",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BBA Logistics & Supply Chain Management"
+        "rollNo": "5811",
+        "email": "mohammedrihan2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aromal",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "5815",
+        "email": "aromal2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Mohammed Harshin PA",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5820",
+        "email": "mohammedharshinpa2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nihal",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "5825",
+        "email": "nihal2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nidhil",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5830",
+        "email": "nidhil2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Raniya fathima",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "5835",
+        "email": "raniyafathima2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Dynamic cross-docking and container load optimization platform utilizing real-time route telemetry to minimize deadhead miles for fleet operators.",
+    "techStack1": "React, Python, OR-Tools, Mapbox API, PostgreSQL"
   },
   {
     "teamNumber": 58,
@@ -2141,9 +4991,59 @@
         "name": "Rihan",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BBA Logistics & Supply Chain Management"
+        "rollNo": "5811",
+        "email": "mohammedrihan2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aromal",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "5815",
+        "email": "aromal2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Mohammed Harshin PA",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5820",
+        "email": "mohammedharshinpa2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nihal",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "5825",
+        "email": "nihal2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Nidhil",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5830",
+        "email": "nidhil2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Raniya fathima",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "5835",
+        "email": "raniyafathima2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Low-cost BLE and GSM temperature logging beacons verifying cold chain integrity from farm gate to retail distribution hub.",
+    "techStack1": "ESP32 BLE Beacon, Cloud Telemetry, React Native"
   },
   {
     "teamNumber": 59,
@@ -2177,10 +5077,60 @@
       {
         "name": "S. Mithyleash",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGFS015",
+        "email": "mithyleashs2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Thulasi Sindhu Advaitha",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Forensic Science"
+        "rollNo": "24UGFS022",
+        "email": "thulasia2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Nethara Sri",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGFS018",
+        "email": "netharasris2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Yamika P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGFS025",
+        "email": "yamikap2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Gubendran",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGFS009",
+        "email": "gubendrans2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Aswin Mickle Raj P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGFS004",
+        "email": "aswinmicklerajp2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Wearable hazardous gas detector (CO, Methane) and sub-surface RF beacon enabling automated evacuation alarms and precision miner localization during collapses.",
+    "techStack1": "MQ Gas Sensors, Sub-GHz Transceivers, STM32, Thermal Camera, React"
   },
   {
     "teamNumber": 60,
@@ -2214,10 +5164,60 @@
       {
         "name": "S. Mithyleash",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGFS015",
+        "email": "mithyleashs2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Thulasi Sindhu Advaitha",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Forensic Science"
+        "rollNo": "24UGFS022",
+        "email": "thulasia2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Nethara Sri",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGFS018",
+        "email": "netharasris2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Yamika P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGFS025",
+        "email": "yamikap2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Gubendran",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGFS009",
+        "email": "gubendrans2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Aswin Mickle Raj P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGFS004",
+        "email": "aswinmicklerajp2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Micro-spectroscopic spectral scanning and blockchain NFC certificate tagging guaranteeing artisan authenticity for GI-tagged traditional crafts.",
+    "techStack1": "Spectral Imaging, NFC RFID, Solidity, React Native"
   },
   {
     "teamNumber": 61,
@@ -2252,9 +5252,59 @@
         "name": "Sajela thasni m.p",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BBA Aviation Management"
+        "rollNo": "AJKTEMP01 B7",
+        "email": "sajelathasnimp2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "AJKTEMP01 02",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 03",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "AJKTEMP01 04",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 05",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 06",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Al-Assisted Early Detection System for Osteoarthritis (OA) Risk Markers in North Eastern Region (NER).",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 62,
@@ -2289,9 +5339,59 @@
         "name": "Sajela thasni m.p",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BBA Aviation Management"
+        "rollNo": "AJKTEMP01 B7",
+        "email": "sajelathasnimp2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "AJKTEMP01 02",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 03",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "AJKTEMP01 04",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 05",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "AJKTEMP01 06",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing Al-Assisted Early Detection System for Osteoarthritis (OA) Risk Markers in North Eastern Region (NER) with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 63,
@@ -2326,9 +5426,59 @@
         "name": "SAMSHEER.K",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Biotechnology"
+        "rollNo": "25UGBT007",
+        "email": "samsheer473@gmail.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "PRIYADHARSHINI.S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGBT005",
+        "email": "priya2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "RAVEENA",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGBT006",
+        "email": "raveena2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "AKSHIMA.A",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGBT001",
+        "email": "akshima2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "THEERTHA PRADEEP",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "25UGBT009",
+        "email": "theertha2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "ATHIRA J",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGBT002",
+        "email": "athira2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Eco-friendly extraction of keratin proteins from poultry feather biomass to synthesize biodegradable, high-tensile bioplastics.",
+    "techStack1": "Bio-Chemical Processing, Green Synthesis, Tensile Testing"
   },
   {
     "teamNumber": 64,
@@ -2363,9 +5513,59 @@
         "name": "SAMSHEER.K",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Biotechnology"
+        "rollNo": "25UGBT007",
+        "email": "samsheer473@gmail.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "PRIYADHARSHINI.S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGBT005",
+        "email": "priya2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "RAVEENA",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "25UGBT006",
+        "email": "raveena2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "AKSHIMA.A",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGBT001",
+        "email": "akshima2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "THEERTHA PRADEEP",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "25UGBT009",
+        "email": "theertha2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
+      },
+      {
+        "name": "ATHIRA J",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "25UGBT002",
+        "email": "athira2526@ajkcas.com",
+        "dept": "B.Sc Biotechnology",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "FeatherClean: Sustainable cross-linked keratin bioadsorbent membranes filtering toxic azo dyes and heavy metals from textile effluents.",
+    "techStack1": "Nanofiltration, Adsorption Kinetics, Spectrophotometry"
   },
   {
     "teamNumber": 65,
@@ -2397,12 +5597,62 @@
     "status": "Submitted",
     "members": [
       {
-        "name": "Shabika KA",
+        "name": "S. Mithyleash",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGFS015",
+        "email": "mithyleashs2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Thulasi Sindhu Advaitha",
+        "role": "Member 2",
         "gender": "Female",
-        "dept": "B.Sc Digital & Cyber Forensic Science"
+        "rollNo": "24UGFS022",
+        "email": "thulasia2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Nethara Sri",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "24UGFS018",
+        "email": "netharasris2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Yamika P",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGFS025",
+        "email": "yamikap2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "S. Gubendran",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGFS009",
+        "email": "gubendrans2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Aswin Mickle Raj P",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGFS004",
+        "email": "aswinmicklerajp2425@ajkcas.com",
+        "dept": "B.Sc Forensic Science",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Wearable hazardous gas detector (CO, Methane) and sub-surface RF beacon enabling automated evacuation alarms and precision miner localization during collapses.",
+    "techStack1": "MQ Gas Sensors, Sub-GHz Transceivers, STM32, Thermal Camera, React"
   },
   {
     "teamNumber": 66,
@@ -2437,9 +5687,59 @@
         "name": "Shahana sherin V. V",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.Sc Costume Design & Fashion"
+        "rollNo": "24UGCD016",
+        "email": "shahanasherinvv2425@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGCD002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCD003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGCD004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCD005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCD006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Costume Design & Fashion",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Agriculture, FoodTech & Rural Development.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 67,
@@ -2473,10 +5773,60 @@
       {
         "name": "Shamil Ahmed",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "24UGCA088",
+        "email": "shamilahmed2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Adhil Mohammed A",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "24UGCA006",
+        "email": "adhilmohammeda2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Ajay Krishna K",
+        "role": "Member 3",
         "gender": "Female",
-        "dept": "BCA"
+        "rollNo": "24UGCA008",
+        "email": "ajaykrishnak2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Jithin J",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGCA022",
+        "email": "jithinj2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Nivya p",
+        "role": "Member 5",
+        "gender": "Female",
+        "rollNo": "24UGCA037",
+        "email": "nivyap2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Aswin K Chandran",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCA018",
+        "email": "aswinkchandran2627@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Vernacular conversational AI assistant providing hyper-local agricultural weather forecasts, storm warnings, and climate advisories through voice and text.",
+    "techStack1": "Python, LLM / LangChain, Whisper Voice API, Open-Meteo, React"
   },
   {
     "teamNumber": 68,
@@ -2510,10 +5860,60 @@
       {
         "name": "Shefin M",
         "role": "Team Leader",
+        "gender": "Male",
+        "rollNo": "26AV001",
+        "email": "shefinm2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Muhammed Nihal TS",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "26AV002",
+        "email": "muhammednihalts2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Anjana M",
+        "role": "Member 3",
         "gender": "Female",
-        "dept": "BBA Aviation Management"
+        "rollNo": "26AV003",
+        "email": "anjanam2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Arundas TP",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "26AV004",
+        "email": "arundastp2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Alen P Jophy",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "26AV005",
+        "email": "alenpjophy2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Muhammad Aflah K A",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "26AV006",
+        "email": "muhammadaflahka2627@ajkcas.com",
+        "dept": "BBA Aviation Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Intelligent smart automation system optimizing airport ground turnaround times, baggage handling tracking, and gate scheduling efficiency.",
+    "techStack1": "Python, React Native, RFID/BLE Trackers, Cloud Analytics"
   },
   {
     "teamNumber": 69,
@@ -2547,10 +5947,60 @@
       {
         "name": "Srijin Krishna",
         "role": "Team Leader",
+        "gender": "Female",
+        "rollNo": "24UGCA050",
+        "email": "srijinkrishna2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Abhinav K S",
+        "role": "Member 2",
         "gender": "Male",
-        "dept": "BCA"
+        "rollNo": "24UGCA002",
+        "email": "abhinavks2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Akshay c",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCA009",
+        "email": "akshayc2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Sidharth S",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "24UGCA048",
+        "email": "sidharths2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Adharsh P S",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCA004",
+        "email": "adharshps2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Avani P A",
+        "role": "Member 6",
+        "gender": "Female",
+        "rollNo": "24UGCA019",
+        "email": "avanipa2425@ajkcas.com",
+        "dept": "BCA",
+        "year": "2nd Year"
       }
-    ]
+    ],
+    "solution1": "Real-time railway telemetry aggregation system processing GPS speed logs and signal delays to calculate accurate train arrival estimates.",
+    "techStack1": "Python, Scikit-learn, FastAPI, WebSockets, Leaflet.js"
   },
   {
     "teamNumber": 70,
@@ -2585,9 +6035,59 @@
         "name": "Srinanth AK",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BCA Artificial Intelligence"
+        "rollNo": "5776",
+        "email": "srinandhak2627@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5702",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5703",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5704",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5705",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5706",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Artificial Intelligence",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Kabadiwala Connect \u2013 Bringing the Informal Collector into the Formal Recycling Chain.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 71,
@@ -2622,9 +6122,59 @@
         "name": "SRUTHI KEERTHI S S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Cybersecurity with Data Science"
+        "rollNo": "5706",
+        "email": "sssruthikeerthi2627@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5702",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5703",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5704",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5705",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5706",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for AI-Based Real-Time Stress and Trauma Assessment Module for Victims/Complainants Accessing NHAA (14566) and Integrated Portal.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 72,
@@ -2659,9 +6209,59 @@
         "name": "SRUTHI KEERTHI S S",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BCA Cybersecurity with Data Science"
+        "rollNo": "5706",
+        "email": "sssruthikeerthi2627@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "5702",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "5703",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "5704",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5705",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5706",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BCA Cybersecurity with Data Science",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Comprehensive secondary innovation concept addressing AI-Based Real-Time Stress and Trauma Assessment Module for Victims/Complainants Accessing NHAA (14566) and Integrated Portal with modular deployment.",
+    "techStack1": "Python, React.js, FastAPI, Node.js, Cloud APIs"
   },
   {
     "teamNumber": 73,
@@ -2696,9 +6296,59 @@
         "name": "Thoufeeq",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "B.Sc Visual Communication & Electronics Media"
+        "rollNo": "6109",
+        "email": "thoufeeku2627@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "6102",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "6103",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "6104",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "6105",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "6106",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.Sc Visual Communication & Electronics Media",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for Cooperative Gig Services Platform for Household & Community Services.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 74,
@@ -2733,9 +6383,59 @@
         "name": "Varsha K",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "B.COM CA"
+        "rollNo": "24UGCC026",
+        "email": "varshak2425@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "24UGCC002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "24UGCC003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "24UGCC004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "24UGCC005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "24UGCC006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "B.COM CA",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for AI based early warning and landslide risk monitoring system in NER.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   },
   {
     "teamNumber": 75,
@@ -2770,9 +6470,59 @@
         "name": "W.jemima vasanthy",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BBA Logistics & Supply Chain Management"
+        "rollNo": "5567",
+        "email": "wjemimavasanthy2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "C.saravanan",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "5570",
+        "email": "csaravanan2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Safeena.S",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "5575",
+        "email": "safeenas2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "T.Maruthu pandi",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "5580",
+        "email": "tmaruthupandi2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "P.Naveenkumar",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5585",
+        "email": "pnaveenkumar2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "P.Ajesh",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5590",
+        "email": "pajesh2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "AI-powered urban hub-and-spoke parcel consolidation model reducing delivery congestion and vehicle emissions through dynamic micro-depots.",
+    "techStack1": "Python, GraphHopper API, FastAPI, React"
   },
   {
     "teamNumber": 76,
@@ -2807,9 +6557,59 @@
         "name": "W.jemima vasanthy",
         "role": "Team Leader",
         "gender": "Female",
-        "dept": "BBA Logistics & Supply Chain Management"
+        "rollNo": "5567",
+        "email": "wjemimavasanthy2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "C.saravanan",
+        "role": "Member 2",
+        "gender": "Male",
+        "rollNo": "5570",
+        "email": "csaravanan2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Safeena.S",
+        "role": "Member 3",
+        "gender": "Female",
+        "rollNo": "5575",
+        "email": "safeenas2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "T.Maruthu pandi",
+        "role": "Member 4",
+        "gender": "Male",
+        "rollNo": "5580",
+        "email": "tmaruthupandi2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "P.Naveenkumar",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "5585",
+        "email": "pnaveenkumar2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "P.Ajesh",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "5590",
+        "email": "pajesh2627@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Mountainous terrain route feasibility and weather hazard prediction system ensuring resilient essential supplies distribution in remote regions.",
+    "techStack1": "React Native, Python, GIS Telemetry, SQLite"
   },
   {
     "teamNumber": 77,
@@ -2844,8 +6644,58 @@
         "name": "Karthik R",
         "role": "Team Leader",
         "gender": "Male",
-        "dept": "BBA Logistics & Supply Chain Management"
+        "rollNo": "25UGLO019",
+        "email": "karthikr.logistics2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "2nd Year"
+      },
+      {
+        "name": "Devika S",
+        "role": "Member 2",
+        "gender": "Female",
+        "rollNo": "25UGLO002",
+        "email": "devikas2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Rahul K",
+        "role": "Member 3",
+        "gender": "Male",
+        "rollNo": "25UGLO003",
+        "email": "rahulk2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Ananya M",
+        "role": "Member 4",
+        "gender": "Female",
+        "rollNo": "25UGLO004",
+        "email": "ananyam2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Vishnu P",
+        "role": "Member 5",
+        "gender": "Male",
+        "rollNo": "25UGLO005",
+        "email": "vishnup2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
+      },
+      {
+        "name": "Aswin R",
+        "role": "Member 6",
+        "gender": "Male",
+        "rollNo": "25UGLO006",
+        "email": "aswinr2526@ajkcas.com",
+        "dept": "BBA Logistics & Supply Chain Management",
+        "year": "1st Year"
       }
-    ]
+    ],
+    "solution1": "Automated smart architecture leveraging modern software/hardware frameworks for [SIH26006] Multi-Modal Smart Freight Routing & Carbon Footprint Optimizer for Inter-State Transit.",
+    "techStack1": "Python, PyTorch, React, REST APIs, PostgreSQL"
   }
 ]
