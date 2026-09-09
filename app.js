@@ -594,9 +594,16 @@ function loadStoredState() {
   localStorage.removeItem('prajna_deleted_team_ids');
   state.deletedTeamIds = [];
 
-  // Master team definition from INITIAL_DATA (77 teams with verified slots and hall allocations)
-  const masterTeams = (window.INITIAL_DATA && window.INITIAL_DATA.teams) 
-    ? JSON.parse(JSON.stringify(window.INITIAL_DATA.teams)) 
+  // Master team definition from INITIAL_DATA (81 teams with verified slots and hall allocations)
+  let rawMaster = null;
+  if (typeof INITIAL_DATA !== 'undefined' && INITIAL_DATA && Array.isArray(INITIAL_DATA.teams)) {
+    rawMaster = INITIAL_DATA.teams;
+  } else if (typeof window !== 'undefined' && window.INITIAL_DATA && Array.isArray(window.INITIAL_DATA.teams)) {
+    rawMaster = window.INITIAL_DATA.teams;
+  }
+
+  const masterTeams = (rawMaster && rawMaster.length > 0)
+    ? JSON.parse(JSON.stringify(rawMaster))
     : [];
 
   const savedTeamsJson = localStorage.getItem('prajna_teams');
@@ -617,7 +624,7 @@ function loadStoredState() {
         state.teams = masterTeams.map(mt => {
           const keyNum = mt.teamNumber || (mt.id ? parseInt(mt.id.replace(/[^0-9]/g, '')) : null);
           const keyName = (mt.name || mt.team_name || '').toLowerCase().trim();
-          const match = scoreMap['num_' + keyNum] || scoreMap['name_' + keyName];
+          const match = (keyNum ? scoreMap['num_' + keyNum] : null) || (keyName ? scoreMap['name_' + keyName] : null);
           if (match) {
             if (match.scores) mt.scores = match.scores;
             if (match.juryEvaluations) mt.juryEvaluations = match.juryEvaluations;
@@ -626,6 +633,7 @@ function loadStoredState() {
             if (match.status && match.status !== 'Submitted') mt.status = match.status;
             if (match.evaluatorName) mt.evaluatorName = match.evaluatorName;
           }
+          mt.hall = mt.hall || assignHallToTeam(mt);
           return mt;
         });
       } else {
@@ -639,10 +647,13 @@ function loadStoredState() {
     state.teams = masterTeams;
   }
 
-  // Ensure state.teams is properly initialized
+  // Ensure state.teams is properly initialized with halls
   if (!Array.isArray(state.teams) || state.teams.length === 0) {
     state.teams = masterTeams;
   }
+  state.teams.forEach(t => {
+    t.hall = t.hall || assignHallToTeam(t);
+  });
   
   // Resave clean state
   localStorage.setItem('prajna_teams', JSON.stringify(state.teams));
