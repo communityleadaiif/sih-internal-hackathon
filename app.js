@@ -863,7 +863,7 @@ const AUTH_ACCOUNTS = {
     track: 'Commerce & FinTech (Teams 40–51)',
     displayPass: 'CoJuryD#2026'
   },
-  // Hall E Juries (Teams 52 - 63, 77)
+  // Hall E Juries (Teams 52 - 63, 77 - 81)
   'jury9': {
     id: 'jury9',
     role: 'jury',
@@ -872,7 +872,7 @@ const AUTH_ACCOUNTS = {
     passcodes: ['Sachin@HallE', 'jury9@2026', 'jury9pass', 'Jury9#2026'],
     hall: 'Hall E',
     hallName: 'Hall E (Third Floor)',
-    track: 'Management, Hotel & Aviation (Teams 52–63, 77)',
+    track: 'Management, Hotel & Aviation, Spot & Logistics (Teams 52–63, 77–81)',
     displayPass: 'Sachin@HallE'
   },
   'jury10': {
@@ -883,7 +883,7 @@ const AUTH_ACCOUNTS = {
     passcodes: ['CoJuryE#2026', 'jury10@2026', 'jury10pass', 'Jury10#2026'],
     hall: 'Hall E',
     hallName: 'Hall E (Third Floor)',
-    track: 'Management, Hotel & Aviation (Teams 52–63, 77)',
+    track: 'Management, Hotel & Aviation, Spot & Logistics (Teams 52–63, 77–81)',
     displayPass: 'CoJuryE#2026'
   },
   // Hall F Juries (Teams 64 - 76)
@@ -2178,7 +2178,7 @@ function saveTeamRegistration() {
   const baseNum = state.teams.length + 1;
   const baseId = `SIH-TEAM-${baseNum < 10 ? '0' + baseNum : baseNum}`;
 
-  // Idea 1 Entry
+  // Idea 1 Entry (Assigned to Hall E and Last Time Slot for spot/new registrations)
   const teamIdea1 = enrichTeamRecord({
     id: hasSecondIdea ? `${baseId}-A` : baseId,
     name: hasSecondIdea ? `${teamName} (Idea 1)` : teamName,
@@ -2191,6 +2191,11 @@ function saveTeamRegistration() {
     solution1: sol1,
     techStack1: tech1,
     members: members,
+    hall: 'Hall E',
+    hallLetter: 'E',
+    assignedJury: 'Mr. Sachin',
+    slot: '01.15 - 01.45pm',
+    pitchSlot: '01.15 - 01.45pm',
     status: 'Verified',
     submittedAt: new Date().toISOString(),
     scores: null
@@ -2212,6 +2217,11 @@ function saveTeamRegistration() {
       solution1: sol2 || sol1,
       techStack1: tech2 || tech1,
       members: members,
+      hall: 'Hall E',
+      hallLetter: 'E',
+      assignedJury: 'Mr. Sachin',
+      slot: '01.15 - 01.45pm',
+      pitchSlot: '01.15 - 01.45pm',
       status: 'Verified',
       submittedAt: new Date().toISOString(),
       scores: null
@@ -2264,6 +2274,9 @@ Team Name: ${team.name}
 Official Department: ${team.department}
 Track: ${team.category} Track
 Date of Pitching: September 09, 2026 @ AJK Campus
+Pitch Hall: ${team.hall || 'Hall E (Third Floor)'}
+Assigned Jury: ${team.assignedJury || 'Mr. Sachin (Hall E)'}
+Pitching Time Slot: ${team.slot || '01.15 - 01.45pm (Last Slot)'}
 
 ASSIGNED MENTOR:
 - ${mentor ? mentor.name + ' (' + mentor.designation + ')' : 'Faculty Mentor'} (${mentor ? mentor.email : ''})
@@ -3128,7 +3141,15 @@ function enrichTeamRecord(team) {
       : 'Python, React, Node.js, PostgreSQL, Cloud APIs';
   }
 
-  team.hall = assignHallToTeam(team);
+  team.hall = team.hall || assignHallToTeam(team);
+  team.hallLetter = team.hallLetter || (team.hall ? team.hall.replace('Hall ', '').trim() : 'E');
+  if (!team.slot || team.slot === 'TBD' || team.slot === '') {
+    team.slot = (team.hall === 'Hall E') ? '01.15 - 01.45pm' : '10.30 - 11.15am';
+  }
+  team.pitchSlot = team.pitchSlot || team.slot;
+  if (!team.assignedJury) {
+    team.assignedJury = (team.hall === 'Hall E') ? 'Mr. Sachin' : 'Assigned Jury';
+  }
 
   return team;
 }
@@ -3585,10 +3606,11 @@ function assignHallToTeam(team) {
   if (num >= 14 && num <= 26) return 'Hall B';
   if (num >= 27 && num <= 39) return 'Hall C';
   if (num >= 40 && num <= 51) return 'Hall D';
-  if ((num >= 52 && num <= 63) || num === 77) return 'Hall E';
+  if ((num >= 52 && num <= 63) || (num >= 77 && num <= 85)) return 'Hall E';
   if (num >= 64 && num <= 76) return 'Hall F';
 
-  return 'Hall A';
+  // Spot registrations and any newly registered teams go to Hall E
+  return 'Hall E';
 }
 
 function getActiveJuryId() {
